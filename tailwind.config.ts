@@ -57,6 +57,12 @@ export default {
           border: "hsl(var(--sidebar-border))",
           ring: "hsl(var(--sidebar-ring))",
         },
+        email: {
+          hover: "hsl(var(--email-hover))",
+          selected: "hsl(var(--email-selected))",
+          unread: "hsl(var(--email-unread))",
+          read: "hsl(var(--email-read))",
+        },
       },
       borderRadius: {
         lg: "var(--radius)",
