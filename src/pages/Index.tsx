@@ -3,6 +3,7 @@ import { EmailSidebar } from "@/components/EmailSidebar";
 import { EmailList } from "@/components/EmailList";
 import { EmailDetail } from "@/components/EmailDetail";
 import { EmailHeader } from "@/components/EmailHeader";
+import { IntentLine } from "@/components/IntentLine";
 
 const mockEmails = [
   {
@@ -106,6 +107,7 @@ const Index = () => {
 
   return (
     <div className="h-screen flex flex-col">
+      <IntentLine />
       <EmailHeader />
       <div className="flex-1 flex overflow-hidden">
         <EmailSidebar
