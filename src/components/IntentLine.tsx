@@ -23,11 +23,11 @@ export const IntentLine = () => {
       newKeys.add(e.code.toLowerCase());
       setKeysPressed(newKeys);
 
-      // Check if both Tab and Q are pressed
-      const hasTab = newKeys.has("tab") || e.key === "Tab";
+      // Check if both Q and W are pressed
       const hasQ = newKeys.has("q") || newKeys.has("keyq");
+      const hasW = newKeys.has("w") || newKeys.has("keyw");
 
-      if (hasTab && hasQ) {
+      if (hasQ && hasW) {
         e.preventDefault();
         createIntentLine();
       }
