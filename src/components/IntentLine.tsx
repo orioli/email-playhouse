@@ -41,13 +41,13 @@ export const IntentLine = () => {
     };
 
     const createIntentLine = () => {
-      // Find the Send button - looking for button with Send text
+      // Find the Reply button - looking for button with Reply text
       const buttons = Array.from(document.querySelectorAll("button"));
-      const sendButton = buttons.find((btn) => btn.textContent?.includes("Send"));
+      const replyButton = buttons.find((btn) => btn.textContent?.includes("Reply") && !btn.textContent?.includes("Reply All"));
       
-      if (!sendButton) return;
+      if (!replyButton) return;
 
-      const buttonRect = sendButton.getBoundingClientRect();
+      const buttonRect = replyButton.getBoundingClientRect();
       const buttonCenterX = buttonRect.left + buttonRect.width / 2;
       const buttonCenterY = buttonRect.top + buttonRect.height / 2;
 
