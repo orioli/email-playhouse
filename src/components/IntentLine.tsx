@@ -11,6 +11,7 @@ export const IntentLine = () => {
   const [line, setLine] = useState<LineCoordinates | null>(null);
   const [cursorPos, setCursorPos] = useState({ x: 0, y: 0 });
   const [keysPressed, setKeysPressed] = useState<Set<string>>(new Set());
+  const [isLineActive, setIsLineActive] = useState(false);
 
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
@@ -27,7 +28,7 @@ export const IntentLine = () => {
       const hasQ = newKeys.has("q") || newKeys.has("keyq");
       const hasW = newKeys.has("w") || newKeys.has("keyw");
 
-      if (hasQ && hasW) {
+      if (hasQ && hasW && !isLineActive) {
         e.preventDefault();
         createIntentLine();
       }
@@ -51,6 +52,7 @@ export const IntentLine = () => {
       const buttonCenterX = buttonRect.left + buttonRect.width / 2;
       const buttonCenterY = buttonRect.top + buttonRect.height / 2;
 
+      setIsLineActive(true);
       setLine({
         x1: cursorPos.x,
         y1: cursorPos.y,
@@ -61,6 +63,7 @@ export const IntentLine = () => {
       // Remove line after animation completes
       setTimeout(() => {
         setLine(null);
+        setIsLineActive(false);
       }, 2000);
     };
 
@@ -73,7 +76,7 @@ export const IntentLine = () => {
       window.removeEventListener("keydown", handleKeyDown);
       window.removeEventListener("keyup", handleKeyUp);
     };
-  }, [cursorPos, keysPressed]);
+  }, [cursorPos, keysPressed, isLineActive]);
 
   if (!line) return null;
 
