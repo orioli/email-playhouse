@@ -104,16 +104,16 @@ export const EmailDetail = ({ isComposing, onClose, onSend, onReply }: EmailDeta
           <div className="prose prose-sm max-w-none">
             <h2 className="text-xl font-semibold mb-4">🖱️ MousePilot – Quick Instructions</h2>
             
-            {/* Möbius Band 2D Projection */}
+            {/* Infinity Loop */}
             <div className="mb-6">
-              <svg width="200" height="80" xmlns="http://www.w3.org/2000/svg">
+              <svg width="200" height="80" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 80">
                 <defs>
-                  <linearGradient id="bandGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                  <linearGradient id="infinityGradient" x1="0%" y1="0%" x2="100%" y2="0%">
                     <stop offset="0%" stopColor="#059669" />
                     <stop offset="50%" stopColor="#10b981" />
                     <stop offset="100%" stopColor="#059669" />
                   </linearGradient>
-                  <filter id="glow">
+                  <filter id="infinityGlow">
                     <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
                     <feMerge>
                       <feMergeNode in="coloredBlur"/>
@@ -124,38 +124,24 @@ export const EmailDetail = ({ isComposing, onClose, onSend, onReply }: EmailDeta
                 
                 {/* Glow effect */}
                 <path
-                  d="M 20 40 Q 60 15, 100 40 T 180 40"
+                  d="M 50 40 C 50 20, 30 20, 30 40 C 30 60, 50 60, 50 40 C 50 20, 70 20, 100 20 C 130 20, 150 20, 150 40 C 150 60, 130 60, 100 60 C 70 60, 50 60, 50 40"
                   fill="none"
                   stroke="#10b981"
-                  strokeWidth="20"
+                  strokeWidth="18"
                   opacity="0.3"
-                  filter="blur(4px)"
+                  filter="blur(5px)"
                 />
                 
-                {/* Back part of the band (darker) */}
+                {/* Main infinity path */}
                 <path
-                  d="M 20 45 Q 60 20, 100 45 T 180 45"
+                  d="M 50 40 C 50 20, 30 20, 30 40 C 30 60, 50 60, 50 40 C 50 20, 70 20, 100 20 C 130 20, 150 20, 150 40 C 150 60, 130 60, 100 60 C 70 60, 50 60, 50 40"
                   fill="none"
-                  stroke="#059669"
+                  stroke="url(#infinityGradient)"
                   strokeWidth="12"
-                  opacity="0.6"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  filter="url(#infinityGlow)"
                 />
-                
-                {/* Front part of the band with gradient */}
-                <path
-                  d="M 20 35 Q 60 10, 100 35 T 180 35"
-                  fill="none"
-                  stroke="url(#bandGradient)"
-                  strokeWidth="15"
-                  filter="url(#glow)"
-                />
-                
-                {/* Twist visualization - cross section lines */}
-                <line x1="20" y1="35" x2="20" y2="45" stroke="#10b981" strokeWidth="2" opacity="0.7"/>
-                <line x1="60" y1="25" x2="65" y2="35" stroke="#10b981" strokeWidth="2" opacity="0.5"/>
-                <line x1="100" y1="35" x2="100" y2="45" stroke="#10b981" strokeWidth="2" opacity="0.7"/>
-                <line x1="140" y1="25" x2="135" y2="35" stroke="#10b981" strokeWidth="2" opacity="0.5"/>
-                <line x1="180" y1="35" x2="180" y2="45" stroke="#10b981" strokeWidth="2" opacity="0.7"/>
               </svg>
             </div>
             
