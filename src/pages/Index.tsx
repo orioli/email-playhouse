@@ -102,6 +102,10 @@ const Index = () => {
   const [unteraveledPixels, setUntraveledPixels] = useState(0);
   const [discardedSuggestions, setDiscardedSuggestions] = useState(0);
   const [actualClicks, setActualClicks] = useState(0);
+  const [isMinimized, setIsMinimized] = useState(false);
+  const [position, setPosition] = useState({ x: 0, y: 16 });
+  const [isDragging, setIsDragging] = useState(false);
+  const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
 
   const handleCompose = () => {
     setIsComposing(true);
@@ -125,59 +129,117 @@ const Index = () => {
     return () => window.removeEventListener("click", handleClick);
   }, []);
 
+  // Handle dragging
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      if (isDragging) {
+        setPosition({
+          x: e.clientX - dragOffset.x,
+          y: e.clientY - dragOffset.y,
+        });
+      }
+    };
+
+    const handleMouseUp = () => {
+      setIsDragging(false);
+    };
+
+    if (isDragging) {
+      window.addEventListener("mousemove", handleMouseMove);
+      window.addEventListener("mouseup", handleMouseUp);
+    }
+
+    return () => {
+      window.removeEventListener("mousemove", handleMouseMove);
+      window.removeEventListener("mouseup", handleMouseUp);
+    };
+  }, [isDragging, dragOffset]);
+
+  const handleMouseDown = (e: React.MouseEvent) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    setDragOffset({
+      x: e.clientX - rect.left,
+      y: e.clientY - rect.top,
+    });
+    setIsDragging(true);
+  };
+
   return (
     <div className="h-screen flex flex-col">
-      <div className="fixed top-4 left-1/2 -translate-x-1/2 z-50 bg-background/50 backdrop-blur-sm border rounded-lg p-4 shadow-lg w-96">
-        <div className="space-y-3">
-          <div className="flex justify-between items-center pb-2 border-b">
+      <div 
+        className="fixed z-50 bg-background/50 backdrop-blur-sm border rounded-lg shadow-lg transition-all"
+        style={{
+          left: position.x === 0 ? '50%' : `${position.x}px`,
+          top: `${position.y}px`,
+          transform: position.x === 0 ? 'translateX(-50%)' : 'none',
+          width: isMinimized ? '200px' : '384px',
+          cursor: isDragging ? 'grabbing' : 'default',
+        }}
+      >
+        <div 
+          className="p-3 border-b flex items-center justify-between cursor-grab active:cursor-grabbing"
+          onMouseDown={handleMouseDown}
+        >
+          <div className="flex items-center gap-2">
             <span className="text-lg font-semibold">MousePilot™</span>
-            <span className="text-2xl font-bold text-primary">{chordCount}</span>
+            <span className="text-xl font-bold text-primary">{chordCount}</span>
           </div>
-          <div className="flex items-center gap-4">
-            <label className="text-sm font-medium whitespace-nowrap">Sensitivity: {sensitivity}ms</label>
-            <Slider
-              value={[sensitivity]}
-              onValueChange={(value) => setSensitivity(value[0])}
-              min={0}
-              max={560}
-              step={10}
-              className="flex-1"
-            />
-          </div>
-          <div className="flex items-center gap-4">
-            <label className="text-sm font-medium whitespace-nowrap">Ease In: {easeIn}ms</label>
-            <Slider
-              value={[easeIn]}
-              onValueChange={(value) => setEaseIn(value[0])}
-              min={0}
-              max={500}
-              step={10}
-              className="flex-1"
-            />
-          </div>
-          <div className="pt-2 border-t space-y-1 text-sm">
-            <div className="flex justify-between">
-              <span className="text-muted-foreground">Session Start:</span>
-              <span className="font-medium">{sessionStartTime.toLocaleTimeString()}</span>
-            </div>
-            <div className="flex justify-between">
-              <span className="text-muted-foreground">Clicks Saved:</span>
-              <span className="font-medium text-primary">{chordCount}</span>
-            </div>
-            <div className="flex justify-between">
-              <span className="text-muted-foreground">Untraveled Pixels:</span>
-              <span className="font-medium text-primary">{Math.round(unteraveledPixels)}</span>
-            </div>
-            <div className="flex justify-between">
-              <span className="text-muted-foreground">Discarded Suggestions:</span>
-              <span className="font-medium text-amber-500">{discardedSuggestions}</span>
-            </div>
-            <div className="flex justify-between">
-              <span className="text-muted-foreground">Actual Clicks:</span>
-              <span className="font-medium">{actualClicks}</span>
-            </div>
-          </div>
+          <button
+            onClick={() => setIsMinimized(!isMinimized)}
+            className="text-muted-foreground hover:text-foreground transition-colors"
+          >
+            {isMinimized ? "+" : "−"}
+          </button>
         </div>
+        
+        {!isMinimized && (
+          <div className="p-4 space-y-3">
+            <div className="flex items-center gap-4">
+              <label className="text-sm font-medium whitespace-nowrap">Sensitivity: {sensitivity}ms</label>
+              <Slider
+                value={[sensitivity]}
+                onValueChange={(value) => setSensitivity(value[0])}
+                min={0}
+                max={560}
+                step={10}
+                className="flex-1"
+              />
+            </div>
+            <div className="flex items-center gap-4">
+              <label className="text-sm font-medium whitespace-nowrap">Ease In: {easeIn}ms</label>
+              <Slider
+                value={[easeIn]}
+                onValueChange={(value) => setEaseIn(value[0])}
+                min={0}
+                max={500}
+                step={10}
+                className="flex-1"
+              />
+            </div>
+            <div className="pt-2 border-t space-y-1 text-sm">
+              <div className="flex justify-between">
+                <span className="text-muted-foreground">Session Start:</span>
+                <span className="font-medium">{sessionStartTime.toLocaleTimeString()}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-muted-foreground">Clicks Saved:</span>
+                <span className="font-medium text-primary">{chordCount}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-muted-foreground">Untraveled Pixels:</span>
+                <span className="font-medium text-primary">{Math.round(unteraveledPixels)}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-muted-foreground">Discarded Suggestions:</span>
+                <span className="font-medium text-amber-500">{discardedSuggestions}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-muted-foreground">Actual Clicks:</span>
+                <span className="font-medium">{actualClicks}</span>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
       <IntentLine 
         sensitivity={sensitivity} 
