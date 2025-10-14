@@ -6,6 +6,7 @@ import { EmailHeader } from "@/components/EmailHeader";
 import { IntentLine } from "@/components/IntentLine";
 import { Slider } from "@/components/ui/slider";
 import { useToast } from "@/hooks/use-toast";
+import { LineChart, Line, ResponsiveContainer } from "recharts";
 
 const mockEmails = [
   {
@@ -183,6 +184,22 @@ const Index = () => {
     setIsDragging(true);
   };
 
+  // Generate fake Bloomberg-style chart data
+  const chartData = [
+    { value: 45 },
+    { value: 52 },
+    { value: 48 },
+    { value: 61 },
+    { value: 55 },
+    { value: 67 },
+    { value: 72 },
+    { value: 68 },
+    { value: 74 },
+    { value: 82 },
+    { value: 78 },
+    { value: 85 },
+  ];
+
   return (
     <div className="h-screen flex flex-col">
       <div 
@@ -199,9 +216,21 @@ const Index = () => {
           className="p-3 border-b flex items-center justify-between cursor-grab active:cursor-grabbing"
           onMouseDown={handleMouseDown}
         >
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-3">
             <span className="text-lg font-semibold">Your Stats</span>
-            <span className="text-xl font-bold text-primary">{chordCount}</span>
+            <div className="w-16 h-6">
+              <ResponsiveContainer width="100%" height="100%">
+                <LineChart data={chartData}>
+                  <Line 
+                    type="monotone" 
+                    dataKey="value" 
+                    stroke="hsl(var(--primary))" 
+                    strokeWidth={1.5}
+                    dot={false}
+                  />
+                </LineChart>
+              </ResponsiveContainer>
+            </div>
           </div>
           <button
             onClick={() => setIsMinimized(!isMinimized)}
