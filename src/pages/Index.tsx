@@ -260,6 +260,13 @@ const Index = () => {
                 <span className="text-muted-foreground">Physically Travelled pixels:</span>
                 <span className="font-medium">{Math.round(totalTraveledPixels)}</span>
               </div>
+              <div className="flex justify-between">
+                <span className="text-muted-foreground">Savings:</span>
+                <span className="font-medium">
+                  pixels {totalTraveledPixels > 0 ? Math.round((unteraveledPixels / totalTraveledPixels) * 100) : 0}% · 
+                  clicks {actualClicks > 0 ? Math.round((chordCount / actualClicks) * 100) : 0}%
+                </span>
+              </div>
             </div>
           </div>
         )}
