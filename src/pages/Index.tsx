@@ -213,7 +213,7 @@ const Index = () => {
         >
           <div className="flex items-center gap-2">
             <span className="text-lg font-semibold">Your Clicks</span>
-            <span className="text-xl font-bold text-primary">{chordCount}</span>
+            <span className="text-xl font-bold text-green-500">{chordCount}</span>
           </div>
           <button
             onClick={() => setIsMinimized(!isMinimized)}
@@ -233,7 +233,7 @@ const Index = () => {
                 min={0}
                 max={560}
                 step={10}
-                className="flex-1"
+                className="flex-1 [&_[role=slider]]:bg-green-500 [&_[role=slider]]:border-green-600 [&_.bg-primary]:bg-green-500"
               />
             </div>
             <div className="flex items-center gap-4">
@@ -244,7 +244,7 @@ const Index = () => {
                 min={0}
                 max={500}
                 step={10}
-                className="flex-1"
+                className="flex-1 [&_[role=slider]]:bg-green-500 [&_[role=slider]]:border-green-600 [&_.bg-primary]:bg-green-500"
               />
             </div>
             <div className="pt-2 border-t space-y-1 text-sm">
@@ -254,11 +254,11 @@ const Index = () => {
               </div>
               <div className="flex justify-between">
                 <span className="text-muted-foreground">Clicks Saved:</span>
-                <span className="font-medium text-primary">{chordCount}</span>
+                <span className="font-medium text-green-500">{chordCount}</span>
               </div>
               <div className="flex justify-between">
                 <span className="text-muted-foreground">Untraveled Pixels:</span>
-                <span className="font-medium text-primary">{Math.round(unteraveledPixels)}</span>
+                <span className="font-medium text-green-500">{Math.round(unteraveledPixels)}</span>
               </div>
               <div className="flex justify-between">
                 <span className="text-muted-foreground">Discarded Suggestions:</span>
