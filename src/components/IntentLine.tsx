@@ -79,131 +79,93 @@ export const IntentLine = ({ sensitivity = 80, easeIn = 50 }: { sensitivity?: nu
       // First key released
       setFirstKeyReleased(releasedKey);
       setLastKeyReleaseTime(now);
-    } else if (firstKeyReleased === "q" && releasedKey === "w") {
-      // Q released first, then W - check timing
+    } else if (firstKeyReleased !== releasedKey) {
+      // Second key released - check timing regardless of order
       const timeDiff = now - (lastKeyReleaseTime || 0);
       
       if (timeDiff <= sensitivity) {
-            // Released together (within threshold) - trigger the send sequence with animation
-            setIsAnimatingOut(true);
-            
-            // Animate the line disappearing from cursor side
-            const animationDuration = easeIn;
-            const startTime = Date.now();
-            const originalLine = line;
-            
-            const animateLineOut = () => {
-              const elapsed = Date.now() - startTime;
-              const progress = Math.min(elapsed / animationDuration, 1);
-              
-              if (progress < 1 && originalLine) {
-                // Interpolate from cursor (x1, y1) towards button (x2, y2)
-                const newX1 = originalLine.x1 + (originalLine.x2 - originalLine.x1) * progress;
-                const newY1 = originalLine.y1 + (originalLine.y2 - originalLine.y1) * progress;
-                
-                setLine({
-                  x1: newX1,
-                  y1: newY1,
-                  x2: originalLine.x2,
-                  y2: originalLine.y2,
-                });
-                
-                requestAnimationFrame(animateLineOut);
-              } else {
-                // Animation complete - hide everything and show toast
-                setLine(null);
-                setIsAnimatingOut(false);
-                
-                setTimeout(() => {
-                  setButtonRect(null);
-                  setIsLineActive(false);
-                  
-                  // Show email sent notification
-                  toast({
-                    title: "Email sent",
-                    description: "Your message has been sent successfully.",
-                    duration: 10000,
-                    variant: "success" as any,
-                  });
-                }, 250);
-              }
-            };
-            
-            requestAnimationFrame(animateLineOut);
-      } else {
-        // Released apart (more than threshold) or wrong order - cancel with animation from button to cursor
+        // Released together (within threshold) - trigger the send sequence with animation
         setIsAnimatingOut(true);
+        
+        // Animate the line disappearing from cursor side
+        const animationDuration = easeIn;
+        const startTime = Date.now();
+        const originalLine = line;
+        
+        const animateLineOut = () => {
+          const elapsed = Date.now() - startTime;
+          const progress = Math.min(elapsed / animationDuration, 1);
+          
+          if (progress < 1 && originalLine) {
+            // Interpolate from cursor (x1, y1) towards button (x2, y2)
+            const newX1 = originalLine.x1 + (originalLine.x2 - originalLine.x1) * progress;
+            const newY1 = originalLine.y1 + (originalLine.y2 - originalLine.y1) * progress;
             
-            // Animate the line disappearing from button side
-            const animationDuration = easeIn;
-            const startTime = Date.now();
-            const originalLine = line;
-            
-            const animateLineOut = () => {
-              const elapsed = Date.now() - startTime;
-              const progress = Math.min(elapsed / animationDuration, 1);
-              
-              if (progress < 1 && originalLine) {
-                // Interpolate from button (x2, y2) towards cursor (x1, y1)
-                const newX2 = originalLine.x2 + (originalLine.x1 - originalLine.x2) * progress;
-                const newY2 = originalLine.y2 + (originalLine.y1 - originalLine.y2) * progress;
-                
-                setLine({
-                  x1: originalLine.x1,
-                  y1: originalLine.y1,
-                  x2: newX2,
-                  y2: newY2,
-                });
-                
-                requestAnimationFrame(animateLineOut);
-              } else {
-                // Animation complete - hide everything
-                setLine(null);
-                setButtonRect(null);
-                setIsLineActive(false);
-                setIsAnimatingOut(false);
-              }
-            };
+            setLine({
+              x1: newX1,
+              y1: newY1,
+              x2: originalLine.x2,
+              y2: originalLine.y2,
+            });
             
             requestAnimationFrame(animateLineOut);
+          } else {
+            // Animation complete - hide everything and show toast
+            setLine(null);
+            setIsAnimatingOut(false);
+            
+            setTimeout(() => {
+              setButtonRect(null);
+              setIsLineActive(false);
+              
+              // Show email sent notification
+              toast({
+                title: "Email sent",
+                description: "Your message has been sent successfully.",
+                duration: 10000,
+                variant: "success" as any,
+              });
+            }, 250);
           }
-      
-      // Reset tracking
-      setFirstKeyReleased(null);
-      setLastKeyReleaseTime(null);
-    } else if (firstKeyReleased === "w" && releasedKey === "q") {
-      // W released first, then Q - always cancel with animation from button to cursor
-      setIsAnimatingOut(true);
-      
-      const animationDuration = easeIn;
-      const startTime = Date.now();
-      const originalLine = line;
-      
-      const animateLineOut = () => {
-        const elapsed = Date.now() - startTime;
-        const progress = Math.min(elapsed / animationDuration, 1);
+        };
         
-        if (progress < 1 && originalLine) {
-          const newX2 = originalLine.x2 + (originalLine.x1 - originalLine.x2) * progress;
-          const newY2 = originalLine.y2 + (originalLine.y1 - originalLine.y2) * progress;
+        requestAnimationFrame(animateLineOut);
+      } else {
+        // Released apart (more than threshold) - cancel with animation from button to cursor
+        setIsAnimatingOut(true);
+        
+        const animationDuration = easeIn;
+        const startTime = Date.now();
+        const originalLine = line;
+        
+        const animateLineOut = () => {
+          const elapsed = Date.now() - startTime;
+          const progress = Math.min(elapsed / animationDuration, 1);
           
-          setLine({
-            x1: originalLine.x1,
-            y1: originalLine.y1,
-            x2: newX2,
-            y2: newY2,
-          });
-          
-          requestAnimationFrame(animateLineOut);
-        } else {
-          setLine(null);
-          setButtonRect(null);
-          setIsLineActive(false);
-          setIsAnimatingOut(false);
-        }
-      };
-      
-      requestAnimationFrame(animateLineOut);
+          if (progress < 1 && originalLine) {
+            // Interpolate from button (x2, y2) towards cursor (x1, y1)
+            const newX2 = originalLine.x2 + (originalLine.x1 - originalLine.x2) * progress;
+            const newY2 = originalLine.y2 + (originalLine.y1 - originalLine.y2) * progress;
+            
+            setLine({
+              x1: originalLine.x1,
+              y1: originalLine.y1,
+              x2: newX2,
+              y2: newY2,
+            });
+            
+            requestAnimationFrame(animateLineOut);
+          } else {
+            // Animation complete - hide everything
+            setLine(null);
+            setButtonRect(null);
+            setIsLineActive(false);
+            setIsAnimatingOut(false);
+          }
+        };
+        
+        requestAnimationFrame(animateLineOut);
+      }
       
       // Reset tracking
       setFirstKeyReleased(null);
