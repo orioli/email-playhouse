@@ -94,6 +94,7 @@ const Index = () => {
   const [selectedEmail, setSelectedEmail] = useState<string | null>("1");
   const [isComposing, setIsComposing] = useState(false);
   const [sensitivity, setSensitivity] = useState(80);
+  const [easeIn, setEaseIn] = useState(50);
 
   const handleCompose = () => {
     setIsComposing(true);
@@ -109,20 +110,33 @@ const Index = () => {
 
   return (
     <div className="h-screen flex flex-col">
-      <div className="fixed top-4 left-1/2 -translate-x-1/2 z-50 bg-background/95 backdrop-blur-sm border rounded-lg p-4 shadow-lg w-80">
-        <div className="flex items-center gap-4">
-          <label className="text-sm font-medium whitespace-nowrap">Sensitivity: {sensitivity}ms</label>
-          <Slider
-            value={[sensitivity]}
-            onValueChange={(value) => setSensitivity(value[0])}
-            min={0}
-            max={560}
-            step={10}
-            className="flex-1"
-          />
+      <div className="fixed top-4 left-1/2 -translate-x-1/2 z-50 bg-background/95 backdrop-blur-sm border rounded-lg p-4 shadow-lg w-96">
+        <div className="space-y-3">
+          <div className="flex items-center gap-4">
+            <label className="text-sm font-medium whitespace-nowrap">Sensitivity: {sensitivity}ms</label>
+            <Slider
+              value={[sensitivity]}
+              onValueChange={(value) => setSensitivity(value[0])}
+              min={0}
+              max={560}
+              step={10}
+              className="flex-1"
+            />
+          </div>
+          <div className="flex items-center gap-4">
+            <label className="text-sm font-medium whitespace-nowrap">Ease In: {easeIn}ms</label>
+            <Slider
+              value={[easeIn]}
+              onValueChange={(value) => setEaseIn(value[0])}
+              min={0}
+              max={500}
+              step={10}
+              className="flex-1"
+            />
+          </div>
         </div>
       </div>
-      <IntentLine sensitivity={sensitivity} />
+      <IntentLine sensitivity={sensitivity} easeIn={easeIn} />
       <EmailHeader />
       <div className="flex-1 flex overflow-hidden">
         <EmailSidebar

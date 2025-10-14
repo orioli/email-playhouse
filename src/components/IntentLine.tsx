@@ -8,7 +8,7 @@ interface LineCoordinates {
   y2: number;
 }
 
-export const IntentLine = ({ sensitivity = 80 }: { sensitivity?: number }) => {
+export const IntentLine = ({ sensitivity = 80, easeIn = 50 }: { sensitivity?: number; easeIn?: number }) => {
   const { toast } = useToast();
   const [line, setLine] = useState<LineCoordinates | null>(null);
   const [cursorPos, setCursorPos] = useState({ x: 0, y: 0 });
@@ -85,8 +85,8 @@ export const IntentLine = ({ sensitivity = 80 }: { sensitivity?: number }) => {
             // Released together (within threshold) - trigger the send sequence with animation
             setIsAnimatingOut(true);
             
-            // Animate the line disappearing from cursor side over 50ms
-            const animationDuration = 50;
+            // Animate the line disappearing from cursor side
+            const animationDuration = easeIn;
             const startTime = Date.now();
             const originalLine = line;
             
@@ -132,8 +132,8 @@ export const IntentLine = ({ sensitivity = 80 }: { sensitivity?: number }) => {
             // Released apart (more than threshold) - cancel with animation from button to cursor
             setIsAnimatingOut(true);
             
-            // Animate the line disappearing from button side over 50ms
-            const animationDuration = 50;
+            // Animate the line disappearing from button side
+            const animationDuration = easeIn;
             const startTime = Date.now();
             const originalLine = line;
             
