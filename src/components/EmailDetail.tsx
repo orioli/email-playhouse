@@ -104,6 +104,56 @@ export const EmailDetail = ({ isComposing, onClose, onSend, onReply }: EmailDeta
           <div className="prose prose-sm max-w-none">
             <h2 className="text-xl font-semibold mb-4">🖱️ MousePilot – Quick Instructions</h2>
             
+            {/* Chord Lasso Visual */}
+            <div className="mb-6">
+              <svg width="200" height="20" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                  <pattern
+                    id="lassoStripes"
+                    patternUnits="userSpaceOnUse"
+                    width="20"
+                    height="3"
+                    patternTransform="rotate(0)"
+                  >
+                    <rect width="10" height="3" fill="#10b981" />
+                    <rect x="10" width="10" height="3" fill="#059669" />
+                    <animateTransform
+                      attributeName="patternTransform"
+                      type="translate"
+                      from="0 0"
+                      to="20 0"
+                      dur="0.5s"
+                      repeatCount="indefinite"
+                    />
+                  </pattern>
+                </defs>
+                
+                {/* Glow line */}
+                <line
+                  x1="0"
+                  y1="10"
+                  x2="200"
+                  y2="10"
+                  stroke="#10b981"
+                  strokeWidth="5"
+                  strokeLinecap="round"
+                  opacity="0.3"
+                  filter="blur(4px)"
+                />
+                
+                {/* Main line */}
+                <line
+                  x1="0"
+                  y1="10"
+                  x2="200"
+                  y2="10"
+                  stroke="url(#lassoStripes)"
+                  strokeWidth="3"
+                  strokeLinecap="round"
+                />
+              </svg>
+            </div>
+            
             <div className="mb-4">
               <h3 className="text-lg font-semibold mb-2">1️⃣ Activate:</h3>
               <p className="mb-2">Press and hold 🆀 + 🆆</p>
