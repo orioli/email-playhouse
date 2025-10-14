@@ -145,6 +145,11 @@ const Index = () => {
         sensitivity={sensitivity} 
         easeIn={easeIn} 
         onChordActivated={() => setChordCount(prev => prev + 1)}
+        onActionConfirmed={() => {
+          if (isComposing) {
+            handleClose();
+          }
+        }}
       />
       <EmailHeader />
       <div className="flex-1 flex overflow-hidden">
