@@ -10,7 +10,7 @@ import { useToast } from "@/hooks/use-toast";
 const mockEmails = [
   {
     id: "1",
-    sender: "🖱️ MousePilot – Quick Instructions  jsoeberengueres",
+    sender: "Jose Berengueres\n🖱️ MousePilot – Quick Instructions",
     subject: "Press Q + W at same time",
     preview: "Discover the powerful keyboard chord interaction system that revolutionizes how you interact with your email...",
     time: "10:30 AM",
