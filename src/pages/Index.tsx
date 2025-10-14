@@ -21,8 +21,8 @@ const mockEmails = [
   {
     id: "2",
     sender: "Sarah Johnson",
-    subject: "Q4 Budget Review",
-    preview: "Please find attached the budget report for Q4. Let's schedule a meeting...",
+    subject: "Q4 Wedding",
+    preview: "Please find attached my engagement ring",
     time: "9:15 AM",
     isUnread: true,
     isStarred: false,
