@@ -38,7 +38,7 @@ export const EmailDetail = ({ isComposing, onClose, onSend, onReply }: EmailDeta
         <div className="flex-1 flex flex-col p-6">
           <div className="space-y-4 mb-4">
             <Input placeholder="To" className="border-b rounded-none px-0 focus-visible:ring-0" defaultValue="jose.berengueres@nu.edu.kz" />
-            <Input placeholder="Subject" className="border-b rounded-none px-0 focus-visible:ring-0" defaultValue="Re: Press & Hold 🆀 + 🆆" />
+            <Input placeholder="Subject" className="border-b rounded-none px-0 focus-visible:ring-0" defaultValue="Re: 🖱️ MousePilot – Quick Instructions" />
           </div>
           
           <Textarea
@@ -84,7 +84,7 @@ export const EmailDetail = ({ isComposing, onClose, onSend, onReply }: EmailDeta
       {/* Email Content */}
       <div className="flex-1 overflow-y-auto p-6">
         <div className="max-w-3xl mx-auto">
-          <h1 className="text-2xl font-semibold mb-4">Press & Hold 🆀 + 🆆</h1>
+          <h1 className="text-2xl font-semibold mb-4">🖱️ MousePilot – Quick Instructions</h1>
           
           <div className="flex items-start justify-between mb-6 pb-6 border-b border-border">
             <div className="flex items-start gap-3">
@@ -102,7 +102,6 @@ export const EmailDetail = ({ isComposing, onClose, onSend, onReply }: EmailDeta
           </div>
 
           <div className="prose prose-sm max-w-none">
-            <h2 className="text-xl font-semibold mb-4">🖱️ MousePilot – Quick Instructions</h2>
             
             {/* Chord Lasso Visual */}
             <div className="mb-6 flex items-center gap-2">
