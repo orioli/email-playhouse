@@ -248,12 +248,46 @@ export const IntentLine = ({ sensitivity = 70, easeIn = 200, onChordActivated, o
     };
   }, [cursorPos, keysPressed, isLineActive, initialCursorPos, isIgnoringKeys]);
 
-  if (!line || !buttonRect) return null;
-
-  const angle = Math.atan2(line.y2 - line.y1, line.x2 - line.x1) * (180 / Math.PI);
+  const angle = line && buttonRect ? Math.atan2(line.y2 - line.y1, line.x2 - line.x1) * (180 / Math.PI) : 0;
+  
+  // Check which keys are currently pressed
+  const isQPressed = keysPressed.has("q") || keysPressed.has("keyq");
+  const isWPressed = keysPressed.has("w") || keysPressed.has("keyw");
 
   return (
     <div className="fixed inset-0 pointer-events-none z-50">
+      {/* Key press overlays near mouse cursor */}
+      {isQPressed && (
+        <div 
+          className="absolute flex items-center justify-center bg-gray-400/80 rounded text-2xl"
+          style={{
+            left: cursorPos.x + 20,
+            top: cursorPos.y - 15,
+            width: 30,
+            height: 30,
+            transform: 'translate(-50%, -50%)'
+          }}
+        >
+          🆀
+        </div>
+      )}
+      {isWPressed && (
+        <div 
+          className="absolute flex items-center justify-center bg-gray-400/80 rounded text-2xl"
+          style={{
+            left: cursorPos.x + 20,
+            top: cursorPos.y + 15,
+            width: 30,
+            height: 30,
+            transform: 'translate(-50%, -50%)'
+          }}
+        >
+          🆆
+        </div>
+      )}
+      
+      {/* Intent line visualization */}
+      {line && buttonRect && (
       <svg
         className="absolute inset-0 w-full h-full"
         xmlns="http://www.w3.org/2000/svg"
@@ -382,6 +416,7 @@ export const IntentLine = ({ sensitivity = 70, easeIn = 200, onChordActivated, o
           />
         </g>
       </svg>
+      )}
     </div>
   );
 };
