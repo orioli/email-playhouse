@@ -12,10 +12,25 @@ export const IntentLine = () => {
   const [cursorPos, setCursorPos] = useState({ x: 0, y: 0 });
   const [keysPressed, setKeysPressed] = useState<Set<string>>(new Set());
   const [isLineActive, setIsLineActive] = useState(false);
+  const [initialCursorPos, setInitialCursorPos] = useState({ x: 0, y: 0 });
 
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
-      setCursorPos({ x: e.clientX, y: e.clientY });
+      const newPos = { x: e.clientX, y: e.clientY };
+      setCursorPos(newPos);
+
+      // If line is active and mouse moved more than 5 pixels, hide the line
+      if (isLineActive) {
+        const distance = Math.sqrt(
+          Math.pow(newPos.x - initialCursorPos.x, 2) + 
+          Math.pow(newPos.y - initialCursorPos.y, 2)
+        );
+        
+        if (distance > 5) {
+          setLine(null);
+          setIsLineActive(false);
+        }
+      }
     };
 
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -63,6 +78,7 @@ export const IntentLine = () => {
       const buttonCenterX = buttonRect.left + buttonRect.width / 2;
       const buttonCenterY = buttonRect.top + buttonRect.height / 2;
 
+      setInitialCursorPos(cursorPos);
       setIsLineActive(true);
       setLine({
         x1: cursorPos.x,
@@ -87,7 +103,7 @@ export const IntentLine = () => {
       window.removeEventListener("keydown", handleKeyDown);
       window.removeEventListener("keyup", handleKeyUp);
     };
-  }, [cursorPos, keysPressed, isLineActive]);
+  }, [cursorPos, keysPressed, isLineActive, initialCursorPos]);
 
   if (!line) return null;
 
