@@ -104,12 +104,12 @@ export const EmailDetail = ({ isComposing, onClose, onSend, onReply }: EmailDeta
           <div className="prose prose-sm max-w-none">
             <h2 className="text-xl font-semibold mb-4">🖱️ MousePilot – Quick Instructions</h2>
             
-            {/* Chord Lasso Visual */}
-            <div className="mb-6 flex items-center gap-2">
-              <svg width="200" height="20" xmlns="http://www.w3.org/2000/svg">
+            {/* Infinity Loop */}
+            <div className="mb-6">
+              <svg width="200" height="80" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 80">
                 <defs>
                   <pattern
-                    id="lassoStripes"
+                    id="infinityStripes"
                     patternUnits="userSpaceOnUse"
                     width="20"
                     height="3"
@@ -128,31 +128,26 @@ export const EmailDetail = ({ isComposing, onClose, onSend, onReply }: EmailDeta
                   </pattern>
                 </defs>
                 
-                {/* Glow line */}
-                <line
-                  x1="0"
-                  y1="10"
-                  x2="200"
-                  y2="10"
+                {/* Glow effect */}
+                <path
+                  d="M 50 40 C 50 20, 30 20, 30 40 C 30 60, 50 60, 50 40 C 50 20, 70 20, 100 20 C 130 20, 150 20, 150 40 C 150 60, 130 60, 100 60 C 70 60, 50 60, 50 40"
+                  fill="none"
                   stroke="#10b981"
-                  strokeWidth="5"
-                  strokeLinecap="round"
+                  strokeWidth="15"
                   opacity="0.3"
                   filter="blur(4px)"
                 />
                 
-                {/* Main line */}
-                <line
-                  x1="0"
-                  y1="10"
-                  x2="200"
-                  y2="10"
-                  stroke="url(#lassoStripes)"
-                  strokeWidth="3"
+                {/* Main infinity path with animated stripes */}
+                <path
+                  d="M 50 40 C 50 20, 30 20, 30 40 C 30 60, 50 60, 50 40 C 50 20, 70 20, 100 20 C 130 20, 150 20, 150 40 C 150 60, 130 60, 100 60 C 70 60, 50 60, 50 40"
+                  fill="none"
+                  stroke="url(#infinityStripes)"
+                  strokeWidth="10"
                   strokeLinecap="round"
+                  strokeLinejoin="round"
                 />
               </svg>
-              <span className="text-xl">🖱️</span>
             </div>
             
             <div className="mb-4">
