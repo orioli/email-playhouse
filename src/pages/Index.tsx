@@ -167,7 +167,7 @@ const Index = () => {
   return (
     <div className="h-screen flex flex-col">
       <div 
-        className="fixed z-50 bg-background/50 backdrop-blur-sm border rounded-lg shadow-lg transition-all"
+        className="fixed z-50 bg-background/20 backdrop-blur-sm border rounded-lg shadow-lg transition-all"
         style={{
           left: `${position.x}px`,
           top: `${position.y}px`,
