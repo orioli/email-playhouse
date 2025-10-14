@@ -200,7 +200,7 @@ const Index = () => {
           onMouseDown={handleMouseDown}
         >
           <div className="flex items-center gap-2">
-            <span className="text-lg font-semibold">Your Clicks</span>
+            <span className="text-lg font-semibold">Your Stats</span>
             <span className="text-xl font-bold text-primary">{chordCount}</span>
           </div>
           <button
