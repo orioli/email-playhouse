@@ -181,13 +181,16 @@ export const IntentLine = ({ sensitivity = 70, easeIn = 200, onChordActivated }:
     };
 
     const createIntentLine = () => {
-      // Find the Reply button - looking for button with Reply text
+      // Find the Reply or Send button
       const buttons = Array.from(document.querySelectorAll("button"));
-      const replyButton = buttons.find((btn) => btn.textContent?.includes("Reply") && !btn.textContent?.includes("Reply All"));
+      const targetButton = buttons.find((btn) => 
+        (btn.textContent?.includes("Reply") && !btn.textContent?.includes("Reply All")) ||
+        btn.textContent?.includes("Send")
+      );
       
-      if (!replyButton) return;
+      if (!targetButton) return;
 
-      const rect = replyButton.getBoundingClientRect();
+      const rect = targetButton.getBoundingClientRect();
       const padding = 4;
       
       // Rounded rectangle bounds (4px larger on each side)
