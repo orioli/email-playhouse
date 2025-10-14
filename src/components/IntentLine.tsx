@@ -94,6 +94,7 @@ export const IntentLine = () => {
                 title: "Email sent",
                 description: "Your message has been sent successfully.",
                 duration: 10000,
+                variant: "success" as any,
               });
             }, 300);
           } else {
