@@ -4,6 +4,7 @@ import { EmailList } from "@/components/EmailList";
 import { EmailDetail } from "@/components/EmailDetail";
 import { EmailHeader } from "@/components/EmailHeader";
 import { IntentLine } from "@/components/IntentLine";
+import { Slider } from "@/components/ui/slider";
 
 const mockEmails = [
   {
@@ -92,6 +93,7 @@ const Index = () => {
   const [selectedFolder, setSelectedFolder] = useState("inbox");
   const [selectedEmail, setSelectedEmail] = useState<string | null>("1");
   const [isComposing, setIsComposing] = useState(false);
+  const [sensitivity, setSensitivity] = useState(250);
 
   const handleCompose = () => {
     setIsComposing(true);
@@ -107,7 +109,20 @@ const Index = () => {
 
   return (
     <div className="h-screen flex flex-col">
-      <IntentLine />
+      <div className="fixed top-4 left-1/2 -translate-x-1/2 z-50 bg-background/95 backdrop-blur-sm border rounded-lg p-4 shadow-lg w-80">
+        <div className="flex items-center gap-4">
+          <label className="text-sm font-medium whitespace-nowrap">Sensitivity: {sensitivity}ms</label>
+          <Slider
+            value={[sensitivity]}
+            onValueChange={(value) => setSensitivity(value[0])}
+            min={0}
+            max={560}
+            step={10}
+            className="flex-1"
+          />
+        </div>
+      </div>
+      <IntentLine sensitivity={sensitivity} />
       <EmailHeader />
       <div className="flex-1 flex overflow-hidden">
         <EmailSidebar

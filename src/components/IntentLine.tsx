@@ -8,7 +8,7 @@ interface LineCoordinates {
   y2: number;
 }
 
-export const IntentLine = () => {
+export const IntentLine = ({ sensitivity = 250 }: { sensitivity?: number }) => {
   const { toast } = useToast();
   const [line, setLine] = useState<LineCoordinates | null>(null);
   const [cursorPos, setCursorPos] = useState({ x: 0, y: 0 });
@@ -79,7 +79,7 @@ export const IntentLine = () => {
           // Second key released (the other key)
           const timeDiff = now - (lastKeyReleaseTime || 0);
           
-          if (timeDiff > 250) {
+          if (timeDiff > sensitivity) {
             // More than 250ms apart - trigger the sequence
             // 1. Hide chord
             setLine(null);
