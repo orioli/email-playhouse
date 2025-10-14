@@ -2,13 +2,26 @@ import { X, Reply, ReplyAll, Forward, Trash2, Archive, MoreVertical, Send } from
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
+import { useToast } from "@/hooks/use-toast";
 
 interface EmailDetailProps {
   isComposing: boolean;
   onClose: () => void;
+  onSend?: () => void;
 }
 
-export const EmailDetail = ({ isComposing, onClose }: EmailDetailProps) => {
+export const EmailDetail = ({ isComposing, onClose, onSend }: EmailDetailProps) => {
+  const { toast } = useToast();
+
+  const handleSend = () => {
+    toast({
+      title: "Email sent",
+      description: "Your message has been sent successfully.",
+      duration: 3000,
+    });
+    onSend?.();
+    onClose();
+  };
   if (isComposing) {
     return (
       <div className="flex-1 flex flex-col bg-background">
@@ -35,7 +48,7 @@ export const EmailDetail = ({ isComposing, onClose }: EmailDetailProps) => {
 
         {/* Footer with Send button */}
         <div className="border-t border-border p-4 flex justify-end">
-          <Button size="lg" className="min-w-32">
+          <Button size="lg" className="min-w-32" onClick={handleSend}>
             <Send className="mr-2 h-4 w-4" />
             Send
           </Button>
