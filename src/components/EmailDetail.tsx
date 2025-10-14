@@ -161,7 +161,7 @@ export const EmailDetail = ({ isComposing, onClose, onSend, onReply }: EmailDeta
             </div>
             
             <div className="mb-4">
-              <h3 className="text-lg font-semibold mb-2">2️⃣ Accept Chord (Confirm Action)</h3>
+              <h3 className="text-lg font-semibold mb-2">2️⃣ Accept AI Suggestion</h3>
               <p className="mb-2">Release both <span className="text-2xl inline-block px-1 border border-emerald-500 rounded">🆀</span> and <span className="text-2xl inline-block px-1 border border-emerald-500 rounded">🆆</span> simultaneously</p>
             </div>
             
