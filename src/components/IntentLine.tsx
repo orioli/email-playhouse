@@ -14,6 +14,7 @@ export const IntentLine = () => {
   const [isLineActive, setIsLineActive] = useState(false);
   const [initialCursorPos, setInitialCursorPos] = useState({ x: 0, y: 0 });
   const [isIgnoringKeys, setIsIgnoringKeys] = useState(false);
+  const [circleRadius, setCircleRadius] = useState(0);
 
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
@@ -87,14 +88,26 @@ export const IntentLine = () => {
       const buttonRect = replyButton.getBoundingClientRect();
       const buttonCenterX = buttonRect.left + buttonRect.width / 2;
       const buttonCenterY = buttonRect.top + buttonRect.height / 2;
+      const radius = buttonRect.width / 2;
+
+      // Calculate the shortened line endpoint (stop at circle edge)
+      const dx = buttonCenterX - cursorPos.x;
+      const dy = buttonCenterY - cursorPos.y;
+      const length = Math.sqrt(dx * dx + dy * dy);
+      const shortenedLength = length - radius;
+      const ratio = shortenedLength / length;
+      
+      const shortenedX = cursorPos.x + dx * ratio;
+      const shortenedY = cursorPos.y + dy * ratio;
 
       setInitialCursorPos(cursorPos);
       setIsLineActive(true);
+      setCircleRadius(radius);
       setLine({
         x1: cursorPos.x,
         y1: cursorPos.y,
-        x2: buttonCenterX,
-        y2: buttonCenterY,
+        x2: shortenedX,
+        y2: shortenedY,
       });
 
       // Remove line after animation completes
@@ -118,6 +131,13 @@ export const IntentLine = () => {
   if (!line) return null;
 
   const angle = Math.atan2(line.y2 - line.y1, line.x2 - line.x1) * (180 / Math.PI);
+  
+  // Calculate circle center (extends from line end)
+  const dx = line.x2 - line.x1;
+  const dy = line.y2 - line.y1;
+  const length = Math.sqrt(dx * dx + dy * dy);
+  const circleCenterX = line.x2 + (dx / length) * circleRadius;
+  const circleCenterY = line.y2 + (dy / length) * circleRadius;
 
   return (
     <div className="fixed inset-0 pointer-events-none z-50">
@@ -208,6 +228,28 @@ export const IntentLine = () => {
           stroke="#10b981"
           strokeWidth="5"
           strokeLinecap="round"
+          opacity="0.3"
+          filter="blur(4px)"
+        />
+
+        {/* Circle at the end */}
+        <circle
+          cx={circleCenterX}
+          cy={circleCenterY}
+          r={circleRadius}
+          stroke="url(#stripes)"
+          strokeWidth="3"
+          fill="none"
+          className="animate-in fade-in duration-200"
+        />
+        
+        <circle
+          cx={circleCenterX}
+          cy={circleCenterY}
+          r={circleRadius}
+          stroke="#10b981"
+          strokeWidth="5"
+          fill="none"
           opacity="0.3"
           filter="blur(4px)"
         />
