@@ -148,6 +148,9 @@ const Index = () => {
         onActionConfirmed={() => {
           if (isComposing) {
             handleClose();
+          } else {
+            // From email view, open compose mode
+            handleCompose();
           }
         }}
       />
@@ -169,6 +172,7 @@ const Index = () => {
         <EmailDetail
           isComposing={isComposing}
           onClose={handleClose}
+          onReply={handleCompose}
         />
       </div>
     </div>

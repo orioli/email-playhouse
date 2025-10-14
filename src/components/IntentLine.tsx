@@ -124,7 +124,6 @@ export const IntentLine = ({ sensitivity = 70, easeIn = 200, onChordActivated, o
                 title: "Email sent",
                 description: "Your message has been sent successfully.",
                 duration: 3000,
-                variant: "success" as any,
               });
               
               // Trigger action confirmed callback
