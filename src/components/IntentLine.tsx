@@ -119,13 +119,6 @@ export const IntentLine = ({ sensitivity = 70, easeIn = 200, onChordActivated, o
               setButtonRect(null);
               setIsLineActive(false);
               
-              // Show email sent notification
-              toast({
-                title: "Email sent",
-                description: "Your message has been sent successfully.",
-                duration: 3000,
-              });
-              
               // Trigger action confirmed callback
               onActionConfirmed?.();
             }, 250);

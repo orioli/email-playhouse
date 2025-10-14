@@ -5,6 +5,7 @@ import { EmailDetail } from "@/components/EmailDetail";
 import { EmailHeader } from "@/components/EmailHeader";
 import { IntentLine } from "@/components/IntentLine";
 import { Slider } from "@/components/ui/slider";
+import { useToast } from "@/hooks/use-toast";
 
 const mockEmails = [
   {
@@ -90,6 +91,7 @@ const mockEmails = [
 ];
 
 const Index = () => {
+  const { toast } = useToast();
   const [selectedFolder, setSelectedFolder] = useState("inbox");
   const [selectedEmail, setSelectedEmail] = useState<string | null>("1");
   const [isComposing, setIsComposing] = useState(false);
@@ -147,6 +149,12 @@ const Index = () => {
         onChordActivated={() => setChordCount(prev => prev + 1)}
         onActionConfirmed={() => {
           if (isComposing) {
+            // Show toast when sending from compose mode
+            toast({
+              title: "Email sent",
+              description: "Your message has been sent successfully.",
+              duration: 3000,
+            });
             handleClose();
           } else {
             // From email view, open compose mode
