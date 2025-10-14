@@ -103,7 +103,7 @@ const Index = () => {
   const [discardedSuggestions, setDiscardedSuggestions] = useState(0);
   const [actualClicks, setActualClicks] = useState(0);
   const [isMinimized, setIsMinimized] = useState(false);
-  const [position, setPosition] = useState({ x: 0, y: 16 });
+  const [position, setPosition] = useState({ x: 16, y: 340 });
   const [isDragging, setIsDragging] = useState(false);
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
 
@@ -169,9 +169,8 @@ const Index = () => {
       <div 
         className="fixed z-50 bg-background/50 backdrop-blur-sm border rounded-lg shadow-lg transition-all"
         style={{
-          left: position.x === 0 ? '50%' : `${position.x}px`,
+          left: `${position.x}px`,
           top: `${position.y}px`,
-          transform: position.x === 0 ? 'translateX(-50%)' : 'none',
           width: isMinimized ? '200px' : '384px',
           cursor: isDragging ? 'grabbing' : 'default',
         }}
