@@ -79,8 +79,8 @@ export const IntentLine = ({ sensitivity = 80 }: { sensitivity?: number }) => {
           // Second key released (the other key)
           const timeDiff = now - (lastKeyReleaseTime || 0);
           
-          if (timeDiff > sensitivity) {
-            // More than 250ms apart - trigger the sequence
+          if (timeDiff <= sensitivity) {
+            // Released together (within threshold) - trigger the send sequence
             // 1. Hide chord
             setLine(null);
             
@@ -98,8 +98,9 @@ export const IntentLine = ({ sensitivity = 80 }: { sensitivity?: number }) => {
               });
             }, 300);
           } else {
-            // Less than 250ms apart - just hide immediately
+            // Released apart (more than threshold) - just cancel, no action
             setLine(null);
+            setButtonRect(null);
             setIsLineActive(false);
           }
           
