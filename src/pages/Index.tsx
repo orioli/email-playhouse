@@ -31,7 +31,7 @@ const mockEmails = [
   },
   {
     id: "3",
-    sender: "Marketing Team",
+    sender: "Jack Lo",
     subject: "Campaign Performance Report",
     preview: "Our latest campaign has exceeded expectations with a 45% increase...",
     time: "Yesterday",
@@ -41,7 +41,7 @@ const mockEmails = [
   },
   {
     id: "4",
-    sender: "David Chen",
+    sender: "Jim Jefferies",
     subject: "Project Deadline Extension",
     preview: "Good news! We've secured an extension for the project deadline...",
     time: "Yesterday",
@@ -51,7 +51,7 @@ const mockEmails = [
   },
   {
     id: "5",
-    sender: "HR Department",
+    sender: "Hannah Gadsby",
     subject: "Annual Performance Review",
     preview: "It's time for your annual performance review. Please schedule...",
     time: "2 days ago",
@@ -61,7 +61,7 @@ const mockEmails = [
   },
   {
     id: "6",
-    sender: "Tech Support",
+    sender: "Chris Lilley",
     subject: "System Maintenance Notice",
     preview: "Scheduled maintenance will occur this Saturday from 2 AM to 6 AM...",
     time: "3 days ago",
@@ -71,7 +71,7 @@ const mockEmails = [
   },
   {
     id: "7",
-    sender: "Emily Rodriguez",
+    sender: "Tim Minchin",
     subject: "Client Meeting Notes",
     preview: "Here are the notes from yesterday's client meeting. Key takeaways...",
     time: "3 days ago",
@@ -81,7 +81,7 @@ const mockEmails = [
   },
   {
     id: "8",
-    sender: "Finance Team",
+    sender: "Hamish Blake",
     subject: "Expense Report Approval",
     preview: "Your expense report for March has been approved and processed...",
     time: "4 days ago",
