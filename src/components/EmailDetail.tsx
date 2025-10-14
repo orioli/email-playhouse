@@ -156,7 +156,7 @@ export const EmailDetail = ({ isComposing, onClose, onSend, onReply }: EmailDeta
             </div>
             
             <div className="mb-4">
-              <h3 className="text-lg font-semibold mb-2">1️⃣ Activate AutoComplete</h3>
+              <h3 className="text-lg font-semibold mb-2">1️⃣ Preview AutoComplete</h3>
               <p className="mb-2">Press and hold <span className="text-2xl inline-block px-1 border border-emerald-500 rounded">🆀</span> + <span className="text-2xl inline-block px-1 border border-emerald-500 rounded">🆆</span></p>
             </div>
             
