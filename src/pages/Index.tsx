@@ -131,33 +131,21 @@ const Index = () => {
     return () => window.removeEventListener("click", handleClick);
   }, []);
 
-  // Track total traveled pixels (sample every 5 seconds)
+  // Track total traveled pixels continuously
   useEffect(() => {
-    const intervalId = setInterval(() => {
-      const currentPos = { x: 0, y: 0 };
+    const handleMouseMove = (e: MouseEvent) => {
+      const currentPos = { x: e.clientX, y: e.clientY };
       
-      const handleMousePosition = (e: MouseEvent) => {
-        currentPos.x = e.clientX;
-        currentPos.y = e.clientY;
-      };
+      if (lastSampledPosition) {
+        const distance = Math.abs(currentPos.x - lastSampledPosition.x) + Math.abs(currentPos.y - lastSampledPosition.y);
+        setTotalTraveledPixels(prev => prev + distance);
+      }
       
-      window.addEventListener('mousemove', handleMousePosition, { once: true });
-      
-      setTimeout(() => {
-        window.removeEventListener('mousemove', handleMousePosition);
-        
-        if (lastSampledPosition && (currentPos.x !== 0 || currentPos.y !== 0)) {
-          const distance = Math.abs(currentPos.x - lastSampledPosition.x) + Math.abs(currentPos.y - lastSampledPosition.y);
-          setTotalTraveledPixels(prev => prev + distance);
-        }
-        
-        if (currentPos.x !== 0 || currentPos.y !== 0) {
-          setLastSampledPosition(currentPos);
-        }
-      }, 100);
-    }, 5000);
+      setLastSampledPosition(currentPos);
+    };
     
-    return () => clearInterval(intervalId);
+    window.addEventListener('mousemove', handleMouseMove);
+    return () => window.removeEventListener('mousemove', handleMouseMove);
   }, [lastSampledPosition]);
 
   // Handle dragging
