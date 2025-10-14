@@ -174,6 +174,17 @@ export const EmailDetail = ({ isComposing, onClose, onSend, onReply }: EmailDeta
                 <li>Release 🆆 first</li>
               </ul>
               <hr className="mt-4 border-border" />
+              <p className="mt-4">
+                Read more about our research at:{" "}
+                <a 
+                  href="https://dl.acm.org/doi/10.1145/3759241" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="text-primary hover:underline"
+                >
+                  https://dl.acm.org/doi/10.1145/3759241
+                </a>
+              </p>
             </div>
           </div>
         </div>
