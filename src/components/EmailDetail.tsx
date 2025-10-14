@@ -158,12 +158,12 @@ export const EmailDetail = ({ isComposing, onClose, onSend, onReply }: EmailDeta
             
             <div className="mb-4">
               <h3 className="text-lg font-semibold mb-2">1️⃣ Activate:</h3>
-              <p className="mb-2">Press and hold 🆀 + 🆆</p>
+              <p className="mb-2">Press and hold <span className="text-2xl">🆀</span> + <span className="text-2xl">🆆</span></p>
             </div>
             
             <div className="mb-4">
               <h3 className="text-lg font-semibold mb-2">2️⃣ Accept (Confirm Action):</h3>
-              <p className="mb-2">Release both 🆀 and 🆆 simultaneously</p>
+              <p className="mb-2">Release both <span className="text-2xl">🆀</span> and <span className="text-2xl">🆆</span> simultaneously</p>
             </div>
             
             <div className="mb-4">
@@ -171,7 +171,7 @@ export const EmailDetail = ({ isComposing, onClose, onSend, onReply }: EmailDeta
               <p className="mb-2">Either:</p>
               <ul className="list-disc ml-6">
                 <li>Move the mouse, or</li>
-                <li>Release 🆆 first</li>
+                <li>Release <span className="text-2xl">🆆</span> first</li>
               </ul>
               <hr className="mt-4 border-border" />
               <p className="mt-4">
