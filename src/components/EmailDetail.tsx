@@ -28,7 +28,7 @@ export const EmailDetail = ({ isComposing, onClose, onSend, onReply }: EmailDeta
       <div className="flex-1 flex flex-col bg-background">
         {/* Header with Close button */}
         <div className="border-b border-border p-4 flex items-center justify-between">
-          <h2 className="text-lg font-semibold">Reply to: John Smith</h2>
+          <h2 className="text-lg font-semibold">Reply to: Jose Berengueres</h2>
           <Button variant="ghost" size="icon" onClick={onClose}>
             <X className="h-5 w-5" />
           </Button>
@@ -37,14 +37,14 @@ export const EmailDetail = ({ isComposing, onClose, onSend, onReply }: EmailDeta
         {/* Compose Form */}
         <div className="flex-1 flex flex-col p-6">
           <div className="space-y-4 mb-4">
-            <Input placeholder="To" className="border-b rounded-none px-0 focus-visible:ring-0" defaultValue="john.smith@company.com" />
+            <Input placeholder="To" className="border-b rounded-none px-0 focus-visible:ring-0" defaultValue="jose.berengueres@nu.edu.kz" />
             <Input placeholder="Subject" className="border-b rounded-none px-0 focus-visible:ring-0" defaultValue="Re: Press Q + W at same time" />
           </div>
           
           <Textarea
             placeholder="Compose your message..."
             className="flex-1 resize-none border-0 focus-visible:ring-0 p-0"
-            defaultValue={"\n\n---\nOn 10:30 AM, John Smith wrote:\n> Welcome to the Keyboard Chord Interaction System - a revolutionary way to interact with your email client using intuitive keyboard shortcuts."}
+            defaultValue={"\n\n---\nOn 10:30 AM, Jose Berengueres wrote:\n> Welcome to the Keyboard Chord Interaction System - a revolutionary way to interact with your email client using intuitive keyboard shortcuts."}
           />
         </div>
 
@@ -92,8 +92,8 @@ export const EmailDetail = ({ isComposing, onClose, onSend, onReply }: EmailDeta
                 JS
               </div>
               <div>
-                <div className="font-semibold">John Smith</div>
-                <div className="text-sm text-muted-foreground">john.smith@company.com</div>
+                <div className="font-semibold">Jose Berengueres</div>
+                <div className="text-sm text-muted-foreground">jose.berengueres@nu.edu.kz</div>
               </div>
             </div>
             <div className="text-sm text-muted-foreground">
