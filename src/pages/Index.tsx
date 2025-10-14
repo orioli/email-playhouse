@@ -263,8 +263,8 @@ const Index = () => {
               <div className="flex justify-between">
                 <span className="text-muted-foreground">Savings:</span>
                 <span className="font-medium">
-                  {totalTraveledPixels > 0 ? Math.round((unteraveledPixels / totalTraveledPixels) * 100) : 0}% less travel · 
-                  {actualClicks > 0 ? Math.round((chordCount / actualClicks) * 100) : 0}% less clicks
+                  {(totalTraveledPixels + unteraveledPixels) > 0 ? Math.round((unteraveledPixels / (totalTraveledPixels + unteraveledPixels)) * 100) : 0}% less travel · 
+                  {(actualClicks + chordCount) > 0 ? Math.round((chordCount / (actualClicks + chordCount)) * 100) : 0}% less clicks
                 </span>
               </div>
             </div>
