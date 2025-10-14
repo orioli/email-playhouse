@@ -39,6 +39,17 @@ export const IntentLine = () => {
       newKeys.delete(e.key.toLowerCase());
       newKeys.delete(e.code.toLowerCase());
       setKeysPressed(newKeys);
+
+      // If line is active and either Q or W is released, hide the line immediately
+      if (isLineActive) {
+        const releasedQ = e.key.toLowerCase() === "q" || e.code.toLowerCase() === "keyq";
+        const releasedW = e.key.toLowerCase() === "w" || e.code.toLowerCase() === "keyw";
+        
+        if (releasedQ || releasedW) {
+          setLine(null);
+          setIsLineActive(false);
+        }
+      }
     };
 
     const createIntentLine = () => {
