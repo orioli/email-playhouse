@@ -356,28 +356,46 @@ export const IntentLine = ({ sensitivity = 70, easeIn = 200, onChordActivated, o
           </pattern>
         </defs>
 
-        <line
-          x1={line.x1}
-          y1={line.y1}
-          x2={line.x2}
-          y2={line.y2}
-          stroke="url(#stripes)"
-          strokeWidth="3"
-          strokeLinecap="round"
-          className="animate-in fade-in duration-200"
-        />
+        {(() => {
+          // Calculate screen center
+          const centerX = window.innerWidth / 2;
+          const centerY = window.innerHeight / 2;
+          
+          // Calculate control points for S-curve
+          // First control point: bias towards screen center from start point
+          const cp1x = line.x1 + (centerX - line.x1) * 0.5;
+          const cp1y = line.y1 + (centerY - line.y1) * 0.5;
+          
+          // Second control point: bias towards screen center from end point
+          const cp2x = line.x2 + (centerX - line.x2) * 0.3;
+          const cp2y = line.y2 + (centerY - line.y2) * 0.3;
+          
+          // Create SVG path data for cubic bezier curve
+          const pathData = `M ${line.x1} ${line.y1} C ${cp1x} ${cp1y}, ${cp2x} ${cp2y}, ${line.x2} ${line.y2}`;
+          
+          return (
+            <>
+              <path
+                d={pathData}
+                stroke="url(#stripes)"
+                strokeWidth="3"
+                strokeLinecap="round"
+                fill="none"
+                className="animate-in fade-in duration-200"
+              />
 
-        <line
-          x1={line.x1}
-          y1={line.y1}
-          x2={line.x2}
-          y2={line.y2}
-          stroke="#10b981"
-          strokeWidth="5"
-          strokeLinecap="round"
-          opacity="0.3"
-          filter="blur(4px)"
-        />
+              <path
+                d={pathData}
+                stroke="#10b981"
+                strokeWidth="5"
+                strokeLinecap="round"
+                fill="none"
+                opacity="0.3"
+                filter="blur(4px)"
+              />
+            </>
+          );
+        })()}
 
         {/* Rounded rectangle at the end */}
         <rect
