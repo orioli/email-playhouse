@@ -173,6 +173,7 @@ export const EmailDetail = ({ isComposing, onClose, onSend, onReply }: EmailDeta
                 <li>Move the mouse, or</li>
                 <li>Release 🆆 first</li>
               </ul>
+              <hr className="mt-4 border-border" />
             </div>
           </div>
         </div>
