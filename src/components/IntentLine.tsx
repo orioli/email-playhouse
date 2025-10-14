@@ -14,7 +14,7 @@ export const IntentLine = () => {
   const [isLineActive, setIsLineActive] = useState(false);
   const [initialCursorPos, setInitialCursorPos] = useState({ x: 0, y: 0 });
   const [isIgnoringKeys, setIsIgnoringKeys] = useState(false);
-  const [circleRadius, setCircleRadius] = useState(0);
+  const [buttonRect, setButtonRect] = useState<{ x: number; y: number; width: number; height: number } | null>(null);
 
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
@@ -85,16 +85,26 @@ export const IntentLine = () => {
       
       if (!replyButton) return;
 
-      const buttonRect = replyButton.getBoundingClientRect();
-      const buttonCenterX = buttonRect.left + buttonRect.width / 2;
-      const buttonCenterY = buttonRect.top + buttonRect.height / 2;
-      const radius = buttonRect.width / 2;
+      const rect = replyButton.getBoundingClientRect();
+      const padding = 4;
+      
+      // Rounded rectangle bounds (4px larger on each side)
+      const rectX = rect.left - padding;
+      const rectY = rect.top - padding;
+      const rectWidth = rect.width + padding * 2;
+      const rectHeight = rect.height + padding * 2;
+      
+      const buttonCenterX = rect.left + rect.width / 2;
+      const buttonCenterY = rect.top + rect.height / 2;
 
-      // Calculate the shortened line endpoint (stop at circle edge)
+      // Calculate direction and shorten line to stop at rectangle edge
       const dx = buttonCenterX - cursorPos.x;
       const dy = buttonCenterY - cursorPos.y;
       const length = Math.sqrt(dx * dx + dy * dy);
-      const shortenedLength = length - radius;
+      
+      // Approximate distance to rectangle edge (using average of width/height)
+      const avgDimension = (rectWidth + rectHeight) / 4;
+      const shortenedLength = length - avgDimension;
       const ratio = shortenedLength / length;
       
       const shortenedX = cursorPos.x + dx * ratio;
@@ -102,7 +112,7 @@ export const IntentLine = () => {
 
       setInitialCursorPos(cursorPos);
       setIsLineActive(true);
-      setCircleRadius(radius);
+      setButtonRect({ x: rectX, y: rectY, width: rectWidth, height: rectHeight });
       setLine({
         x1: cursorPos.x,
         y1: cursorPos.y,
@@ -128,16 +138,9 @@ export const IntentLine = () => {
     };
   }, [cursorPos, keysPressed, isLineActive, initialCursorPos, isIgnoringKeys]);
 
-  if (!line) return null;
+  if (!line || !buttonRect) return null;
 
   const angle = Math.atan2(line.y2 - line.y1, line.x2 - line.x1) * (180 / Math.PI);
-  
-  // Calculate circle center (extends from line end)
-  const dx = line.x2 - line.x1;
-  const dy = line.y2 - line.y1;
-  const length = Math.sqrt(dx * dx + dy * dy);
-  const circleCenterX = line.x2 + (dx / length) * circleRadius;
-  const circleCenterY = line.y2 + (dy / length) * circleRadius;
 
   return (
     <div className="fixed inset-0 pointer-events-none z-50">
@@ -232,21 +235,27 @@ export const IntentLine = () => {
           filter="blur(4px)"
         />
 
-        {/* Circle at the end */}
-        <circle
-          cx={circleCenterX}
-          cy={circleCenterY}
-          r={circleRadius}
+        {/* Rounded rectangle at the end */}
+        <rect
+          x={buttonRect.x}
+          y={buttonRect.y}
+          width={buttonRect.width}
+          height={buttonRect.height}
+          rx="6"
+          ry="6"
           stroke="url(#stripes)"
           strokeWidth="3"
           fill="none"
           className="animate-in fade-in duration-200"
         />
         
-        <circle
-          cx={circleCenterX}
-          cy={circleCenterY}
-          r={circleRadius}
+        <rect
+          x={buttonRect.x}
+          y={buttonRect.y}
+          width={buttonRect.width}
+          height={buttonRect.height}
+          rx="6"
+          ry="6"
           stroke="#10b981"
           strokeWidth="5"
           fill="none"
