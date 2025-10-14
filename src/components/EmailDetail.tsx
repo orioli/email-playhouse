@@ -69,7 +69,7 @@ export const EmailDetail = ({ isComposing, onClose }: EmailDetailProps) => {
       {/* Email Content */}
       <div className="flex-1 overflow-y-auto p-6">
         <div className="max-w-3xl mx-auto">
-          <h1 className="text-2xl font-semibold mb-4">Weekly Team Update</h1>
+          <h1 className="text-2xl font-semibold mb-4">Press Q + W at same time</h1>
           
           <div className="flex items-start justify-between mb-6 pb-6 border-b border-border">
             <div className="flex items-start gap-3">
@@ -87,27 +87,38 @@ export const EmailDetail = ({ isComposing, onClose }: EmailDetailProps) => {
           </div>
 
           <div className="prose prose-sm max-w-none">
-            <p className="mb-4">Hi team,</p>
+            <p className="mb-4">Hello!</p>
             <p className="mb-4">
-              I wanted to share a quick update on our progress this week. We've made significant strides in several key areas:
+              Welcome to the Keyboard Chord Interaction System - a revolutionary way to interact with your email client using intuitive keyboard shortcuts.
             </p>
+            
+            <h3 className="text-lg font-semibold mt-6 mb-3">How It Works</h3>
+            <p className="mb-4">
+              Simply press Q and W keys together to activate an intent line that connects your cursor to the Reply button. This visual feedback system helps you understand exactly what action you're about to perform.
+            </p>
+            
+            <h3 className="text-lg font-semibold mt-6 mb-3">Key Features</h3>
             <ul className="mb-4 space-y-2">
-              <li>Completed the frontend redesign for the dashboard</li>
-              <li>Fixed critical bugs in the payment processing system</li>
-              <li>Started work on the mobile app integration</li>
+              <li><strong>Visual Intent Line:</strong> A beautiful animated line appears connecting your cursor to the target action</li>
+              <li><strong>Precise Timing Control:</strong> Release both keys within the sensitivity window (default 70ms) to confirm the action</li>
+              <li><strong>Motion Cancellation:</strong> Move your mouse to cancel the action if you change your mind</li>
+              <li><strong>Smooth Animations:</strong> Elegant ease-in animations (200ms) make every interaction feel polished</li>
+              <li><strong>Activity Tracking:</strong> A counter at the top tracks how many successful chord activations you've made</li>
             </ul>
-            <p className="mb-4">
-              Looking ahead to next week, our priorities will be:
-            </p>
+            
+            <h3 className="text-lg font-semibold mt-6 mb-3">Benefits</h3>
             <ol className="mb-4 space-y-2">
-              <li>Launch the new dashboard to beta users</li>
-              <li>Complete security audit for the payment system</li>
-              <li>Continue mobile app development</li>
+              <li><strong>Speed:</strong> Execute actions faster than traditional clicking</li>
+              <li><strong>Precision:</strong> Built-in confirmation mechanism prevents accidental actions</li>
+              <li><strong>Ergonomics:</strong> Keep your hands on the keyboard for a seamless workflow</li>
+              <li><strong>Visual Feedback:</strong> Always know what action you're about to perform before committing</li>
+              <li><strong>Customizable:</strong> Adjust sensitivity and animation timing to match your preferences</li>
             </ol>
+            
             <p className="mb-4">
-              Please let me know if you have any questions or concerns.
+              Try it now! Press Q + W together while reading this email, then release both keys at the same time to send a reply.
             </p>
-            <p>Best regards,<br />John</p>
+            <p>Happy emailing!<br />John</p>
           </div>
         </div>
       </div>

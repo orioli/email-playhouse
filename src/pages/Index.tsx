@@ -10,8 +10,8 @@ const mockEmails = [
   {
     id: "1",
     sender: "John Smith",
-    subject: "Weekly Team Update",
-    preview: "Hi team, I wanted to share a quick update on our progress this week...",
+    subject: "Press Q + W at same time",
+    preview: "Discover the powerful keyboard chord interaction system that revolutionizes how you interact with your email...",
     time: "10:30 AM",
     isUnread: true,
     isStarred: true,
