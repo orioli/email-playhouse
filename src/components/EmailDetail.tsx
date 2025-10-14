@@ -108,18 +108,24 @@ export const EmailDetail = ({ isComposing, onClose, onSend, onReply }: EmailDeta
             <div className="mb-6">
               <svg width="200" height="80" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 80">
                 <defs>
-                  <linearGradient id="infinityGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                    <stop offset="0%" stopColor="#059669" />
-                    <stop offset="50%" stopColor="#10b981" />
-                    <stop offset="100%" stopColor="#059669" />
-                  </linearGradient>
-                  <filter id="infinityGlow">
-                    <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
-                    <feMerge>
-                      <feMergeNode in="coloredBlur"/>
-                      <feMergeNode in="SourceGraphic"/>
-                    </feMerge>
-                  </filter>
+                  <pattern
+                    id="infinityStripes"
+                    patternUnits="userSpaceOnUse"
+                    width="20"
+                    height="3"
+                    patternTransform="rotate(0)"
+                  >
+                    <rect width="10" height="3" fill="#10b981" />
+                    <rect x="10" width="10" height="3" fill="#059669" />
+                    <animateTransform
+                      attributeName="patternTransform"
+                      type="translate"
+                      from="0 0"
+                      to="20 0"
+                      dur="0.5s"
+                      repeatCount="indefinite"
+                    />
+                  </pattern>
                 </defs>
                 
                 {/* Glow effect */}
@@ -127,20 +133,19 @@ export const EmailDetail = ({ isComposing, onClose, onSend, onReply }: EmailDeta
                   d="M 50 40 C 50 20, 30 20, 30 40 C 30 60, 50 60, 50 40 C 50 20, 70 20, 100 20 C 130 20, 150 20, 150 40 C 150 60, 130 60, 100 60 C 70 60, 50 60, 50 40"
                   fill="none"
                   stroke="#10b981"
-                  strokeWidth="18"
+                  strokeWidth="15"
                   opacity="0.3"
-                  filter="blur(5px)"
+                  filter="blur(4px)"
                 />
                 
-                {/* Main infinity path */}
+                {/* Main infinity path with animated stripes */}
                 <path
                   d="M 50 40 C 50 20, 30 20, 30 40 C 30 60, 50 60, 50 40 C 50 20, 70 20, 100 20 C 130 20, 150 20, 150 40 C 150 60, 130 60, 100 60 C 70 60, 50 60, 50 40"
                   fill="none"
-                  stroke="url(#infinityGradient)"
-                  strokeWidth="12"
+                  stroke="url(#infinityStripes)"
+                  strokeWidth="10"
                   strokeLinecap="round"
                   strokeLinejoin="round"
-                  filter="url(#infinityGlow)"
                 />
               </svg>
             </div>
