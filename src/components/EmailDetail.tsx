@@ -106,6 +106,7 @@ export const EmailDetail = ({ isComposing, onClose, onSend, onReply }: EmailDeta
             
             {/* Chord Lasso Visual */}
             <div className="mb-6 flex items-center gap-2">
+              <span className="text-xl">🅰️</span>
               <svg width="200" height="20" xmlns="http://www.w3.org/2000/svg">
                 <defs>
                   <pattern
@@ -152,7 +153,7 @@ export const EmailDetail = ({ isComposing, onClose, onSend, onReply }: EmailDeta
                   strokeLinecap="round"
                 />
               </svg>
-              <span className="text-xl">🖱️</span>
+              <span className="text-xl">🅱️</span>
             </div>
             
             <div className="mb-4">
