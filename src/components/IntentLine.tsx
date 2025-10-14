@@ -8,7 +8,7 @@ interface LineCoordinates {
   y2: number;
 }
 
-export const IntentLine = ({ sensitivity = 80, easeIn = 50 }: { sensitivity?: number; easeIn?: number }) => {
+export const IntentLine = ({ sensitivity = 80, easeIn = 50, onChordActivated }: { sensitivity?: number; easeIn?: number; onChordActivated?: () => void }) => {
   const { toast } = useToast();
   const [line, setLine] = useState<LineCoordinates | null>(null);
   const [cursorPos, setCursorPos] = useState({ x: 0, y: 0 });
@@ -57,6 +57,7 @@ export const IntentLine = ({ sensitivity = 80, easeIn = 50 }: { sensitivity?: nu
       if (hasQ && hasW && !isLineActive && !isIgnoringKeys) {
         e.preventDefault();
         createIntentLine();
+        onChordActivated?.();
       }
     };
 

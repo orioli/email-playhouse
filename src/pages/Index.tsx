@@ -95,6 +95,7 @@ const Index = () => {
   const [isComposing, setIsComposing] = useState(false);
   const [sensitivity, setSensitivity] = useState(80);
   const [easeIn, setEaseIn] = useState(50);
+  const [chordCount, setChordCount] = useState(0);
 
   const handleCompose = () => {
     setIsComposing(true);
@@ -112,6 +113,10 @@ const Index = () => {
     <div className="h-screen flex flex-col">
       <div className="fixed top-4 left-1/2 -translate-x-1/2 z-50 bg-background/95 backdrop-blur-sm border rounded-lg p-4 shadow-lg w-96">
         <div className="space-y-3">
+          <div className="text-center pb-2 border-b">
+            <span className="text-lg font-semibold">Chord Count: </span>
+            <span className="text-2xl font-bold text-primary">{chordCount}</span>
+          </div>
           <div className="flex items-center gap-4">
             <label className="text-sm font-medium whitespace-nowrap">Sensitivity: {sensitivity}ms</label>
             <Slider
@@ -136,7 +141,11 @@ const Index = () => {
           </div>
         </div>
       </div>
-      <IntentLine sensitivity={sensitivity} easeIn={easeIn} />
+      <IntentLine 
+        sensitivity={sensitivity} 
+        easeIn={easeIn} 
+        onChordActivated={() => setChordCount(prev => prev + 1)}
+      />
       <EmailHeader />
       <div className="flex-1 flex overflow-hidden">
         <EmailSidebar
