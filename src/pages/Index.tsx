@@ -113,8 +113,8 @@ const Index = () => {
     <div className="h-screen flex flex-col">
       <div className="fixed top-4 left-1/2 -translate-x-1/2 z-50 bg-background/50 backdrop-blur-sm border rounded-lg p-4 shadow-lg w-96">
         <div className="space-y-3">
-          <div className="text-center pb-2 border-b">
-            <span className="text-lg font-semibold">Chord Count: </span>
+          <div className="flex justify-between items-center pb-2 border-b">
+            <span className="text-lg font-semibold">MousePilot™</span>
             <span className="text-2xl font-bold text-primary">{chordCount}</span>
           </div>
           <div className="flex items-center gap-4">
