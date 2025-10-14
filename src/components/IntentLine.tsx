@@ -19,6 +19,8 @@ export const IntentLine = ({ sensitivity = 80 }: { sensitivity?: number }) => {
   const [buttonRect, setButtonRect] = useState<{ x: number; y: number; width: number; height: number } | null>(null);
   const [lastKeyReleaseTime, setLastKeyReleaseTime] = useState<number | null>(null);
   const [firstKeyReleased, setFirstKeyReleased] = useState<string | null>(null);
+  const [isAnimatingOut, setIsAnimatingOut] = useState(false);
+  const [animationProgress, setAnimationProgress] = useState(0);
 
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
@@ -80,23 +82,52 @@ export const IntentLine = ({ sensitivity = 80 }: { sensitivity?: number }) => {
           const timeDiff = now - (lastKeyReleaseTime || 0);
           
           if (timeDiff <= sensitivity) {
-            // Released together (within threshold) - trigger the send sequence
-            // 1. Hide chord
-            setLine(null);
+            // Released together (within threshold) - trigger the send sequence with animation
+            setIsAnimatingOut(true);
             
-            // 2. Hide box after a brief delay
-            setTimeout(() => {
-              setButtonRect(null);
-              setIsLineActive(false);
+            // Animate the line disappearing from cursor side over 50ms
+            const animationDuration = 50;
+            const startTime = Date.now();
+            const originalLine = line;
+            
+            const animateLineOut = () => {
+              const elapsed = Date.now() - startTime;
+              const progress = Math.min(elapsed / animationDuration, 1);
               
-              // 3. Show email sent notification
-              toast({
-                title: "Email sent",
-                description: "Your message has been sent successfully.",
-                duration: 10000,
-                variant: "success" as any,
-              });
-            }, 300);
+              if (progress < 1 && originalLine) {
+                // Interpolate from cursor (x1, y1) towards button (x2, y2)
+                const newX1 = originalLine.x1 + (originalLine.x2 - originalLine.x1) * progress;
+                const newY1 = originalLine.y1 + (originalLine.y2 - originalLine.y1) * progress;
+                
+                setLine({
+                  x1: newX1,
+                  y1: newY1,
+                  x2: originalLine.x2,
+                  y2: originalLine.y2,
+                });
+                
+                requestAnimationFrame(animateLineOut);
+              } else {
+                // Animation complete - hide everything and show toast
+                setLine(null);
+                setIsAnimatingOut(false);
+                
+                setTimeout(() => {
+                  setButtonRect(null);
+                  setIsLineActive(false);
+                  
+                  // Show email sent notification
+                  toast({
+                    title: "Email sent",
+                    description: "Your message has been sent successfully.",
+                    duration: 10000,
+                    variant: "success" as any,
+                  });
+                }, 250);
+              }
+            };
+            
+            requestAnimationFrame(animateLineOut);
           } else {
             // Released apart (more than threshold) - just cancel, no action
             setLine(null);
