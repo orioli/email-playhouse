@@ -93,7 +93,7 @@ const Index = () => {
   const [selectedFolder, setSelectedFolder] = useState("inbox");
   const [selectedEmail, setSelectedEmail] = useState<string | null>("1");
   const [isComposing, setIsComposing] = useState(false);
-  const [sensitivity, setSensitivity] = useState(250);
+  const [sensitivity, setSensitivity] = useState(80);
 
   const handleCompose = () => {
     setIsComposing(true);
