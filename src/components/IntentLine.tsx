@@ -129,10 +129,41 @@ export const IntentLine = ({ sensitivity = 80 }: { sensitivity?: number }) => {
             
             requestAnimationFrame(animateLineOut);
           } else {
-            // Released apart (more than threshold) - just cancel, no action
-            setLine(null);
-            setButtonRect(null);
-            setIsLineActive(false);
+            // Released apart (more than threshold) - cancel with animation from button to cursor
+            setIsAnimatingOut(true);
+            
+            // Animate the line disappearing from button side over 50ms
+            const animationDuration = 50;
+            const startTime = Date.now();
+            const originalLine = line;
+            
+            const animateLineOut = () => {
+              const elapsed = Date.now() - startTime;
+              const progress = Math.min(elapsed / animationDuration, 1);
+              
+              if (progress < 1 && originalLine) {
+                // Interpolate from button (x2, y2) towards cursor (x1, y1)
+                const newX2 = originalLine.x2 + (originalLine.x1 - originalLine.x2) * progress;
+                const newY2 = originalLine.y2 + (originalLine.y1 - originalLine.y2) * progress;
+                
+                setLine({
+                  x1: originalLine.x1,
+                  y1: originalLine.y1,
+                  x2: newX2,
+                  y2: newY2,
+                });
+                
+                requestAnimationFrame(animateLineOut);
+              } else {
+                // Animation complete - hide everything
+                setLine(null);
+                setButtonRect(null);
+                setIsLineActive(false);
+                setIsAnimatingOut(false);
+              }
+            };
+            
+            requestAnimationFrame(animateLineOut);
           }
           
           // Reset tracking
