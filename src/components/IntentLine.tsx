@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useToast } from "@/hooks/use-toast";
 
 interface LineCoordinates {
   x1: number;
@@ -8,6 +9,7 @@ interface LineCoordinates {
 }
 
 export const IntentLine = () => {
+  const { toast } = useToast();
   const [line, setLine] = useState<LineCoordinates | null>(null);
   const [cursorPos, setCursorPos] = useState({ x: 0, y: 0 });
   const [keysPressed, setKeysPressed] = useState<Set<string>>(new Set());
@@ -15,6 +17,8 @@ export const IntentLine = () => {
   const [initialCursorPos, setInitialCursorPos] = useState({ x: 0, y: 0 });
   const [isIgnoringKeys, setIsIgnoringKeys] = useState(false);
   const [buttonRect, setButtonRect] = useState<{ x: number; y: number; width: number; height: number } | null>(null);
+  const [lastKeyReleaseTime, setLastKeyReleaseTime] = useState<number | null>(null);
+  const [firstKeyReleased, setFirstKeyReleased] = useState<string | null>(null);
 
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
@@ -58,21 +62,53 @@ export const IntentLine = () => {
       newKeys.delete(e.code.toLowerCase());
       setKeysPressed(newKeys);
 
-      // If line is active and either Q or W is released, hide the line immediately
-      if (isLineActive) {
-        const releasedQ = e.key.toLowerCase() === "q" || e.code.toLowerCase() === "keyq";
-        const releasedW = e.key.toLowerCase() === "w" || e.code.toLowerCase() === "keyw";
-        
-        if (releasedQ || releasedW) {
-          setLine(null);
-          setIsLineActive(false);
+      const releasedQ = e.key.toLowerCase() === "q" || e.code.toLowerCase() === "keyq";
+      const releasedW = e.key.toLowerCase() === "w" || e.code.toLowerCase() === "keyw";
+
+      // If line is active and either Q or W is released
+      if (isLineActive && (releasedQ || releasedW)) {
+        const now = Date.now();
+        const releasedKey = releasedQ ? "q" : "w";
+
+        // Check if this is the first key release or second
+        if (!firstKeyReleased) {
+          // First key released
+          setFirstKeyReleased(releasedKey);
+          setLastKeyReleaseTime(now);
+        } else if (firstKeyReleased !== releasedKey) {
+          // Second key released (the other key)
+          const timeDiff = now - (lastKeyReleaseTime || 0);
+          
+          if (timeDiff > 250) {
+            // More than 250ms apart - trigger the sequence
+            // 1. Hide chord
+            setLine(null);
+            
+            // 2. Hide box after a brief delay
+            setTimeout(() => {
+              setButtonRect(null);
+              setIsLineActive(false);
+              
+              // 3. Show email sent notification
+              toast({
+                title: "Email sent",
+                description: "Your message has been sent successfully.",
+                duration: 10000,
+              });
+            }, 300);
+          } else {
+            // Less than 250ms apart - just hide immediately
+            setLine(null);
+            setIsLineActive(false);
+          }
+          
+          // Reset tracking
+          setFirstKeyReleased(null);
+          setLastKeyReleaseTime(null);
         }
       }
 
       // Reset ignore flag when Q or W is released
-      const releasedQ = e.key.toLowerCase() === "q" || e.code.toLowerCase() === "keyq";
-      const releasedW = e.key.toLowerCase() === "w" || e.code.toLowerCase() === "keyw";
-      
       if (releasedQ || releasedW) {
         setIsIgnoringKeys(false);
       }
