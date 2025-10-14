@@ -8,7 +8,7 @@ interface LineCoordinates {
   y2: number;
 }
 
-export const IntentLine = ({ sensitivity = 70, easeIn = 200, onChordActivated, onActionConfirmed, onLineCreated }: { sensitivity?: number; easeIn?: number; onChordActivated?: () => void; onActionConfirmed?: () => void; onLineCreated?: (distance: number) => void }) => {
+export const IntentLine = ({ sensitivity = 70, easeIn = 200, onChordActivated, onActionConfirmed, onLineCreated, onSuggestionDiscarded }: { sensitivity?: number; easeIn?: number; onChordActivated?: () => void; onActionConfirmed?: () => void; onLineCreated?: (distance: number) => void; onSuggestionDiscarded?: () => void }) => {
   const { toast } = useToast();
   const [line, setLine] = useState<LineCoordinates | null>(null);
   const [cursorPos, setCursorPos] = useState({ x: 0, y: 0 });
@@ -40,6 +40,7 @@ export const IntentLine = ({ sensitivity = 70, easeIn = 200, onChordActivated, o
           setIsIgnoringKeys(true); // Ignore Q+W until released
           setFirstKeyReleased(null); // Reset key tracking
           setLastKeyReleaseTime(null);
+          onSuggestionDiscarded?.(); // Track discarded suggestion
         }
       }
     };
@@ -129,6 +130,7 @@ export const IntentLine = ({ sensitivity = 70, easeIn = 200, onChordActivated, o
       } else {
         // Released apart (more than threshold) - cancel with animation from button to cursor
         setIsAnimatingOut(true);
+        onSuggestionDiscarded?.(); // Track discarded suggestion
         
         const animationDuration = easeIn;
         const startTime = Date.now();

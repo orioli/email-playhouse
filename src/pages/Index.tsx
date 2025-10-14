@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { EmailSidebar } from "@/components/EmailSidebar";
 import { EmailList } from "@/components/EmailList";
 import { EmailDetail } from "@/components/EmailDetail";
@@ -100,6 +100,8 @@ const Index = () => {
   const [chordCount, setChordCount] = useState(0);
   const [sessionStartTime] = useState(new Date());
   const [unteraveledPixels, setUntraveledPixels] = useState(0);
+  const [discardedSuggestions, setDiscardedSuggestions] = useState(0);
+  const [actualClicks, setActualClicks] = useState(0);
 
   const handleCompose = () => {
     setIsComposing(true);
@@ -112,6 +114,16 @@ const Index = () => {
       setSelectedEmail("1");
     }
   };
+
+  // Track actual clicks
+  useEffect(() => {
+    const handleClick = () => {
+      setActualClicks(prev => prev + 1);
+    };
+    
+    window.addEventListener("click", handleClick);
+    return () => window.removeEventListener("click", handleClick);
+  }, []);
 
   return (
     <div className="h-screen flex flex-col">
@@ -156,6 +168,14 @@ const Index = () => {
               <span className="text-muted-foreground">Untraveled Pixels:</span>
               <span className="font-medium text-primary">{Math.round(unteraveledPixels)}</span>
             </div>
+            <div className="flex justify-between">
+              <span className="text-muted-foreground">Discarded Suggestions:</span>
+              <span className="font-medium text-amber-500">{discardedSuggestions}</span>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-muted-foreground">Actual Clicks:</span>
+              <span className="font-medium">{actualClicks}</span>
+            </div>
           </div>
         </div>
       </div>
@@ -164,6 +184,7 @@ const Index = () => {
         easeIn={easeIn} 
         onChordActivated={() => setChordCount(prev => prev + 1)}
         onLineCreated={(distance) => setUntraveledPixels(prev => prev + distance)}
+        onSuggestionDiscarded={() => setDiscardedSuggestions(prev => prev + 1)}
         onActionConfirmed={() => {
           if (isComposing) {
             // Show toast when sending from compose mode
