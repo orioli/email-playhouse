@@ -102,38 +102,26 @@ export const EmailDetail = ({ isComposing, onClose, onSend, onReply }: EmailDeta
           </div>
 
           <div className="prose prose-sm max-w-none">
-            <p className="mb-4">Hello!</p>
-            <p className="mb-4">
-              Welcome to the Keyboard Chord Interaction System - a revolutionary way to interact with your email client using intuitive keyboard shortcuts.
-            </p>
+            <h2 className="text-xl font-semibold mb-4">🖱️ MousePilot – Quick Instructions</h2>
             
-            <h3 className="text-lg font-semibold mt-6 mb-3">How It Works</h3>
-            <p className="mb-4">
-              Simply press Q and W keys together to activate an intent line that connects your cursor to the Reply button. This visual feedback system helps you understand exactly what action you're about to perform.
-            </p>
+            <div className="mb-4">
+              <h3 className="text-lg font-semibold mb-2">1️⃣ Activate:</h3>
+              <p className="mb-2">Press and hold 🆀 + 🆆</p>
+            </div>
             
-            <h3 className="text-lg font-semibold mt-6 mb-3">Key Features</h3>
-            <ul className="mb-4 space-y-2">
-              <li><strong>Visual Intent Line:</strong> A beautiful animated line appears connecting your cursor to the target action</li>
-              <li><strong>Precise Timing Control:</strong> Release both keys within the sensitivity window (default 70ms) to confirm the action</li>
-              <li><strong>Motion Cancellation:</strong> Move your mouse to cancel the action if you change your mind</li>
-              <li><strong>Smooth Animations:</strong> Elegant ease-in animations (200ms) make every interaction feel polished</li>
-              <li><strong>Activity Tracking:</strong> A counter at the top tracks how many successful chord activations you've made</li>
-            </ul>
+            <div className="mb-4">
+              <h3 className="text-lg font-semibold mb-2">2️⃣ Accept (Confirm Action):</h3>
+              <p className="mb-2">Release both 🆀 and 🆆 simultaneously</p>
+            </div>
             
-            <h3 className="text-lg font-semibold mt-6 mb-3">Benefits</h3>
-            <ol className="mb-4 space-y-2">
-              <li><strong>Speed:</strong> Execute actions faster than traditional clicking</li>
-              <li><strong>Precision:</strong> Built-in confirmation mechanism prevents accidental actions</li>
-              <li><strong>Ergonomics:</strong> Keep your hands on the keyboard for a seamless workflow</li>
-              <li><strong>Visual Feedback:</strong> Always know what action you're about to perform before committing</li>
-              <li><strong>Customizable:</strong> Adjust sensitivity and animation timing to match your preferences</li>
-            </ol>
-            
-            <p className="mb-4">
-              Try it now! Press Q + W together while reading this email, then release both keys at the same time to send a reply.
-            </p>
-            <p>Happy emailing!<br />John</p>
+            <div className="mb-4">
+              <h3 className="text-lg font-semibold mb-2">3️⃣ Cancel (Abort Action):</h3>
+              <p className="mb-2">Either:</p>
+              <ul className="list-disc ml-6">
+                <li>Move the mouse, or</li>
+                <li>Release 🆆 first</li>
+              </ul>
+            </div>
           </div>
         </div>
       </div>
