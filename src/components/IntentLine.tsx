@@ -38,6 +38,8 @@ export const IntentLine = ({ sensitivity = 80, easeIn = 50 }: { sensitivity?: nu
           setLine(null);
           setIsLineActive(false);
           setIsIgnoringKeys(true); // Ignore Q+W until released
+          setFirstKeyReleased(null); // Reset key tracking
+          setLastKeyReleaseTime(null);
         }
       }
     };
@@ -72,16 +74,16 @@ export const IntentLine = ({ sensitivity = 80, easeIn = 50 }: { sensitivity?: nu
         const now = Date.now();
         const releasedKey = releasedQ ? "q" : "w";
 
-        // Check if this is the first key release or second
-        if (!firstKeyReleased) {
-          // First key released
-          setFirstKeyReleased(releasedKey);
-          setLastKeyReleaseTime(now);
-        } else if (firstKeyReleased !== releasedKey) {
-          // Second key released (the other key)
-          const timeDiff = now - (lastKeyReleaseTime || 0);
-          
-          if (timeDiff <= sensitivity) {
+    // Check if this is the first key release or second
+    if (!firstKeyReleased) {
+      // First key released
+      setFirstKeyReleased(releasedKey);
+      setLastKeyReleaseTime(now);
+    } else if (firstKeyReleased === "q" && releasedKey === "w") {
+      // Q released first, then W - check timing
+      const timeDiff = now - (lastKeyReleaseTime || 0);
+      
+      if (timeDiff <= sensitivity) {
             // Released together (within threshold) - trigger the send sequence with animation
             setIsAnimatingOut(true);
             
@@ -128,9 +130,9 @@ export const IntentLine = ({ sensitivity = 80, easeIn = 50 }: { sensitivity?: nu
             };
             
             requestAnimationFrame(animateLineOut);
-          } else {
-            // Released apart (more than threshold) - cancel with animation from button to cursor
-            setIsAnimatingOut(true);
+      } else {
+        // Released apart (more than threshold) or wrong order - cancel with animation from button to cursor
+        setIsAnimatingOut(true);
             
             // Animate the line disappearing from button side
             const animationDuration = easeIn;
@@ -165,12 +167,49 @@ export const IntentLine = ({ sensitivity = 80, easeIn = 50 }: { sensitivity?: nu
             
             requestAnimationFrame(animateLineOut);
           }
+      
+      // Reset tracking
+      setFirstKeyReleased(null);
+      setLastKeyReleaseTime(null);
+    } else if (firstKeyReleased === "w" && releasedKey === "q") {
+      // W released first, then Q - always cancel with animation from button to cursor
+      setIsAnimatingOut(true);
+      
+      const animationDuration = easeIn;
+      const startTime = Date.now();
+      const originalLine = line;
+      
+      const animateLineOut = () => {
+        const elapsed = Date.now() - startTime;
+        const progress = Math.min(elapsed / animationDuration, 1);
+        
+        if (progress < 1 && originalLine) {
+          const newX2 = originalLine.x2 + (originalLine.x1 - originalLine.x2) * progress;
+          const newY2 = originalLine.y2 + (originalLine.y1 - originalLine.y2) * progress;
           
-          // Reset tracking
-          setFirstKeyReleased(null);
-          setLastKeyReleaseTime(null);
+          setLine({
+            x1: originalLine.x1,
+            y1: originalLine.y1,
+            x2: newX2,
+            y2: newY2,
+          });
+          
+          requestAnimationFrame(animateLineOut);
+        } else {
+          setLine(null);
+          setButtonRect(null);
+          setIsLineActive(false);
+          setIsAnimatingOut(false);
         }
-      }
+      };
+      
+      requestAnimationFrame(animateLineOut);
+      
+      // Reset tracking
+      setFirstKeyReleased(null);
+      setLastKeyReleaseTime(null);
+    }
+  }
 
       // Reset ignore flag when Q or W is released
       if (releasedQ || releasedW) {
