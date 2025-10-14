@@ -248,8 +248,6 @@ export const IntentLine = ({ sensitivity = 70, easeIn = 200, onChordActivated, o
     };
   }, [cursorPos, keysPressed, isLineActive, initialCursorPos, isIgnoringKeys]);
 
-  const angle = line && buttonRect ? Math.atan2(line.y2 - line.y1, line.x2 - line.x1) * (180 / Math.PI) : 0;
-  
   // Check which keys are currently pressed
   const isQPressed = keysPressed.has("q") || keysPressed.has("keyq");
   const isWPressed = keysPressed.has("w") || keysPressed.has("keyw");
@@ -341,7 +339,6 @@ export const IntentLine = ({ sensitivity = 70, easeIn = 200, onChordActivated, o
             patternUnits="userSpaceOnUse"
             width="20"
             height="3"
-            patternTransform={`rotate(${angle})`}
           >
             <rect width="10" height="3" fill="#10b981" />
             <rect x="10" width="10" height="3" fill="#059669" />
@@ -370,6 +367,9 @@ export const IntentLine = ({ sensitivity = 70, easeIn = 200, onChordActivated, o
           const cp2x = line.x2 + (centerX - line.x2) * 0.3;
           const cp2y = line.y2 + (centerY - line.y2) * 0.3;
           
+          // Calculate tangent angle at the end of the curve (from cp2 to endpoint)
+          const tangentAngle = Math.atan2(line.y2 - cp2y, line.x2 - cp2x) * (180 / Math.PI);
+          
           // Create SVG path data for cubic bezier curve
           const pathData = `M ${line.x1} ${line.y1} C ${cp1x} ${cp1y}, ${cp2x} ${cp2y}, ${line.x2} ${line.y2}`;
           
@@ -393,6 +393,15 @@ export const IntentLine = ({ sensitivity = 70, easeIn = 200, onChordActivated, o
                 opacity="0.3"
                 filter="blur(4px)"
               />
+
+              {/* Animated arrow at the end */}
+              <g transform={`translate(${line.x2}, ${line.y2}) rotate(${tangentAngle})`}>
+                <polygon
+                  points="0,0 -10,-5 -10,5"
+                  fill="#10b981"
+                  className="animate-pulse"
+                />
+              </g>
             </>
           );
         })()}
@@ -425,14 +434,6 @@ export const IntentLine = ({ sensitivity = 70, easeIn = 200, onChordActivated, o
           filter="blur(4px)"
         />
 
-        {/* Animated arrow at the end */}
-        <g transform={`translate(${line.x2}, ${line.y2}) rotate(${angle})`}>
-          <polygon
-            points="0,0 -10,-5 -10,5"
-            fill="#10b981"
-            className="animate-pulse"
-          />
-        </g>
       </svg>
       )}
     </div>
