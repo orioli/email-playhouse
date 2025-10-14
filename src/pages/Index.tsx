@@ -22,7 +22,7 @@ const mockEmails = [
     id: "2",
     sender: "Sarah Johnson",
     subject: "Q4 Wedding",
-    preview: "Please find attached my engagement ring",
+    preview: "Dear, find attached my huge engagement ring",
     time: "9:15 AM",
     isUnread: true,
     isStarred: false,
