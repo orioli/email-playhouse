@@ -13,6 +13,7 @@ export const IntentLine = () => {
   const [keysPressed, setKeysPressed] = useState<Set<string>>(new Set());
   const [isLineActive, setIsLineActive] = useState(false);
   const [initialCursorPos, setInitialCursorPos] = useState({ x: 0, y: 0 });
+  const [isIgnoringKeys, setIsIgnoringKeys] = useState(false);
 
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
@@ -29,6 +30,7 @@ export const IntentLine = () => {
         if (distance > 5) {
           setLine(null);
           setIsLineActive(false);
+          setIsIgnoringKeys(true); // Ignore Q+W until released
         }
       }
     };
@@ -43,7 +45,7 @@ export const IntentLine = () => {
       const hasQ = newKeys.has("q") || newKeys.has("keyq");
       const hasW = newKeys.has("w") || newKeys.has("keyw");
 
-      if (hasQ && hasW && !isLineActive) {
+      if (hasQ && hasW && !isLineActive && !isIgnoringKeys) {
         e.preventDefault();
         createIntentLine();
       }
@@ -64,6 +66,14 @@ export const IntentLine = () => {
           setLine(null);
           setIsLineActive(false);
         }
+      }
+
+      // Reset ignore flag when Q or W is released
+      const releasedQ = e.key.toLowerCase() === "q" || e.code.toLowerCase() === "keyq";
+      const releasedW = e.key.toLowerCase() === "w" || e.code.toLowerCase() === "keyw";
+      
+      if (releasedQ || releasedW) {
+        setIsIgnoringKeys(false);
       }
     };
 
@@ -103,7 +113,7 @@ export const IntentLine = () => {
       window.removeEventListener("keydown", handleKeyDown);
       window.removeEventListener("keyup", handleKeyUp);
     };
-  }, [cursorPos, keysPressed, isLineActive, initialCursorPos]);
+  }, [cursorPos, keysPressed, isLineActive, initialCursorPos, isIgnoringKeys]);
 
   if (!line) return null;
 
