@@ -102,6 +102,8 @@ const Index = () => {
   const [unteraveledPixels, setUntraveledPixels] = useState(0);
   const [discardedSuggestions, setDiscardedSuggestions] = useState(0);
   const [actualClicks, setActualClicks] = useState(0);
+  const [totalTraveledPixels, setTotalTraveledPixels] = useState(0);
+  const [lastSampledPosition, setLastSampledPosition] = useState<{ x: number; y: number } | null>(null);
   const [isMinimized, setIsMinimized] = useState(false);
   const [position, setPosition] = useState({ x: 16, y: 340 });
   const [isDragging, setIsDragging] = useState(false);
@@ -128,6 +130,35 @@ const Index = () => {
     window.addEventListener("click", handleClick);
     return () => window.removeEventListener("click", handleClick);
   }, []);
+
+  // Track total traveled pixels (sample every 5 seconds)
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      const currentPos = { x: 0, y: 0 };
+      
+      const handleMousePosition = (e: MouseEvent) => {
+        currentPos.x = e.clientX;
+        currentPos.y = e.clientY;
+      };
+      
+      window.addEventListener('mousemove', handleMousePosition, { once: true });
+      
+      setTimeout(() => {
+        window.removeEventListener('mousemove', handleMousePosition);
+        
+        if (lastSampledPosition && (currentPos.x !== 0 || currentPos.y !== 0)) {
+          const distance = Math.abs(currentPos.x - lastSampledPosition.x) + Math.abs(currentPos.y - lastSampledPosition.y);
+          setTotalTraveledPixels(prev => prev + distance);
+        }
+        
+        if (currentPos.x !== 0 || currentPos.y !== 0) {
+          setLastSampledPosition(currentPos);
+        }
+      }, 100);
+    }, 5000);
+    
+    return () => clearInterval(intervalId);
+  }, [lastSampledPosition]);
 
   // Handle dragging
   useEffect(() => {
@@ -180,7 +211,7 @@ const Index = () => {
           onMouseDown={handleMouseDown}
         >
           <div className="flex items-center gap-2">
-            <span className="text-lg font-semibold">MousePilot™</span>
+            <span className="text-lg font-semibold">Your Clicks</span>
             <span className="text-xl font-bold text-primary">{chordCount}</span>
           </div>
           <button
@@ -233,8 +264,12 @@ const Index = () => {
                 <span className="font-medium text-amber-500">{discardedSuggestions}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-muted-foreground">Actual Clicks:</span>
+                <span className="text-muted-foreground">Total Clicks:</span>
                 <span className="font-medium">{actualClicks}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-muted-foreground">Total Traveled Pixels:</span>
+                <span className="font-medium">{Math.round(totalTraveledPixels)}</span>
               </div>
             </div>
           </div>
