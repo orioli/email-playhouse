@@ -98,6 +98,8 @@ const Index = () => {
   const [sensitivity, setSensitivity] = useState(70);
   const [easeIn, setEaseIn] = useState(200);
   const [chordCount, setChordCount] = useState(0);
+  const [sessionStartTime] = useState(new Date());
+  const [unteraveledPixels, setUntraveledPixels] = useState(0);
 
   const handleCompose = () => {
     setIsComposing(true);
@@ -141,12 +143,27 @@ const Index = () => {
               className="flex-1"
             />
           </div>
+          <div className="pt-2 border-t space-y-1 text-sm">
+            <div className="flex justify-between">
+              <span className="text-muted-foreground">Session Start:</span>
+              <span className="font-medium">{sessionStartTime.toLocaleTimeString()}</span>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-muted-foreground">Clicks Saved:</span>
+              <span className="font-medium text-primary">{chordCount}</span>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-muted-foreground">Untraveled Pixels:</span>
+              <span className="font-medium text-primary">{Math.round(unteraveledPixels)}</span>
+            </div>
+          </div>
         </div>
       </div>
       <IntentLine 
         sensitivity={sensitivity} 
         easeIn={easeIn} 
         onChordActivated={() => setChordCount(prev => prev + 1)}
+        onLineCreated={(distance) => setUntraveledPixels(prev => prev + distance)}
         onActionConfirmed={() => {
           if (isComposing) {
             // Show toast when sending from compose mode

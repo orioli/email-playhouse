@@ -8,7 +8,7 @@ interface LineCoordinates {
   y2: number;
 }
 
-export const IntentLine = ({ sensitivity = 70, easeIn = 200, onChordActivated, onActionConfirmed }: { sensitivity?: number; easeIn?: number; onChordActivated?: () => void; onActionConfirmed?: () => void }) => {
+export const IntentLine = ({ sensitivity = 70, easeIn = 200, onChordActivated, onActionConfirmed, onLineCreated }: { sensitivity?: number; easeIn?: number; onChordActivated?: () => void; onActionConfirmed?: () => void; onLineCreated?: (distance: number) => void }) => {
   const { toast } = useToast();
   const [line, setLine] = useState<LineCoordinates | null>(null);
   const [cursorPos, setCursorPos] = useState({ x: 0, y: 0 });
@@ -196,6 +196,14 @@ export const IntentLine = ({ sensitivity = 70, easeIn = 200, onChordActivated, o
       
       const buttonCenterX = rect.left + rect.width / 2;
       const buttonCenterY = rect.top + rect.height / 2;
+
+      // Calculate distance (x + y, not Pythagorean)
+      const distanceX = Math.abs(buttonCenterX - cursorPos.x);
+      const distanceY = Math.abs(buttonCenterY - cursorPos.y);
+      const totalDistance = distanceX + distanceY;
+      
+      // Report untraveled distance
+      onLineCreated?.(totalDistance);
 
       // Calculate direction and shorten line to stop at rectangle edge
       const dx = buttonCenterX - cursorPos.x;
