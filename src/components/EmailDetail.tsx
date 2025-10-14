@@ -104,53 +104,58 @@ export const EmailDetail = ({ isComposing, onClose, onSend, onReply }: EmailDeta
           <div className="prose prose-sm max-w-none">
             <h2 className="text-xl font-semibold mb-4">🖱️ MousePilot – Quick Instructions</h2>
             
-            {/* Chord Lasso Visual */}
+            {/* Möbius Band 2D Projection */}
             <div className="mb-6">
-              <svg width="200" height="20" xmlns="http://www.w3.org/2000/svg">
+              <svg width="200" height="80" xmlns="http://www.w3.org/2000/svg">
                 <defs>
-                  <pattern
-                    id="lassoStripes"
-                    patternUnits="userSpaceOnUse"
-                    width="20"
-                    height="3"
-                    patternTransform="rotate(0)"
-                  >
-                    <rect width="10" height="3" fill="#10b981" />
-                    <rect x="10" width="10" height="3" fill="#059669" />
-                    <animateTransform
-                      attributeName="patternTransform"
-                      type="translate"
-                      from="0 0"
-                      to="20 0"
-                      dur="0.5s"
-                      repeatCount="indefinite"
-                    />
-                  </pattern>
+                  <linearGradient id="bandGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                    <stop offset="0%" stopColor="#059669" />
+                    <stop offset="50%" stopColor="#10b981" />
+                    <stop offset="100%" stopColor="#059669" />
+                  </linearGradient>
+                  <filter id="glow">
+                    <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+                    <feMerge>
+                      <feMergeNode in="coloredBlur"/>
+                      <feMergeNode in="SourceGraphic"/>
+                    </feMerge>
+                  </filter>
                 </defs>
                 
-                {/* Glow line */}
-                <line
-                  x1="0"
-                  y1="10"
-                  x2="200"
-                  y2="10"
+                {/* Glow effect */}
+                <path
+                  d="M 20 40 Q 60 15, 100 40 T 180 40"
+                  fill="none"
                   stroke="#10b981"
-                  strokeWidth="5"
-                  strokeLinecap="round"
+                  strokeWidth="20"
                   opacity="0.3"
                   filter="blur(4px)"
                 />
                 
-                {/* Main line */}
-                <line
-                  x1="0"
-                  y1="10"
-                  x2="200"
-                  y2="10"
-                  stroke="url(#lassoStripes)"
-                  strokeWidth="3"
-                  strokeLinecap="round"
+                {/* Back part of the band (darker) */}
+                <path
+                  d="M 20 45 Q 60 20, 100 45 T 180 45"
+                  fill="none"
+                  stroke="#059669"
+                  strokeWidth="12"
+                  opacity="0.6"
                 />
+                
+                {/* Front part of the band with gradient */}
+                <path
+                  d="M 20 35 Q 60 10, 100 35 T 180 35"
+                  fill="none"
+                  stroke="url(#bandGradient)"
+                  strokeWidth="15"
+                  filter="url(#glow)"
+                />
+                
+                {/* Twist visualization - cross section lines */}
+                <line x1="20" y1="35" x2="20" y2="45" stroke="#10b981" strokeWidth="2" opacity="0.7"/>
+                <line x1="60" y1="25" x2="65" y2="35" stroke="#10b981" strokeWidth="2" opacity="0.5"/>
+                <line x1="100" y1="35" x2="100" y2="45" stroke="#10b981" strokeWidth="2" opacity="0.7"/>
+                <line x1="140" y1="25" x2="135" y2="35" stroke="#10b981" strokeWidth="2" opacity="0.5"/>
+                <line x1="180" y1="35" x2="180" y2="45" stroke="#10b981" strokeWidth="2" opacity="0.7"/>
               </svg>
             </div>
             
