@@ -21,7 +21,7 @@ export const IntentLine = ({ sensitivity = 70, easeIn = 200, onChordActivated, o
   const [firstKeyReleased, setFirstKeyReleased] = useState<string | null>(null);
   const [isAnimatingOut, setIsAnimatingOut] = useState(false);
   const [animationProgress, setAnimationProgress] = useState(0);
-  const [targetButtonType, setTargetButtonType] = useState<'reply' | 'replyAll' | 'forward' | 'close'>('reply');
+  const [targetButtonType, setTargetButtonType] = useState<'reply' | 'replyAll' | 'forward' | 'trash' | 'close'>('reply');
 
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
@@ -184,7 +184,7 @@ export const IntentLine = ({ sensitivity = 70, easeIn = 200, onChordActivated, o
       }
     };
 
-    const findTargetButton = (type: 'reply' | 'replyAll' | 'forward' | 'close') => {
+    const findTargetButton = (type: 'reply' | 'replyAll' | 'forward' | 'trash' | 'close') => {
       const buttons = Array.from(document.querySelectorAll("button"));
       
       switch (type) {
@@ -197,6 +197,12 @@ export const IntentLine = ({ sensitivity = 70, easeIn = 200, onChordActivated, o
           return buttons.find((btn) => btn.textContent?.includes("Reply All"));
         case 'forward':
           return buttons.find((btn) => btn.textContent?.includes("Forward"));
+        case 'trash':
+          return buttons.find((btn) => 
+            btn.getAttribute("aria-label")?.toLowerCase().includes("delete") || 
+            btn.getAttribute("aria-label")?.toLowerCase().includes("trash") ||
+            btn.textContent?.toLowerCase().includes("delete")
+          );
         case 'close':
           return buttons.find((btn) => btn.getAttribute("aria-label")?.includes("Close") || btn.textContent === "×");
         default:
@@ -205,7 +211,7 @@ export const IntentLine = ({ sensitivity = 70, easeIn = 200, onChordActivated, o
     };
 
     const cycleTargetButton = () => {
-      const cycleOrder: Array<'reply' | 'replyAll' | 'forward' | 'close'> = ['reply', 'replyAll', 'forward', 'close'];
+      const cycleOrder: Array<'reply' | 'replyAll' | 'forward' | 'trash' | 'close'> = ['reply', 'replyAll', 'forward', 'trash', 'close'];
       const currentIndex = cycleOrder.indexOf(targetButtonType);
       const nextIndex = (currentIndex + 1) % cycleOrder.length;
       const nextType = cycleOrder[nextIndex];
@@ -214,7 +220,7 @@ export const IntentLine = ({ sensitivity = 70, easeIn = 200, onChordActivated, o
       updateIntentLine(nextType);
     };
 
-    const updateIntentLine = (type: 'reply' | 'replyAll' | 'forward' | 'close') => {
+    const updateIntentLine = (type: 'reply' | 'replyAll' | 'forward' | 'trash' | 'close') => {
       const targetButton = findTargetButton(type);
       if (!targetButton) return;
 
