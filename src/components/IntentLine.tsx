@@ -198,13 +198,26 @@ export const IntentLine = ({ sensitivity = 70, easeIn = 200, onChordActivated, o
         case 'forward':
           return buttons.find((btn) => btn.textContent?.includes("Forward"));
         case 'trash':
-          return buttons.find((btn) => 
-            btn.getAttribute("aria-label")?.toLowerCase().includes("delete") || 
-            btn.getAttribute("aria-label")?.toLowerCase().includes("trash") ||
-            btn.textContent?.toLowerCase().includes("delete")
-          );
+          // Find button containing Trash2 icon (look for SVG with specific paths)
+          return buttons.find((btn) => {
+            const svg = btn.querySelector('svg');
+            if (!svg) return false;
+            // Check if it has polyline elements (Trash2 icon characteristic)
+            const hasPolyline = svg.querySelector('polyline') !== null;
+            const hasPath = svg.querySelector('path') !== null;
+            // Trash2 icon has both polyline and path
+            return hasPolyline && hasPath && btn.getAttribute('variant') !== 'outline';
+          });
         case 'close':
-          return buttons.find((btn) => btn.getAttribute("aria-label")?.includes("Close") || btn.textContent === "×");
+          // Find button containing X icon (look for SVG with crossing lines)
+          return buttons.find((btn) => {
+            const svg = btn.querySelector('svg');
+            if (!svg) return false;
+            // X icon has two path or line elements that cross
+            const paths = svg.querySelectorAll('path, line');
+            // Simple heuristic: X icon typically has 2 paths/lines
+            return paths.length === 2 && !btn.textContent?.includes("Reply");
+          });
         default:
           return null;
       }
