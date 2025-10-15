@@ -289,7 +289,7 @@ const Index = () => {
                 </div>
               </div>
             </div>
-            <div className="pt-2 border-t space-y-1 text-sm">
+            <div className="pt-4 border-t space-y-1 text-sm">
               <div className="flex justify-between">
                 <span className="text-muted-foreground">Session Start:</span>
                 <span className="font-medium">{sessionStartTime.toLocaleTimeString()}</span>
