@@ -109,7 +109,7 @@ export const EmailDetail = ({ isComposing, onClose, onSend, onReply }: EmailDeta
 
           <div className="prose prose-sm max-w-none">
             <div className="mb-4">
-              <h3 className="text-lg font-semibold mb-2">💡 To Suggest</h3>
+              <h3 className="text-lg font-semibold mb-2">1️⃣ To Suggest</h3>
 
               <span className="text-sm text-muted-foreground">
                 <kbd className="px-2 py-1 bg-muted rounded border text-lg">⤓Q</kbd> +{" "}
