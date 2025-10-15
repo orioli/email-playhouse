@@ -112,9 +112,8 @@ export const EmailDetail = ({ isComposing, onClose, onSend, onReply }: EmailDeta
               <h3 className="text-lg font-semibold mb-2">💡 To Suggest</h3>
 
               <span className="text-sm text-muted-foreground">
-                Hold Down
-                <kbd className="px-2 py-1 bg-muted rounded border text-lg">Q</kbd> +{" "}
-                <kbd className="px-2 py-1 bg-muted rounded border text-lg">W</kbd> simultaneously
+                <kbd className="px-2 py-1 bg-muted rounded border text-lg">⤓Q</kbd> +{" "}
+                <kbd className="px-2 py-1 bg-muted rounded border text-lg">⤓W</kbd> Hold Down both keys simultaneously
               </span>
             </div>
 
