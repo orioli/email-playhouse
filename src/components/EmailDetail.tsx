@@ -111,56 +111,81 @@ export const EmailDetail = ({ isComposing, onClose, onSend, onReply }: EmailDeta
             </div>
 
             {/* Chord Lasso Visual */}
-            <div className="mb-6 flex items-center gap-2">
-              <span className="text-sm text-muted-foreground">hold down Q W ==&gt;</span>
-              <span className="text-xl">🅰️</span>
-              <svg width="200" height="20" xmlns="http://www.w3.org/2000/svg">
-                <defs>
-                  <pattern
-                    id="lassoStripes"
-                    patternUnits="userSpaceOnUse"
-                    width="20"
-                    height="3"
-                    patternTransform="rotate(0)"
-                  >
-                    <rect width="10" height="3" fill="#10b981" />
-                    <rect x="10" width="10" height="3" fill="#059669" />
-                    <animateTransform
-                      attributeName="patternTransform"
-                      type="translate"
-                      from="0 0"
-                      to="20 0"
-                      dur="0.5s"
-                      repeatCount="indefinite"
-                    />
-                  </pattern>
-                </defs>
-                
-                {/* Glow line */}
-                <line
-                  x1="0"
-                  y1="10"
-                  x2="200"
-                  y2="10"
-                  stroke="#10b981"
-                  strokeWidth="5"
-                  strokeLinecap="round"
-                  opacity="0.3"
-                  filter="blur(4px)"
-                />
-                
-                {/* Main line */}
-                <line
-                  x1="0"
-                  y1="10"
-                  x2="200"
-                  y2="10"
-                  stroke="url(#lassoStripes)"
-                  strokeWidth="3"
-                  strokeLinecap="round"
-                />
-              </svg>
-              <span className="text-xl">🅱️</span>
+            <div className="mb-6 relative">
+              <div className="flex items-center gap-2">
+                <span className="text-sm text-muted-foreground">hold down Q W ==&gt;</span>
+                <span className="text-xl">🅰️</span>
+                <svg width="200" height="20" xmlns="http://www.w3.org/2000/svg">
+                  <defs>
+                    <pattern
+                      id="lassoStripes"
+                      patternUnits="userSpaceOnUse"
+                      width="20"
+                      height="3"
+                      patternTransform="rotate(0)"
+                    >
+                      <rect width="10" height="3" fill="#10b981" />
+                      <rect x="10" width="10" height="3" fill="#059669" />
+                      <animateTransform
+                        attributeName="patternTransform"
+                        type="translate"
+                        from="0 0"
+                        to="20 0"
+                        dur="0.5s"
+                        repeatCount="indefinite"
+                      />
+                    </pattern>
+                  </defs>
+                  
+                  {/* Glow line */}
+                  <line
+                    x1="0"
+                    y1="10"
+                    x2="200"
+                    y2="10"
+                    stroke="#10b981"
+                    strokeWidth="5"
+                    strokeLinecap="round"
+                    opacity="0.3"
+                    filter="blur(4px)"
+                  />
+                  
+                  {/* Main line */}
+                  <line
+                    x1="0"
+                    y1="10"
+                    x2="200"
+                    y2="10"
+                    stroke="url(#lassoStripes)"
+                    strokeWidth="3"
+                    strokeLinecap="round"
+                  />
+                </svg>
+                <span className="text-xl">🅱️</span>
+              </div>
+              
+              {/* Pencil arrow and text annotation */}
+              <div className="absolute left-[240px] top-[25px] flex flex-col items-center">
+                <svg width="40" height="40" viewBox="0 0 40 40" className="rotate-[-20deg]">
+                  <path
+                    d="M 20 5 L 20 30 M 20 30 L 15 25 M 20 30 L 25 25"
+                    stroke="#e11d48"
+                    strokeWidth="2.5"
+                    strokeLinecap="round"
+                    fill="none"
+                  />
+                </svg>
+                <div 
+                  className="text-rose-600 font-bold text-sm whitespace-nowrap"
+                  style={{ 
+                    fontFamily: '"Comic Sans MS", "Comic Sans", cursive',
+                    transform: 'rotate(-5deg)',
+                    textShadow: '1px 1px 0px rgba(0,0,0,0.1)'
+                  }}
+                >
+                  Let the AI move the mouse
+                </div>
+              </div>
             </div>
             
             <div className="mb-4">
