@@ -207,7 +207,7 @@ export const EmailDetail = ({ isComposing, onClose, onSend, onReply }: EmailDeta
               </div>
             </div>
 
-            <div className="mb-4 mt-12">
+            <div className="mb-4">
               <h3 className="text-lg font-semibold mb-2">2️⃣ 🚗 To Go!</h3>
               <span className="text-sm text-muted-foreground">
                 <kbd className="px-2 py-1 bg-muted rounded border text-lg">Q↑</kbd>{" "}
