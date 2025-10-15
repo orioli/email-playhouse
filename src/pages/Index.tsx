@@ -275,18 +275,6 @@ const Index = () => {
                   step={10}
                   className="w-full"
                 />
-                <div className="absolute top-6 left-0 w-full pointer-events-none">
-                  <div 
-                    className="absolute text-xs text-muted-foreground whitespace-nowrap"
-                    style={{ left: '80%', transform: 'translateX(-50%)' }}
-                  >
-                    Doherty
-                  </div>
-                  <div 
-                    className="absolute w-px h-2 bg-muted-foreground/50"
-                    style={{ left: '80%' }}
-                  />
-                </div>
               </div>
             </div>
             <div className="pt-4 border-t space-y-1 text-sm">
