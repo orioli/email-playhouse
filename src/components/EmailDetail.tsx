@@ -209,7 +209,7 @@ export const EmailDetail = ({ isComposing, onClose, onSend, onReply }: EmailDeta
               <ul className="list-disc ml-6">
                 <li>Move the mouse, or</li>
                 <li>
-                  Release <kbd className="px-2 py-1 bg-muted rounded border text-lg">W</kbd> first
+                  Release <kbd className="px-2 py-1 bg-muted rounded border text-lg">W↑</kbd> first
                 </li>
               </ul>
             </div>
