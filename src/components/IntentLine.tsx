@@ -96,32 +96,23 @@ export const IntentLine = ({ sensitivity = 70, easeIn = 200, onChordActivated, o
         // Released together (within threshold) - trigger the send sequence with animation
         setIsAnimatingOut(true);
         
-        // Animate the line disappearing from cursor side
+        // Animate wipe effect from cursor to button
         const animationDuration = easeIn;
         const startTime = Date.now();
-        const originalLine = line;
         
         const animateLineOut = () => {
           const elapsed = Date.now() - startTime;
           const progress = Math.min(elapsed / animationDuration, 1);
           
-          if (progress < 1 && originalLine) {
-            // Interpolate from cursor (x1, y1) towards button (x2, y2)
-            const newX1 = originalLine.x1 + (originalLine.x2 - originalLine.x1) * progress;
-            const newY1 = originalLine.y1 + (originalLine.y2 - originalLine.y1) * progress;
-            
-            setLine({
-              x1: newX1,
-              y1: newY1,
-              x2: originalLine.x2,
-              y2: originalLine.y2,
-            });
-            
+          setAnimationProgress(progress);
+          
+          if (progress < 1) {
             requestAnimationFrame(animateLineOut);
           } else {
             // Animation complete - hide everything and show toast
             setLine(null);
             setIsAnimatingOut(false);
+            setAnimationProgress(0);
             
             setTimeout(() => {
               setButtonRect(null);
@@ -135,30 +126,21 @@ export const IntentLine = ({ sensitivity = 70, easeIn = 200, onChordActivated, o
         
         requestAnimationFrame(animateLineOut);
       } else {
-        // Released apart (more than threshold) - cancel with animation from button to cursor
+        // Released apart (more than threshold) - cancel with wipe from button to cursor
         setIsAnimatingOut(true);
         onSuggestionDiscarded?.(); // Track discarded suggestion
         
         const animationDuration = easeIn;
         const startTime = Date.now();
-        const originalLine = line;
         
         const animateLineOut = () => {
           const elapsed = Date.now() - startTime;
           const progress = Math.min(elapsed / animationDuration, 1);
           
-          if (progress < 1 && originalLine) {
-            // Interpolate from button (x2, y2) towards cursor (x1, y1)
-            const newX2 = originalLine.x2 + (originalLine.x1 - originalLine.x2) * progress;
-            const newY2 = originalLine.y2 + (originalLine.y1 - originalLine.y2) * progress;
-            
-            setLine({
-              x1: originalLine.x1,
-              y1: originalLine.y1,
-              x2: newX2,
-              y2: newY2,
-            });
-            
+          // Negative progress for reverse wipe
+          setAnimationProgress(-progress);
+          
+          if (progress < 1) {
             requestAnimationFrame(animateLineOut);
           } else {
             // Animation complete - hide everything
@@ -166,6 +148,7 @@ export const IntentLine = ({ sensitivity = 70, easeIn = 200, onChordActivated, o
             setButtonRect(null);
             setIsLineActive(false);
             setIsAnimatingOut(false);
+            setAnimationProgress(0);
           }
         };
         
@@ -453,6 +436,18 @@ export const IntentLine = ({ sensitivity = 70, easeIn = 200, onChordActivated, o
               repeatCount="indefinite"
             />
           </pattern>
+
+          {/* Wipe mask - linear gradient for disappear effect */}
+          <linearGradient id="wipeMask" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stopColor="white" stopOpacity={animationProgress >= 0 ? (animationProgress > 0 ? 0 : 1) : 1} />
+            <stop offset={`${Math.abs(animationProgress) * 100}%`} stopColor="white" stopOpacity={animationProgress >= 0 ? 0 : 1} />
+            <stop offset={`${Math.abs(animationProgress) * 100}%`} stopColor="white" stopOpacity={animationProgress >= 0 ? 1 : 0} />
+            <stop offset="100%" stopColor="white" stopOpacity={animationProgress >= 0 ? 1 : 0} />
+          </linearGradient>
+
+          <mask id="lineWipeMask">
+            <rect x="0" y="0" width="100%" height="100%" fill="url(#wipeMask)" />
+          </mask>
         </defs>
 
         {(() => {
@@ -477,32 +472,34 @@ export const IntentLine = ({ sensitivity = 70, easeIn = 200, onChordActivated, o
           
           return (
             <>
-              <path
-                d={pathData}
-                stroke="url(#stripes)"
-                strokeWidth="3"
-                strokeLinecap="round"
-                fill="none"
-                className="animate-in fade-in duration-200"
-              />
-
-              <path
-                d={pathData}
-                stroke="#10b981"
-                strokeWidth="5"
-                strokeLinecap="round"
-                fill="none"
-                opacity="0.3"
-                filter="blur(4px)"
-              />
-
-              {/* Animated arrow at the end */}
-              <g transform={`translate(${line.x2}, ${line.y2}) rotate(${tangentAngle})`}>
-                <polygon
-                  points="0,0 -10,-5 -10,5"
-                  fill="#10b981"
-                  className="animate-pulse"
+              <g mask={isAnimatingOut ? "url(#lineWipeMask)" : undefined}>
+                <path
+                  d={pathData}
+                  stroke="url(#stripes)"
+                  strokeWidth="3"
+                  strokeLinecap="round"
+                  fill="none"
+                  className="animate-in fade-in duration-200"
                 />
+
+                <path
+                  d={pathData}
+                  stroke="#10b981"
+                  strokeWidth="5"
+                  strokeLinecap="round"
+                  fill="none"
+                  opacity="0.3"
+                  filter="blur(4px)"
+                />
+
+                {/* Animated arrow at the end */}
+                <g transform={`translate(${line.x2}, ${line.y2}) rotate(${tangentAngle})`}>
+                  <polygon
+                    points="0,0 -10,-5 -10,5"
+                    fill="#10b981"
+                    className="animate-pulse"
+                  />
+                </g>
               </g>
             </>
           );
