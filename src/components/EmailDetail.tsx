@@ -157,12 +157,12 @@ export const EmailDetail = ({ isComposing, onClose, onSend, onReply }: EmailDeta
             
             <div className="mb-4">
               <h3 className="text-lg font-semibold mb-2">1️⃣ Preview AutoComplete</h3>
-              <p className="mb-2">Press and hold <kbd className="px-2 py-1 bg-muted rounded border text-lg">🆀</kbd> + <kbd className="px-2 py-1 bg-muted rounded border text-lg">🆆</kbd></p>
+              <p className="mb-2">Press and hold <kbd className="px-2 py-1 bg-muted rounded border text-lg">Q</kbd> + <kbd className="px-2 py-1 bg-muted rounded border text-lg">W</kbd></p>
             </div>
             
             <div className="mb-4">
               <h3 className="text-lg font-semibold mb-2">2️⃣ Accept AI Suggestion</h3>
-              <p className="mb-2">Release both <kbd className="px-2 py-1 bg-muted rounded border text-lg">🆀</kbd> and <kbd className="px-2 py-1 bg-muted rounded border text-lg">🆆</kbd> simultaneously</p>
+              <p className="mb-2">Release both <kbd className="px-2 py-1 bg-muted rounded border text-lg">Q</kbd> and <kbd className="px-2 py-1 bg-muted rounded border text-lg">W</kbd> simultaneously</p>
             </div>
             
             <div className="mb-4">
@@ -170,13 +170,13 @@ export const EmailDetail = ({ isComposing, onClose, onSend, onReply }: EmailDeta
               <p className="mb-2">Either:</p>
               <ul className="list-disc ml-6">
                 <li>Move the mouse, or</li>
-                <li>Release <kbd className="px-2 py-1 bg-muted rounded border text-lg">🆆</kbd> first</li>
+                <li>Release <kbd className="px-2 py-1 bg-muted rounded border text-lg">W</kbd> first</li>
               </ul>
             </div>
             
             <div className="mb-4">
               <h3 className="text-lg font-semibold mb-2">4️⃣ Loop thru options:</h3>
-              <p className="mb-2">While holding <kbd className="px-2 py-1 bg-muted rounded border text-lg">🆀</kbd> + <kbd className="px-2 py-1 bg-muted rounded border text-lg">🆆</kbd>, press <kbd className="px-2 py-1 bg-muted rounded border">Space</kbd> to cycle through available actions:</p>
+              <p className="mb-2">While holding <kbd className="px-2 py-1 bg-muted rounded border text-lg">Q</kbd> + <kbd className="px-2 py-1 bg-muted rounded border text-lg">W</kbd>, press <kbd className="px-2 py-1 bg-muted rounded border">Space</kbd> to cycle through available actions:</p>
               <ul className="list-disc ml-6">
                 <li>Reply → Reply All → Forward → Trash → Close</li>
               </ul>
