@@ -26,12 +26,18 @@ export const EmailDetail = ({ isComposing, onClose, onSend, onReply }: EmailDeta
   if (isComposing) {
     return (
       <div className="flex-1 flex flex-col bg-background">
-        {/* Header with Close button */}
+        {/* Header with Send and Close buttons */}
         <div className="border-b border-border p-4 flex items-center justify-between">
           <h2 className="text-lg font-semibold">Reply to: Jose Berengueres</h2>
-          <Button variant="ghost" size="icon" onClick={onClose}>
-            <X className="h-5 w-5" />
-          </Button>
+          <div className="flex items-center gap-2">
+            <Button size="lg" className="min-w-32" onClick={handleSend}>
+              <Send className="mr-2 h-4 w-4" />
+              Send
+            </Button>
+            <Button variant="ghost" size="icon" onClick={onClose}>
+              <X className="h-5 w-5" />
+            </Button>
+          </div>
         </div>
 
         {/* Compose Form */}
@@ -46,14 +52,6 @@ export const EmailDetail = ({ isComposing, onClose, onSend, onReply }: EmailDeta
             className="flex-1 resize-none border-0 focus-visible:ring-0 p-0"
             defaultValue={"\n\n---\nOn 10:30 AM, Jose Berengueres wrote:\n> Welcome to the Keyboard Chord Interaction System - a revolutionary way to interact with your email client using intuitive keyboard shortcuts."}
           />
-        </div>
-
-        {/* Footer with Send button */}
-        <div className="border-t border-border p-4 flex justify-end">
-          <Button size="lg" className="min-w-32" onClick={handleSend}>
-            <Send className="mr-2 h-4 w-4" />
-            Send
-          </Button>
         </div>
       </div>
     );
