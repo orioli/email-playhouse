@@ -108,6 +108,17 @@ export const EmailDetail = ({ isComposing, onClose, onSend, onReply }: EmailDeta
           </div>
 
           <div className="prose prose-sm max-w-none">
+            {/* Video demo */}
+            <div className="mb-6">
+              <video
+                className="w-full rounded-lg"
+                autoPlay
+                muted
+                playsInline
+                src="/videos/chord-demo.mov"
+              />
+            </div>
+
             <div className="mb-4">
               <h3 className="text-lg font-semibold mb-2">1️⃣ To Suggest</h3>
 
