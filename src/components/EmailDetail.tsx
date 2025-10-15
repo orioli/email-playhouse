@@ -18,11 +18,11 @@ export const EmailDetail = ({ isComposing, onClose, onSend, onReply }: EmailDeta
     const video = e.currentTarget;
     const playCount = parseInt(video.dataset.playCount || "0");
     
-    if (playCount < 2) {
+    if (playCount < 0) {
       video.dataset.playCount = String(playCount + 1);
       video.play();
     } else {
-      video.dataset.playCount = "3";
+      video.dataset.playCount = "1";
       video.removeAttribute("autoplay");
     }
   };
