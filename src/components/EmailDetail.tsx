@@ -73,7 +73,7 @@ export const EmailDetail = ({ isComposing, onClose, onSend, onReply }: EmailDeta
             <Input
               placeholder="Subject"
               className="border-b rounded-none px-0 focus-visible:ring-0"
-              defaultValue="Re: 🖱️ MousePilot – Quick Instructions"
+              defaultValue="Re: 🖱️ Quick Instructions"
             />
           </div>
 
@@ -133,7 +133,7 @@ export const EmailDetail = ({ isComposing, onClose, onSend, onReply }: EmailDeta
             {/* Video demo */}
             <div className="mb-6">
               <video
-                className="w-1/2 rounded-lg cursor-pointer"
+                className="w-1/2 rounded-lg cursor-pointer border border-black"
                 autoPlay
                 muted
                 playsInline

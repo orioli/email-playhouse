@@ -12,7 +12,7 @@ const mockEmails = [
   {
     id: "1",
     sender: "Jose Berengueres",
-    subject: "🖱️ MousePilot – Quick Instructions",
+    subject: "🖱️ Quick Instructions",
     preview: "Discover the powerful keyboard chord interaction system that revolutionizes how you interact with your email...",
     time: "10:30 AM",
     isUnread: true,
