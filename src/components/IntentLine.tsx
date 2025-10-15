@@ -21,6 +21,7 @@ export const IntentLine = ({ sensitivity = 70, easeIn = 200, onChordActivated, o
   const [firstKeyReleased, setFirstKeyReleased] = useState<string | null>(null);
   const [isAnimatingOut, setIsAnimatingOut] = useState(false);
   const [animationProgress, setAnimationProgress] = useState(0);
+  const [targetButtonType, setTargetButtonType] = useState<'reply' | 'replyAll' | 'forward' | 'close'>('reply');
 
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
@@ -59,6 +60,12 @@ export const IntentLine = ({ sensitivity = 70, easeIn = 200, onChordActivated, o
         e.preventDefault();
         createIntentLine();
         onChordActivated?.();
+      }
+
+      // Handle spacebar to cycle through targets when line is active
+      if (isLineActive && e.code.toLowerCase() === "space") {
+        e.preventDefault();
+        cycleTargetButton();
       }
     };
 
@@ -177,14 +184,73 @@ export const IntentLine = ({ sensitivity = 70, easeIn = 200, onChordActivated, o
       }
     };
 
-    const createIntentLine = () => {
-      // Find the Reply or Send button
+    const findTargetButton = (type: 'reply' | 'replyAll' | 'forward' | 'close') => {
       const buttons = Array.from(document.querySelectorAll("button"));
-      const targetButton = buttons.find((btn) => 
-        (btn.textContent?.includes("Reply") && !btn.textContent?.includes("Reply All")) ||
-        btn.textContent?.includes("Send")
-      );
       
+      switch (type) {
+        case 'reply':
+          return buttons.find((btn) => 
+            (btn.textContent?.includes("Reply") && !btn.textContent?.includes("Reply All")) ||
+            btn.textContent?.includes("Send")
+          );
+        case 'replyAll':
+          return buttons.find((btn) => btn.textContent?.includes("Reply All"));
+        case 'forward':
+          return buttons.find((btn) => btn.textContent?.includes("Forward"));
+        case 'close':
+          return buttons.find((btn) => btn.getAttribute("aria-label")?.includes("Close") || btn.textContent === "×");
+        default:
+          return null;
+      }
+    };
+
+    const cycleTargetButton = () => {
+      const cycleOrder: Array<'reply' | 'replyAll' | 'forward' | 'close'> = ['reply', 'replyAll', 'forward', 'close'];
+      const currentIndex = cycleOrder.indexOf(targetButtonType);
+      const nextIndex = (currentIndex + 1) % cycleOrder.length;
+      const nextType = cycleOrder[nextIndex];
+      
+      setTargetButtonType(nextType);
+      updateIntentLine(nextType);
+    };
+
+    const updateIntentLine = (type: 'reply' | 'replyAll' | 'forward' | 'close') => {
+      const targetButton = findTargetButton(type);
+      if (!targetButton) return;
+
+      const rect = targetButton.getBoundingClientRect();
+      const padding = 4;
+      
+      const rectX = rect.left - padding;
+      const rectY = rect.top - padding;
+      const rectWidth = rect.width + padding * 2;
+      const rectHeight = rect.height + padding * 2;
+      
+      const buttonCenterX = rect.left + rect.width / 2;
+      const buttonCenterY = rect.top + rect.height / 2;
+
+      const dx = buttonCenterX - cursorPos.x;
+      const dy = buttonCenterY - cursorPos.y;
+      const length = Math.sqrt(dx * dx + dy * dy);
+      
+      const avgDimension = (rectWidth + rectHeight) / 4;
+      const shortenedLength = length - avgDimension;
+      const ratio = shortenedLength / length;
+      
+      const shortenedX = cursorPos.x + dx * ratio;
+      const shortenedY = cursorPos.y + dy * ratio;
+
+      setButtonRect({ x: rectX, y: rectY, width: rectWidth, height: rectHeight });
+      setLine({
+        x1: cursorPos.x,
+        y1: cursorPos.y,
+        x2: shortenedX,
+        y2: shortenedY,
+      });
+    };
+
+    const createIntentLine = () => {
+      const targetButton = findTargetButton(targetButtonType);
       if (!targetButton) return;
 
       const rect = targetButton.getBoundingClientRect();
@@ -229,24 +295,18 @@ export const IntentLine = ({ sensitivity = 70, easeIn = 200, onChordActivated, o
         x2: shortenedX,
         y2: shortenedY,
       });
-
-      // Remove line after animation completes
-      setTimeout(() => {
-        setLine(null);
-        setIsLineActive(false);
-      }, 2000);
     };
 
     window.addEventListener("mousemove", handleMouseMove);
     window.addEventListener("keydown", handleKeyDown);
     window.addEventListener("keyup", handleKeyUp);
 
-    return () => {
+      return () => {
       window.removeEventListener("mousemove", handleMouseMove);
       window.removeEventListener("keydown", handleKeyDown);
       window.removeEventListener("keyup", handleKeyUp);
     };
-  }, [cursorPos, keysPressed, isLineActive, initialCursorPos, isIgnoringKeys]);
+  }, [cursorPos, keysPressed, isLineActive, initialCursorPos, isIgnoringKeys, targetButtonType, line]);
 
   // Check which keys are currently pressed
   const isQPressed = keysPressed.has("q") || keysPressed.has("keyq");
