@@ -103,7 +103,6 @@ export const EmailDetail = ({ isComposing, onClose, onSend, onReply }: EmailDeta
             
             <div className="mb-4">
               <h3 className="text-lg font-semibold mb-2">1️⃣ Preview AutoComplete</h3>
-              <p className="mb-2">Press and hold <kbd className="px-2 py-1 bg-muted rounded border text-lg">Q</kbd> + <kbd className="px-2 py-1 bg-muted rounded border text-lg">W</kbd></p>
             </div>
             
             <div className="mb-4">
@@ -113,6 +112,7 @@ export const EmailDetail = ({ isComposing, onClose, onSend, onReply }: EmailDeta
 
             {/* Chord Lasso Visual */}
             <div className="mb-6 flex items-center gap-2">
+              <span className="text-sm text-muted-foreground">hold down Q W ==&gt;</span>
               <span className="text-xl">🅰️</span>
               <svg width="200" height="20" xmlns="http://www.w3.org/2000/svg">
                 <defs>

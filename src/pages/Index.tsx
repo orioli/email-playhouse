@@ -109,6 +109,7 @@ const Index = () => {
   const [position, setPosition] = useState({ x: 16, y: 340 });
   const [isDragging, setIsDragging] = useState(false);
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
+  const [spaceBarCount, setSpaceBarCount] = useState(0);
 
   const handleCompose = () => {
     setIsComposing(true);
@@ -122,14 +123,24 @@ const Index = () => {
     }
   };
 
-  // Track actual clicks
+  // Track actual clicks and spacebar presses
   useEffect(() => {
     const handleClick = () => {
       setActualClicks(prev => prev + 1);
     };
     
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.code === "Space" && !e.repeat) {
+        setSpaceBarCount(prev => prev + 1);
+      }
+    };
+    
     window.addEventListener("click", handleClick);
-    return () => window.removeEventListener("click", handleClick);
+    window.addEventListener("keydown", handleKeyDown);
+    return () => {
+      window.removeEventListener("click", handleClick);
+      window.removeEventListener("keydown", handleKeyDown);
+    };
   }, []);
 
   // Track total traveled pixels continuously
@@ -298,6 +309,10 @@ const Index = () => {
               <div className="flex justify-between">
                 <span className="text-muted-foreground">Total Clicks:</span>
                 <span className="font-medium">{actualClicks}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-muted-foreground">Space Bar Presses:</span>
+                <span className="font-medium">{spaceBarCount}</span>
               </div>
               <div className="flex justify-between">
                 <span className="text-muted-foreground">Physically Travelled pixels:</span>
