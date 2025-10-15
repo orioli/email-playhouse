@@ -172,7 +172,7 @@ export const EmailDetail = ({ isComposing, onClose, onSend, onReply }: EmailDeta
               </div>
 
               {/* Pencil arrow and text annotation */}
-              <div className="absolute left-[200px] top-[25px] flex flex-col items-center">
+              <div className="absolute left-[140px] top-[25px] flex flex-col items-center">
                 <svg width="40" height="40" viewBox="0 0 40 40" className="rotate-[-20deg]">
                   <path
                     d="M 20 5 L 20 30 M 20 30 L 15 25 M 20 30 L 25 25"
