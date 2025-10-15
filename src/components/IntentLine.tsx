@@ -22,7 +22,6 @@ export const IntentLine = ({ sensitivity = 70, easeIn = 200, onChordActivated, o
   const [isAnimatingOut, setIsAnimatingOut] = useState(false);
   const [animationProgress, setAnimationProgress] = useState(0);
   const [targetButtonType, setTargetButtonType] = useState<'reply' | 'replyAll' | 'forward' | 'trash' | 'close'>('reply');
-  const [cancelTimeout, setCancelTimeout] = useState<number | null>(null);
 
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
@@ -86,72 +85,43 @@ export const IntentLine = ({ sensitivity = 70, easeIn = 200, onChordActivated, o
 
     // Check if this is the first key release or second
     if (!firstKeyReleased) {
-      // First key released - start timeout for cancel animation
+      // First key released
       setFirstKeyReleased(releasedKey);
       setLastKeyReleaseTime(now);
-      
-      // Start timeout - if second key isn't released within sensitivity, cancel
-      const timeoutId = window.setTimeout(() => {
-        // Timeout exceeded - trigger cancel animation immediately
-        setIsAnimatingOut(true);
-        onSuggestionDiscarded?.();
-        
-        const animationDuration = easeIn;
-        const startTime = Date.now();
-        
-        const animateLineOut = () => {
-          const elapsed = Date.now() - startTime;
-          const progress = Math.min(elapsed / animationDuration, 1);
-          
-          setAnimationProgress(-progress);
-          
-          if (progress < 1) {
-            requestAnimationFrame(animateLineOut);
-          } else {
-            setLine(null);
-            setButtonRect(null);
-            setIsLineActive(false);
-            setIsAnimatingOut(false);
-            setAnimationProgress(0);
-            setFirstKeyReleased(null);
-            setLastKeyReleaseTime(null);
-          }
-        };
-        
-        requestAnimationFrame(animateLineOut);
-      }, sensitivity);
-      
-      setCancelTimeout(timeoutId);
     } else if (firstKeyReleased !== releasedKey) {
-      // Second key released - clear timeout and check timing
-      if (cancelTimeout) {
-        window.clearTimeout(cancelTimeout);
-        setCancelTimeout(null);
-      }
-      
+      // Second key released - check timing regardless of order
       const timeDiff = now - (lastKeyReleaseTime || 0);
       
       if (timeDiff <= sensitivity) {
         // Released together (within threshold) - trigger the send sequence with animation
         setIsAnimatingOut(true);
         
-        // Animate wipe effect from cursor to button
+        // Animate the line disappearing from cursor side
         const animationDuration = easeIn;
         const startTime = Date.now();
+        const originalLine = line;
         
         const animateLineOut = () => {
           const elapsed = Date.now() - startTime;
           const progress = Math.min(elapsed / animationDuration, 1);
           
-          setAnimationProgress(progress);
-          
-          if (progress < 1) {
+          if (progress < 1 && originalLine) {
+            // Interpolate from cursor (x1, y1) towards button (x2, y2)
+            const newX1 = originalLine.x1 + (originalLine.x2 - originalLine.x1) * progress;
+            const newY1 = originalLine.y1 + (originalLine.y2 - originalLine.y1) * progress;
+            
+            setLine({
+              x1: newX1,
+              y1: newY1,
+              x2: originalLine.x2,
+              y2: originalLine.y2,
+            });
+            
             requestAnimationFrame(animateLineOut);
           } else {
             // Animation complete - hide everything and show toast
             setLine(null);
             setIsAnimatingOut(false);
-            setAnimationProgress(0);
             
             setTimeout(() => {
               setButtonRect(null);
@@ -164,8 +134,43 @@ export const IntentLine = ({ sensitivity = 70, easeIn = 200, onChordActivated, o
         };
         
         requestAnimationFrame(animateLineOut);
+      } else {
+        // Released apart (more than threshold) - cancel with animation from button to cursor
+        setIsAnimatingOut(true);
+        onSuggestionDiscarded?.(); // Track discarded suggestion
+        
+        const animationDuration = easeIn;
+        const startTime = Date.now();
+        const originalLine = line;
+        
+        const animateLineOut = () => {
+          const elapsed = Date.now() - startTime;
+          const progress = Math.min(elapsed / animationDuration, 1);
+          
+          if (progress < 1 && originalLine) {
+            // Interpolate from button (x2, y2) towards cursor (x1, y1)
+            const newX2 = originalLine.x2 + (originalLine.x1 - originalLine.x2) * progress;
+            const newY2 = originalLine.y2 + (originalLine.y1 - originalLine.y2) * progress;
+            
+            setLine({
+              x1: originalLine.x1,
+              y1: originalLine.y1,
+              x2: newX2,
+              y2: newY2,
+            });
+            
+            requestAnimationFrame(animateLineOut);
+          } else {
+            // Animation complete - hide everything
+            setLine(null);
+            setButtonRect(null);
+            setIsLineActive(false);
+            setIsAnimatingOut(false);
+          }
+        };
+        
+        requestAnimationFrame(animateLineOut);
       }
-      // If timeDiff > sensitivity, the timeout already triggered the cancel animation
       
       // Reset tracking
       setFirstKeyReleased(null);
@@ -176,11 +181,6 @@ export const IntentLine = ({ sensitivity = 70, easeIn = 200, onChordActivated, o
       // Reset ignore flag when Q or W is released
       if (releasedQ || releasedW) {
         setIsIgnoringKeys(false);
-        // Clear timeout if exists
-        if (cancelTimeout) {
-          window.clearTimeout(cancelTimeout);
-          setCancelTimeout(null);
-        }
       }
     };
 
@@ -333,7 +333,7 @@ export const IntentLine = ({ sensitivity = 70, easeIn = 200, onChordActivated, o
       window.removeEventListener("keydown", handleKeyDown);
       window.removeEventListener("keyup", handleKeyUp);
     };
-  }, [cursorPos, keysPressed, isLineActive, initialCursorPos, isIgnoringKeys, targetButtonType, line, sensitivity, easeIn, cancelTimeout, firstKeyReleased, lastKeyReleaseTime, onChordActivated, onActionConfirmed, onLineCreated, onSuggestionDiscarded]);
+  }, [cursorPos, keysPressed, isLineActive, initialCursorPos, isIgnoringKeys, targetButtonType, line]);
 
   // Check which keys are currently pressed
   const isQPressed = keysPressed.has("q") || keysPressed.has("keyq");
@@ -453,18 +453,6 @@ export const IntentLine = ({ sensitivity = 70, easeIn = 200, onChordActivated, o
               repeatCount="indefinite"
             />
           </pattern>
-
-          {/* Wipe mask - linear gradient for disappear effect */}
-          <linearGradient id="wipeMask" x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" stopColor="white" stopOpacity={animationProgress >= 0 ? (animationProgress > 0 ? 0 : 1) : 1} />
-            <stop offset={`${Math.abs(animationProgress) * 100}%`} stopColor="white" stopOpacity={animationProgress >= 0 ? 0 : 1} />
-            <stop offset={`${Math.abs(animationProgress) * 100}%`} stopColor="white" stopOpacity={animationProgress >= 0 ? 1 : 0} />
-            <stop offset="100%" stopColor="white" stopOpacity={animationProgress >= 0 ? 1 : 0} />
-          </linearGradient>
-
-          <mask id="lineWipeMask">
-            <rect x="0" y="0" width="100%" height="100%" fill="url(#wipeMask)" />
-          </mask>
         </defs>
 
         {(() => {
@@ -489,34 +477,32 @@ export const IntentLine = ({ sensitivity = 70, easeIn = 200, onChordActivated, o
           
           return (
             <>
-              <g mask={isAnimatingOut ? "url(#lineWipeMask)" : undefined}>
-                <path
-                  d={pathData}
-                  stroke="url(#stripes)"
-                  strokeWidth="3"
-                  strokeLinecap="round"
-                  fill="none"
-                  className="animate-in fade-in duration-200"
-                />
+              <path
+                d={pathData}
+                stroke="url(#stripes)"
+                strokeWidth="3"
+                strokeLinecap="round"
+                fill="none"
+                className="animate-in fade-in duration-200"
+              />
 
-                <path
-                  d={pathData}
-                  stroke="#10b981"
-                  strokeWidth="5"
-                  strokeLinecap="round"
-                  fill="none"
-                  opacity="0.3"
-                  filter="blur(4px)"
-                />
+              <path
+                d={pathData}
+                stroke="#10b981"
+                strokeWidth="5"
+                strokeLinecap="round"
+                fill="none"
+                opacity="0.3"
+                filter="blur(4px)"
+              />
 
-                {/* Animated arrow at the end */}
-                <g transform={`translate(${line.x2}, ${line.y2}) rotate(${tangentAngle})`}>
-                  <polygon
-                    points="0,0 -10,-5 -10,5"
-                    fill="#10b981"
-                    className="animate-pulse"
-                  />
-                </g>
+              {/* Animated arrow at the end */}
+              <g transform={`translate(${line.x2}, ${line.y2}) rotate(${tangentAngle})`}>
+                <polygon
+                  points="0,0 -10,-5 -10,5"
+                  fill="#10b981"
+                  className="animate-pulse"
+                />
               </g>
             </>
           );

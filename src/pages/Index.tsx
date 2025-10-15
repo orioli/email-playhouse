@@ -97,7 +97,7 @@ const Index = () => {
   const [selectedEmail, setSelectedEmail] = useState<string | null>("1");
   const [isComposing, setIsComposing] = useState(false);
   const [sensitivity, setSensitivity] = useState(70);
-  const [easeIn, setEaseIn] = useState(2000);
+  const [easeIn, setEaseIn] = useState(200);
   const [chordCount, setChordCount] = useState(0);
   const [sessionStartTime] = useState(new Date());
   const [unteraveledPixels, setUntraveledPixels] = useState(0);
@@ -259,8 +259,8 @@ const Index = () => {
                 value={[easeIn]}
                 onValueChange={(value) => setEaseIn(value[0])}
                 min={0}
-                max={3000}
-                step={100}
+                max={500}
+                step={10}
                 className="flex-1"
               />
             </div>
