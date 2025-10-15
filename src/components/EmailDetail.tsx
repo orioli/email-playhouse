@@ -133,7 +133,7 @@ export const EmailDetail = ({ isComposing, onClose, onSend, onReply }: EmailDeta
             {/* Video demo */}
             <div className="mb-6">
               <video
-                className="w-full rounded-lg cursor-pointer"
+                className="w-1/2 rounded-lg cursor-pointer"
                 autoPlay
                 muted
                 playsInline
