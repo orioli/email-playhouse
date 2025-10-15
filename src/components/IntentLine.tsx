@@ -330,6 +330,7 @@ export const IntentLine = ({ sensitivity = 70, easeIn = 200, onChordActivated, o
   // Check which keys are currently pressed
   const isQPressed = keysPressed.has("q") || keysPressed.has("keyq");
   const isWPressed = keysPressed.has("w") || keysPressed.has("keyw");
+  const isSpacePressed = keysPressed.has(" ") || keysPressed.has("space");
 
   return (
     <div className="fixed inset-0 pointer-events-none z-50">
@@ -360,6 +361,20 @@ export const IntentLine = ({ sensitivity = 70, easeIn = 200, onChordActivated, o
           }}
         >
           🆆
+        </div>
+      )}
+      {isSpacePressed && isLineActive && (
+        <div 
+          className="absolute flex items-center justify-center bg-gray-400/80 rounded text-sm font-bold"
+          style={{
+            left: cursorPos.x + 60,
+            top: cursorPos.y,
+            width: 60,
+            height: 30,
+            transform: 'translate(-50%, -50%)'
+          }}
+        >
+          SPACE
         </div>
       )}
       
