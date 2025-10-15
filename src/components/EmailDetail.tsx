@@ -172,6 +172,14 @@ export const EmailDetail = ({ isComposing, onClose, onSend, onReply }: EmailDeta
                 <li>Move the mouse, or</li>
                 <li>Release <span className="text-2xl inline-block px-1 border border-emerald-500 rounded">🆆</span> first</li>
               </ul>
+            </div>
+            
+            <div className="mb-4">
+              <h3 className="text-lg font-semibold mb-2">4️⃣ Loop thru options:</h3>
+              <p className="mb-2">While holding <span className="text-2xl inline-block px-1 border border-emerald-500 rounded">🆀</span> + <span className="text-2xl inline-block px-1 border border-emerald-500 rounded">🆆</span>, press <kbd className="px-2 py-1 bg-muted rounded border">Space</kbd> to cycle through available actions:</p>
+              <ul className="list-disc ml-6">
+                <li>Reply → Reply All → Forward → Trash → Close</li>
+              </ul>
               <hr className="mt-4 border-border" />
               <p className="mt-4">
                 Read more about our research at:{" "}
