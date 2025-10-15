@@ -14,6 +14,28 @@ interface EmailDetailProps {
 export const EmailDetail = ({ isComposing, onClose, onSend, onReply }: EmailDetailProps) => {
   const { toast } = useToast();
 
+  const handleVideoEnd = (e: React.SyntheticEvent<HTMLVideoElement>) => {
+    const video = e.currentTarget;
+    const playCount = parseInt(video.dataset.playCount || "0");
+    
+    if (playCount < 2) {
+      video.dataset.playCount = String(playCount + 1);
+      video.play();
+    } else {
+      video.dataset.playCount = "3";
+      video.removeAttribute("autoplay");
+    }
+  };
+
+  const handleVideoClick = (e: React.MouseEvent<HTMLVideoElement>) => {
+    const video = e.currentTarget;
+    if (video.paused) {
+      video.play();
+    } else {
+      video.pause();
+    }
+  };
+
   const handleSend = () => {
     toast({
       title: "Email sent",
@@ -111,11 +133,14 @@ export const EmailDetail = ({ isComposing, onClose, onSend, onReply }: EmailDeta
             {/* Video demo */}
             <div className="mb-6">
               <video
-                className="w-full rounded-lg"
+                className="w-full rounded-lg cursor-pointer"
                 autoPlay
                 muted
                 playsInline
                 src="/videos/chord-demo.mov"
+                onEnded={handleVideoEnd}
+                onClick={handleVideoClick}
+                data-play-count="0"
               />
             </div>
 
