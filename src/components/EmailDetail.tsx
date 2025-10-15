@@ -201,7 +201,7 @@ export const EmailDetail = ({ isComposing, onClose, onSend, onReply }: EmailDeta
             </div>
 
             <div className="mb-4">
-              <h3 className="text-lg font-semibold mb-2">↩️ Cancel (Abort Action):</h3>
+              <h3 className="text-lg font-semibold mb-2">🙅‍♀️ To Discard suggestion :</h3>
               <p className="mb-2">Either:</p>
               <ul className="list-disc ml-6">
                 <li>Move the mouse, or</li>
