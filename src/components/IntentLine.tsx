@@ -224,7 +224,15 @@ export const IntentLine = ({ sensitivity = 70, easeIn = 200, onChordActivated, o
     };
 
     const cycleTargetButton = () => {
-      const cycleOrder: Array<'reply' | 'replyAll' | 'forward' | 'trash' | 'close'> = ['reply', 'replyAll', 'forward', 'trash', 'close'];
+      // Check if we're in compose mode (Send button exists)
+      const hasSendButton = Array.from(document.querySelectorAll("button")).some(btn => btn.textContent?.includes("Send"));
+      
+      // In compose mode: only cycle Send → Close
+      // In email view: cycle Reply → Reply All → Forward → Trash → Close
+      const cycleOrder: Array<'reply' | 'replyAll' | 'forward' | 'trash' | 'close'> = hasSendButton 
+        ? ['reply', 'close']  // 'reply' will find Send button in compose mode
+        : ['reply', 'replyAll', 'forward', 'trash', 'close'];
+      
       const currentIndex = cycleOrder.indexOf(targetButtonType);
       const nextIndex = (currentIndex + 1) % cycleOrder.length;
       const nextType = cycleOrder[nextIndex];
