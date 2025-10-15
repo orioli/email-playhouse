@@ -169,29 +169,6 @@ export const EmailDetail = ({ isComposing, onClose, onSend, onReply }: EmailDeta
                 </svg>
                 <span className="text-xl">🅱️</span>
               </div>
-
-              {/* Pencil arrow and text annotation */}
-              <div className="absolute left-[140px] top-[25px] flex flex-col items-center">
-                <svg width="40" height="40" viewBox="0 0 40 40" className="rotate-[-20deg]">
-                  <path
-                    d="M 20 5 L 20 30 M 20 30 L 15 25 M 20 30 L 25 25"
-                    stroke="#e11d48"
-                    strokeWidth="2.5"
-                    strokeLinecap="round"
-                    fill="none"
-                  />
-                </svg>
-                <div
-                  className="text-rose-600 font-bold text-sm whitespace-nowrap"
-                  style={{
-                    fontFamily: '"Comic Sans MS", "Comic Sans", cursive',
-                    transform: "rotate(-5deg)",
-                    textShadow: "1px 1px 0px rgba(0,0,0,0.1)",
-                  }}
-                >
-                  Let the AI move the mouse
-                </div>
-              </div>
             </div>
 
             <div className="mb-4 mt-12">
