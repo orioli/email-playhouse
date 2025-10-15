@@ -195,7 +195,7 @@ export const EmailDetail = ({ isComposing, onClose, onSend, onReply }: EmailDeta
               </div>
             </div>
 
-            <div className="mb-4 mt-8">
+            <div className="mb-4 mt-12">
               <h3 className="text-lg font-semibold mb-2">✅ To Release</h3>
               <span className="text-sm text-muted-foreground">Release both keys simultaneously</span>
             </div>
