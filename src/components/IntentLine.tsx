@@ -22,6 +22,7 @@ export const IntentLine = ({ sensitivity = 70, easeIn = 200, onChordActivated, o
   const [isAnimatingOut, setIsAnimatingOut] = useState(false);
   const [animationProgress, setAnimationProgress] = useState(0);
   const [targetButtonType, setTargetButtonType] = useState<'reply' | 'replyAll' | 'forward' | 'trash' | 'close'>('reply');
+  const [cancelTimeout, setCancelTimeout] = useState<number | null>(null);
 
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
@@ -85,11 +86,49 @@ export const IntentLine = ({ sensitivity = 70, easeIn = 200, onChordActivated, o
 
     // Check if this is the first key release or second
     if (!firstKeyReleased) {
-      // First key released
+      // First key released - start timeout for cancel animation
       setFirstKeyReleased(releasedKey);
       setLastKeyReleaseTime(now);
+      
+      // Start timeout - if second key isn't released within sensitivity, cancel
+      const timeoutId = window.setTimeout(() => {
+        // Timeout exceeded - trigger cancel animation immediately
+        setIsAnimatingOut(true);
+        onSuggestionDiscarded?.();
+        
+        const animationDuration = easeIn;
+        const startTime = Date.now();
+        
+        const animateLineOut = () => {
+          const elapsed = Date.now() - startTime;
+          const progress = Math.min(elapsed / animationDuration, 1);
+          
+          setAnimationProgress(-progress);
+          
+          if (progress < 1) {
+            requestAnimationFrame(animateLineOut);
+          } else {
+            setLine(null);
+            setButtonRect(null);
+            setIsLineActive(false);
+            setIsAnimatingOut(false);
+            setAnimationProgress(0);
+            setFirstKeyReleased(null);
+            setLastKeyReleaseTime(null);
+          }
+        };
+        
+        requestAnimationFrame(animateLineOut);
+      }, sensitivity);
+      
+      setCancelTimeout(timeoutId);
     } else if (firstKeyReleased !== releasedKey) {
-      // Second key released - check timing regardless of order
+      // Second key released - clear timeout and check timing
+      if (cancelTimeout) {
+        window.clearTimeout(cancelTimeout);
+        setCancelTimeout(null);
+      }
+      
       const timeDiff = now - (lastKeyReleaseTime || 0);
       
       if (timeDiff <= sensitivity) {
@@ -125,35 +164,8 @@ export const IntentLine = ({ sensitivity = 70, easeIn = 200, onChordActivated, o
         };
         
         requestAnimationFrame(animateLineOut);
-      } else {
-        // Released apart (more than threshold) - cancel with wipe from button to cursor
-        setIsAnimatingOut(true);
-        onSuggestionDiscarded?.(); // Track discarded suggestion
-        
-        const animationDuration = easeIn;
-        const startTime = Date.now();
-        
-        const animateLineOut = () => {
-          const elapsed = Date.now() - startTime;
-          const progress = Math.min(elapsed / animationDuration, 1);
-          
-          // Negative progress for reverse wipe
-          setAnimationProgress(-progress);
-          
-          if (progress < 1) {
-            requestAnimationFrame(animateLineOut);
-          } else {
-            // Animation complete - hide everything
-            setLine(null);
-            setButtonRect(null);
-            setIsLineActive(false);
-            setIsAnimatingOut(false);
-            setAnimationProgress(0);
-          }
-        };
-        
-        requestAnimationFrame(animateLineOut);
       }
+      // If timeDiff > sensitivity, the timeout already triggered the cancel animation
       
       // Reset tracking
       setFirstKeyReleased(null);
@@ -164,6 +176,11 @@ export const IntentLine = ({ sensitivity = 70, easeIn = 200, onChordActivated, o
       // Reset ignore flag when Q or W is released
       if (releasedQ || releasedW) {
         setIsIgnoringKeys(false);
+        // Clear timeout if exists
+        if (cancelTimeout) {
+          window.clearTimeout(cancelTimeout);
+          setCancelTimeout(null);
+        }
       }
     };
 
@@ -316,7 +333,7 @@ export const IntentLine = ({ sensitivity = 70, easeIn = 200, onChordActivated, o
       window.removeEventListener("keydown", handleKeyDown);
       window.removeEventListener("keyup", handleKeyUp);
     };
-  }, [cursorPos, keysPressed, isLineActive, initialCursorPos, isIgnoringKeys, targetButtonType, line]);
+  }, [cursorPos, keysPressed, isLineActive, initialCursorPos, isIgnoringKeys, targetButtonType, line, sensitivity, easeIn, cancelTimeout, firstKeyReleased, lastKeyReleaseTime, onChordActivated, onActionConfirmed, onLineCreated, onSuggestionDiscarded]);
 
   // Check which keys are currently pressed
   const isQPressed = keysPressed.has("q") || keysPressed.has("keyq");
