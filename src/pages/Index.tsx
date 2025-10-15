@@ -254,7 +254,7 @@ const Index = () => {
         {!isMinimized && (
           <div className="p-4 space-y-3">
             <div className="flex items-center gap-4">
-              <label className="text-sm font-medium whitespace-nowrap">Cancel Sensitivity: {sensitivity}ms</label>
+              <label className="text-sm font-medium whitespace-nowrap">Discard Chord Sensitivity: {sensitivity}ms</label>
               <Slider
                 value={[sensitivity]}
                 onValueChange={(value) => setSensitivity(value[0])}
