@@ -101,6 +101,16 @@ export const EmailDetail = ({ isComposing, onClose, onSend, onReply }: EmailDeta
 
           <div className="prose prose-sm max-w-none">
             
+            <div className="mb-4">
+              <h3 className="text-lg font-semibold mb-2">1️⃣ Preview AutoComplete</h3>
+              <p className="mb-2">Press and hold <kbd className="px-2 py-1 bg-muted rounded border text-lg">Q</kbd> + <kbd className="px-2 py-1 bg-muted rounded border text-lg">W</kbd></p>
+            </div>
+            
+            <div className="mb-4">
+              <h3 className="text-lg font-semibold mb-2">💡 Accept AI Suggestion</h3>
+              <p className="mb-2">Release both <kbd className="px-2 py-1 bg-muted rounded border text-lg">Q</kbd> and <kbd className="px-2 py-1 bg-muted rounded border text-lg">W</kbd> simultaneously</p>
+            </div>
+
             {/* Chord Lasso Visual */}
             <div className="mb-6 flex items-center gap-2">
               <span className="text-xl">🅰️</span>
@@ -151,16 +161,6 @@ export const EmailDetail = ({ isComposing, onClose, onSend, onReply }: EmailDeta
                 />
               </svg>
               <span className="text-xl">🅱️</span>
-            </div>
-            
-            <div className="mb-4">
-              <h3 className="text-lg font-semibold mb-2">1️⃣ Preview AutoComplete</h3>
-              <p className="mb-2">Press and hold <kbd className="px-2 py-1 bg-muted rounded border text-lg">Q</kbd> + <kbd className="px-2 py-1 bg-muted rounded border text-lg">W</kbd></p>
-            </div>
-            
-            <div className="mb-4">
-              <h3 className="text-lg font-semibold mb-2">💡 Accept AI Suggestion</h3>
-              <p className="mb-2">Release both <kbd className="px-2 py-1 bg-muted rounded border text-lg">Q</kbd> and <kbd className="px-2 py-1 bg-muted rounded border text-lg">W</kbd> simultaneously</p>
             </div>
             
             <div className="mb-4">
