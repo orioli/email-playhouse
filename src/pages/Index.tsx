@@ -320,7 +320,44 @@ const Index = () => {
                 <span className="text-xs text-muted-foreground">Pat. Pend.</span>
               </div>
             </div>
-            <div className="pt-4 flex justify-center">
+            <div className="pt-4 flex justify-center gap-2">
+              <Button 
+                size="lg" 
+                variant="outline"
+                className="border-black hover:bg-gray-100"
+                onClick={() => {
+                  const downloadTime = new Date().toISOString();
+                  const lessTravel = (totalTraveledPixels + unteraveledPixels) > 0 ? Math.round((unteraveledPixels / (totalTraveledPixels + unteraveledPixels)) * 100) : 0;
+                  const lessClicks = (actualClicks + chordCount) > 0 ? Math.round((chordCount / (actualClicks + chordCount)) * 100) : 0;
+                  
+                  const csvContent = [
+                    ['Metric', 'Value'],
+                    ['Session Start Time', sessionStartTime.toLocaleString()],
+                    ['Sensitivity (ms)', sensitivity],
+                    ['Ease Out (ms)', easeIn],
+                    ['Clicks Saved', chordCount],
+                    ['Untraveled Pixels', Math.round(unteraveledPixels)],
+                    ['Discarded Suggestions', discardedSuggestions],
+                    ['Total Clicks', actualClicks],
+                    ['Space Bar Presses', spaceBarCount],
+                    ['Physically Travelled Pixels', Math.round(totalTraveledPixels)],
+                    ['Savings - Less Travel (%)', lessTravel],
+                    ['Savings - Less Clicks (%)', lessClicks],
+                    ['Download Time', downloadTime],
+                  ].map(row => row.join(',')).join('\n');
+                  
+                  const blob = new Blob([csvContent], { type: 'text/csv' });
+                  const url = window.URL.createObjectURL(blob);
+                  const a = document.createElement('a');
+                  a.href = url;
+                  a.download = `stats-${Date.now()}.csv`;
+                  a.click();
+                  window.URL.revokeObjectURL(url);
+                }}
+              >
+                <Download className="mr-2 h-4 w-4" />
+                Download CSV
+              </Button>
               <Button 
                 size="lg" 
                 className="bg-black hover:bg-gray-800 text-white"
