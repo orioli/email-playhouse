@@ -114,7 +114,7 @@ export const EmailDetail = ({ isComposing, onClose, onSend, onReply }: EmailDeta
       {/* Email Content */}
       <div className="flex-1 overflow-y-auto p-6">
         <div className="max-w-3xl mx-auto">
-          <h1 className="text-2xl font-semibold mb-4">🖱️ Quick Instructions</h1>
+          <h1 className="text-2xl font-semibold mb-4">👇 Try me!</h1>
 
           <div className="flex items-start justify-between mb-6 pb-6 border-b border-border">
             <div className="flex items-start gap-3">
@@ -145,7 +145,7 @@ export const EmailDetail = ({ isComposing, onClose, onSend, onReply }: EmailDeta
             </div>
 
             <div className="mb-4">
-              <h3 className="text-lg font-semibold mb-2">1️⃣ To Suggest</h3>
+              <h3 className="text-lg font-semibold mb-2">1️⃣👇 Try me!</h3>
 
               <span className="text-sm text-muted-foreground">
                 <kbd className="px-2 py-1 bg-muted rounded border text-lg">⤓Q</kbd> +{" "}
