@@ -214,7 +214,7 @@ const Index = () => {
   return (
     <div className="h-screen flex flex-col">
       <div 
-        className="fixed z-50 bg-background backdrop-blur-sm border border-black rounded-lg shadow-2xl transition-all"
+        className="fixed z-50 bg-white border-2 border-black shadow-2xl transition-all"
         style={{
           left: `${position.x}px`,
           top: `${position.y}px`,
@@ -224,18 +224,18 @@ const Index = () => {
         }}
       >
         <div 
-          className="p-3 border-b flex items-center justify-between cursor-grab active:cursor-grabbing"
+          className="p-3 bg-black border-b-2 border-black flex items-center justify-between cursor-grab active:cursor-grabbing"
           onMouseDown={handleMouseDown}
         >
           <div className="flex items-center gap-3">
-            <span className="text-lg font-semibold">Your Stats</span>
+            <span className="text-lg font-bold text-white tracking-wide">Your Stats</span>
             <div className="w-16 h-6">
               <ResponsiveContainer width="100%" height="100%">
                 <LineChart data={chartData}>
                   <Line 
                     type="monotone" 
                     dataKey="value" 
-                    stroke="hsl(var(--primary))" 
+                    stroke="#ffffff" 
                     strokeWidth={1.5}
                     dot={false}
                   />
@@ -245,7 +245,7 @@ const Index = () => {
           </div>
           <button
             onClick={() => setIsMinimized(!isMinimized)}
-            className="text-muted-foreground hover:text-foreground transition-colors"
+            className="text-white hover:text-gray-300 transition-colors font-bold"
           >
             {isMinimized ? "+" : "−"}
           </button>
