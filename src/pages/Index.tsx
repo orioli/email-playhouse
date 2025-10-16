@@ -4,6 +4,7 @@ import { EmailList } from "@/components/EmailList";
 import { EmailDetail } from "@/components/EmailDetail";
 import { EmailHeader } from "@/components/EmailHeader";
 import { IntentLine } from "@/components/IntentLine";
+import { WaitlistDialog } from "@/components/WaitlistDialog";
 import { Slider } from "@/components/ui/slider";
 import { useToast } from "@/hooks/use-toast";
 import { LineChart, Line, ResponsiveContainer } from "recharts";
@@ -112,6 +113,7 @@ const Index = () => {
   const [isDragging, setIsDragging] = useState(false);
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
   const [spaceBarCount, setSpaceBarCount] = useState(0);
+  const [isWaitlistOpen, setIsWaitlistOpen] = useState(false);
 
   const handleCompose = () => {
     setIsComposing(true);
@@ -215,6 +217,7 @@ const Index = () => {
 
   return (
     <div className="h-screen flex flex-col">
+      <WaitlistDialog open={isWaitlistOpen} onOpenChange={setIsWaitlistOpen} />
       <div 
         className="fixed z-50 bg-white border-2 border-black shadow-2xl transition-all"
         style={{
@@ -317,7 +320,11 @@ const Index = () => {
               </div>
             </div>
             <div className="pt-4 flex justify-center">
-              <Button size="lg" className="bg-lime-500 hover:bg-lime-600 text-white">
+              <Button 
+                size="lg" 
+                className="bg-lime-500 hover:bg-lime-600 text-white"
+                onClick={() => setIsWaitlistOpen(true)}
+              >
                 <Download className="mr-2 h-4 w-4" />
                 Get Plug-In
               </Button>
