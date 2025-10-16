@@ -14,9 +14,11 @@ Deno.serve(async (req) => {
   try {
     const { email, stats } = await req.json()
 
-    if (!email || !email.trim()) {
+    // Validate email format and length
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+    if (!email || !email.trim() || email.length > 255 || !emailRegex.test(email.trim())) {
       return new Response(
-        JSON.stringify({ error: 'Email is required' }),
+        JSON.stringify({ error: 'Valid email is required (max 255 characters)' }),
         { 
           status: 400, 
           headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
@@ -33,6 +35,29 @@ Deno.serve(async (req) => {
     const supabaseUrl = Deno.env.get('SUPABASE_URL')!
     const supabaseKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!
     const supabase = createClient(supabaseUrl, supabaseKey)
+
+    // Rate limiting: Check for duplicate emails or recent submissions from same IP
+    const oneHourAgo = new Date(Date.now() - 60 * 60 * 1000).toISOString()
+    
+    const { data: recentSubmissions, error: checkError } = await supabase
+      .from('waitlist')
+      .select('id')
+      .or(`email.eq.${email.trim().toLowerCase()},and(ip_address.eq.${ipAddress},created_at.gte.${oneHourAgo})`)
+      .limit(1)
+
+    if (checkError) {
+      console.error('Rate limit check error:', checkError.message)
+    }
+
+    if (recentSubmissions && recentSubmissions.length > 0) {
+      return new Response(
+        JSON.stringify({ error: 'Email already registered or too many requests from this IP' }),
+        { 
+          status: 429, 
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
+        }
+      )
+    }
 
     // Insert into waitlist table
     const { data, error } = await supabase
@@ -54,7 +79,7 @@ Deno.serve(async (req) => {
       .single()
 
     if (error) {
-      console.error('Database error:', error)
+      console.error('Database error:', error.message)
       return new Response(
         JSON.stringify({ error: 'Failed to join waitlist' }),
         { 
@@ -64,7 +89,7 @@ Deno.serve(async (req) => {
       )
     }
 
-    console.log('Successfully added to waitlist:', data)
+    console.log('Successfully added to waitlist - ID:', data.id)
 
     return new Response(
       JSON.stringify({ success: true, data }),
