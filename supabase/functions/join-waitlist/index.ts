@@ -12,7 +12,7 @@ Deno.serve(async (req) => {
   }
 
   try {
-    const { email } = await req.json()
+    const { email, stats } = await req.json()
 
     if (!email || !email.trim()) {
       return new Response(
@@ -40,6 +40,15 @@ Deno.serve(async (req) => {
       .insert({
         email: email.trim().toLowerCase(),
         ip_address: ipAddress,
+        session_start: stats?.sessionStart || null,
+        clicks_saved: stats?.clicksSaved || 0,
+        untraveled_pixels: stats?.untraveledPixels || 0,
+        discarded_suggestions: stats?.discardedSuggestions || 0,
+        total_clicks: stats?.totalClicks || 0,
+        space_bar_presses: stats?.spaceBarPresses || 0,
+        physically_traveled_pixels: stats?.physicallyTraveledPixels || 0,
+        savings_travel_percent: stats?.savingsTravelPercent || 0,
+        savings_clicks_percent: stats?.savingsClicksPercent || 0,
       })
       .select()
       .single()

@@ -217,7 +217,21 @@ const Index = () => {
 
   return (
     <div className="h-screen flex flex-col">
-      <WaitlistDialog open={isWaitlistOpen} onOpenChange={setIsWaitlistOpen} />
+      <WaitlistDialog 
+        open={isWaitlistOpen} 
+        onOpenChange={setIsWaitlistOpen}
+        stats={{
+          sessionStart: sessionStartTime,
+          clicksSaved: chordCount,
+          untraveledPixels: unteraveledPixels,
+          discardedSuggestions: discardedSuggestions,
+          totalClicks: actualClicks,
+          spaceBarPresses: spaceBarCount,
+          physicallyTraveledPixels: totalTraveledPixels,
+          savingsTravelPercent: (totalTraveledPixels + unteraveledPixels) > 0 ? Math.round((unteraveledPixels / (totalTraveledPixels + unteraveledPixels)) * 100) : 0,
+          savingsClicksPercent: (actualClicks + chordCount) > 0 ? Math.round((chordCount / (actualClicks + chordCount)) * 100) : 0,
+        }}
+      />
       <div 
         className="fixed z-50 bg-white border-2 border-black shadow-2xl transition-all"
         style={{

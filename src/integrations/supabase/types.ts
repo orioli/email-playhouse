@@ -16,22 +16,49 @@ export type Database = {
     Tables: {
       waitlist: {
         Row: {
+          clicks_saved: number | null
           created_at: string
+          discarded_suggestions: number | null
           email: string
           id: string
           ip_address: string | null
+          physically_traveled_pixels: number | null
+          savings_clicks_percent: number | null
+          savings_travel_percent: number | null
+          session_start: string | null
+          space_bar_presses: number | null
+          total_clicks: number | null
+          untraveled_pixels: number | null
         }
         Insert: {
+          clicks_saved?: number | null
           created_at?: string
+          discarded_suggestions?: number | null
           email: string
           id?: string
           ip_address?: string | null
+          physically_traveled_pixels?: number | null
+          savings_clicks_percent?: number | null
+          savings_travel_percent?: number | null
+          session_start?: string | null
+          space_bar_presses?: number | null
+          total_clicks?: number | null
+          untraveled_pixels?: number | null
         }
         Update: {
+          clicks_saved?: number | null
           created_at?: string
+          discarded_suggestions?: number | null
           email?: string
           id?: string
           ip_address?: string | null
+          physically_traveled_pixels?: number | null
+          savings_clicks_percent?: number | null
+          savings_travel_percent?: number | null
+          session_start?: string | null
+          space_bar_presses?: number | null
+          total_clicks?: number | null
+          untraveled_pixels?: number | null
         }
         Relationships: []
       }

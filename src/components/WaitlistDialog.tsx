@@ -9,9 +9,20 @@ import { Download, X } from "lucide-react";
 interface WaitlistDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
+  stats: {
+    sessionStart: Date;
+    clicksSaved: number;
+    untraveledPixels: number;
+    discardedSuggestions: number;
+    totalClicks: number;
+    spaceBarPresses: number;
+    physicallyTraveledPixels: number;
+    savingsTravelPercent: number;
+    savingsClicksPercent: number;
+  };
 }
 
-export const WaitlistDialog = ({ open, onOpenChange }: WaitlistDialogProps) => {
+export const WaitlistDialog = ({ open, onOpenChange, stats }: WaitlistDialogProps) => {
   const [email, setEmail] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
@@ -44,7 +55,20 @@ export const WaitlistDialog = ({ open, onOpenChange }: WaitlistDialogProps) => {
 
     try {
       const { error } = await supabase.functions.invoke('join-waitlist', {
-        body: { email }
+        body: { 
+          email,
+          stats: {
+            sessionStart: stats.sessionStart.toISOString(),
+            clicksSaved: stats.clicksSaved,
+            untraveledPixels: Math.round(stats.untraveledPixels),
+            discardedSuggestions: stats.discardedSuggestions,
+            totalClicks: stats.totalClicks,
+            spaceBarPresses: stats.spaceBarPresses,
+            physicallyTraveledPixels: Math.round(stats.physicallyTraveledPixels),
+            savingsTravelPercent: stats.savingsTravelPercent,
+            savingsClicksPercent: stats.savingsClicksPercent,
+          }
+        }
       });
 
       if (error) throw error;
