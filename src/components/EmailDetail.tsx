@@ -52,11 +52,11 @@ export const EmailDetail = ({ isComposing, onClose, onSend, onReply }: EmailDeta
         <div className="border-b border-border p-4 flex items-center justify-between">
           <h2 className="text-lg font-semibold">Reply to: Jose Berengueres</h2>
           <div className="flex items-center gap-2">
-            <Button size="lg" className="min-w-32" onClick={handleSend}>
+            <Button size="lg" className="min-w-32" onClick={handleSend} data-target="reply">
               <Send className="mr-2 h-4 w-4" />
               Send
             </Button>
-            <Button variant="ghost" size="icon" onClick={onClose}>
+            <Button variant="ghost" size="icon" onClick={onClose} data-target="close">
               <X className="h-5 w-5" />
             </Button>
           </div>
@@ -94,14 +94,14 @@ export const EmailDetail = ({ isComposing, onClose, onSend, onReply }: EmailDeta
       {/* Header with Close button */}
       <div className="border-b border-border p-4 flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <Button variant="ghost" size="icon" onClick={onClose}>
+          <Button variant="ghost" size="icon" onClick={onClose} data-target="close">
             <X className="h-5 w-5" />
           </Button>
           <div className="flex items-center gap-1">
             <Button variant="ghost" size="icon">
               <Archive className="h-4 w-4" />
             </Button>
-            <Button variant="ghost" size="icon">
+            <Button variant="ghost" size="icon" data-target="trash">
               <Trash2 className="h-4 w-4" />
             </Button>
             <Button variant="ghost" size="icon">
@@ -253,15 +253,15 @@ export const EmailDetail = ({ isComposing, onClose, onSend, onReply }: EmailDeta
 
       {/* Footer with action buttons */}
       <div className="border-t border-border p-4 flex justify-start gap-2">
-        <Button variant="outline" size="sm" onClick={onReply}>
+        <Button variant="outline" size="sm" onClick={onReply} data-target="reply">
           <Reply className="mr-2 h-4 w-4" />
           Reply
         </Button>
-        <Button variant="outline" size="sm">
+        <Button variant="outline" size="sm" data-target="replyAll">
           <ReplyAll className="mr-2 h-4 w-4" />
           Reply All
         </Button>
-        <Button variant="outline" size="sm">
+        <Button variant="outline" size="sm" data-target="forward">
           <Forward className="mr-2 h-4 w-4" />
           Forward
         </Button>
