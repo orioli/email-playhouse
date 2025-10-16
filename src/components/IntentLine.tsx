@@ -56,6 +56,11 @@ export const IntentLine = ({ sensitivity = 70, easeIn = 200, onChordActivated, o
       const hasQ = newKeys.has("q") || newKeys.has("keyq");
       const hasW = newKeys.has("w") || newKeys.has("keyw");
 
+      // Prevent Q and W from typing into text boxes when chord is active
+      if (isLineActive && (e.key.toLowerCase() === "q" || e.key.toLowerCase() === "w")) {
+        e.preventDefault();
+      }
+
       if (hasQ && hasW && !isLineActive && !isIgnoringKeys) {
         e.preventDefault();
         createIntentLine();
@@ -78,64 +83,9 @@ export const IntentLine = ({ sensitivity = 70, easeIn = 200, onChordActivated, o
       const releasedQ = e.key.toLowerCase() === "q" || e.code.toLowerCase() === "keyq";
       const releasedW = e.key.toLowerCase() === "w" || e.code.toLowerCase() === "keyw";
 
-      // If line is active and either Q or W is released
+      // If line is active and either Q or W is released, cancel immediately
       if (isLineActive && (releasedQ || releasedW)) {
-        const now = Date.now();
-        const releasedKey = releasedQ ? "q" : "w";
-
-    // Check if this is the first key release or second
-    if (!firstKeyReleased) {
-      // First key released
-      setFirstKeyReleased(releasedKey);
-      setLastKeyReleaseTime(now);
-    } else if (firstKeyReleased !== releasedKey) {
-      // Second key released - check timing regardless of order
-      const timeDiff = now - (lastKeyReleaseTime || 0);
-      
-      if (timeDiff <= sensitivity) {
-        // Released together (within threshold) - trigger the send sequence with animation
-        setIsAnimatingOut(true);
-        
-        // Animate the line disappearing from cursor side
-        const animationDuration = easeIn;
-        const startTime = Date.now();
-        const originalLine = line;
-        
-        const animateLineOut = () => {
-          const elapsed = Date.now() - startTime;
-          const progress = Math.min(elapsed / animationDuration, 1);
-          
-          if (progress < 1 && originalLine) {
-            // Interpolate from cursor (x1, y1) towards button (x2, y2)
-            const newX1 = originalLine.x1 + (originalLine.x2 - originalLine.x1) * progress;
-            const newY1 = originalLine.y1 + (originalLine.y2 - originalLine.y1) * progress;
-            
-            setLine({
-              x1: newX1,
-              y1: newY1,
-              x2: originalLine.x2,
-              y2: originalLine.y2,
-            });
-            
-            requestAnimationFrame(animateLineOut);
-          } else {
-            // Animation complete - hide everything and show toast
-            setLine(null);
-            setIsAnimatingOut(false);
-            
-            setTimeout(() => {
-              setButtonRect(null);
-              setIsLineActive(false);
-              
-              // Trigger action confirmed callback
-              onActionConfirmed?.();
-            }, 250);
-          }
-        };
-        
-        requestAnimationFrame(animateLineOut);
-      } else {
-        // Released apart (more than threshold) - cancel with animation from button to cursor
+        // Cancel with animation from button to cursor
         setIsAnimatingOut(true);
         onSuggestionDiscarded?.(); // Track discarded suggestion
         
@@ -170,13 +120,11 @@ export const IntentLine = ({ sensitivity = 70, easeIn = 200, onChordActivated, o
         };
         
         requestAnimationFrame(animateLineOut);
+        
+        // Reset tracking
+        setFirstKeyReleased(null);
+        setLastKeyReleaseTime(null);
       }
-      
-      // Reset tracking
-      setFirstKeyReleased(null);
-      setLastKeyReleaseTime(null);
-    }
-  }
 
       // Reset ignore flag when Q or W is released
       if (releasedQ || releasedW) {
