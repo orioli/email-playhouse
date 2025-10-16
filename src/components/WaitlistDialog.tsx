@@ -76,15 +76,27 @@ export const WaitlistDialog = ({ open, onOpenChange, stats }: WaitlistDialogProp
         }
       });
 
-      if (error) throw error;
+      if (error) {
+        console.error('Waitlist error:', error);
+        // Extract error message from the error object
+        const errorMessage = error.message || "Failed to join waitlist. Please try again.";
+        toast({
+          title: "Error",
+          description: errorMessage,
+          variant: "destructive",
+        });
+        setIsLoading(false);
+        return;
+      }
 
       setIsSuccess(true);
       setEmail("");
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error joining waitlist:', error);
+      const errorMessage = error?.message || "Failed to join waitlist. Please try again.";
       toast({
         title: "Error",
-        description: "Failed to join waitlist. Please try again.",
+        description: errorMessage,
         variant: "destructive",
       });
     } finally {

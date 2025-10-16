@@ -39,22 +39,42 @@ Deno.serve(async (req) => {
     const supabaseKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!
     const supabase = createClient(supabaseUrl, supabaseKey)
 
-    // Rate limiting: Check for duplicate emails or recent submissions from same IP
-    const oneHourAgo = new Date(Date.now() - 60 * 60 * 1000).toISOString()
-    
-    const { data: recentSubmissions, error: checkError } = await supabase
+    // Check for duplicate email
+    const { data: existingEmail, error: emailCheckError } = await supabase
       .from('waitlist')
       .select('id')
-      .or(`email.eq.${email.trim().toLowerCase()},and(ip_address.eq.${ipAddress},created_at.gte.${oneHourAgo})`)
+      .eq('email', email.trim().toLowerCase())
       .limit(1)
 
-    if (checkError) {
-      console.error('Rate limit check error:', checkError.message)
+    if (emailCheckError) {
+      console.error('Email check error:', emailCheckError.message)
     }
 
-    if (recentSubmissions && recentSubmissions.length > 0) {
+    if (existingEmail && existingEmail.length > 0) {
       return new Response(
-        JSON.stringify({ error: 'Email already registered or too many requests from this IP' }),
+        JSON.stringify({ error: 'This email is already registered on the waitlist' }),
+        { 
+          status: 409, 
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
+        }
+      )
+    }
+
+    // Rate limiting by IP: Max 5 submissions per hour from same IP
+    const oneHourAgo = new Date(Date.now() - 60 * 60 * 1000).toISOString()
+    const { count, error: rateLimitError } = await supabase
+      .from('waitlist')
+      .select('id', { count: 'exact', head: true })
+      .eq('ip_address', ipAddress)
+      .gte('created_at', oneHourAgo)
+
+    if (rateLimitError) {
+      console.error('Rate limit check error:', rateLimitError.message)
+    }
+
+    if (count && count >= 5) {
+      return new Response(
+        JSON.stringify({ error: 'Too many submissions from your IP address. Please try again later.' }),
         { 
           status: 429, 
           headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
