@@ -7,6 +7,8 @@ import { IntentLine } from "@/components/IntentLine";
 import { Slider } from "@/components/ui/slider";
 import { useToast } from "@/hooks/use-toast";
 import { LineChart, Line, ResponsiveContainer } from "recharts";
+import { Download } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 const mockEmails = [
   {
@@ -315,9 +317,10 @@ const Index = () => {
               </div>
             </div>
             <div className="pt-4 flex justify-center">
-              <button className="bg-lime-500 hover:bg-lime-600 text-white font-bold py-2 px-6 rounded transition-colors">
+              <Button size="lg" className="bg-lime-500 hover:bg-lime-600 text-white">
+                <Download className="mr-2 h-4 w-4" />
                 Get Plug-In
-              </button>
+              </Button>
             </div>
           </div>
         )}
