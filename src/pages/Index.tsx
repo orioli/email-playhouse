@@ -322,7 +322,7 @@ const Index = () => {
             <div className="pt-4 flex justify-center">
               <Button 
                 size="lg" 
-                className="bg-lime-500 hover:bg-lime-600 text-white"
+                className="bg-black hover:bg-gray-800 text-white"
                 onClick={() => setIsWaitlistOpen(true)}
               >
                 <Download className="mr-2 h-4 w-4" />
