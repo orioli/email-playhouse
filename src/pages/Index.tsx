@@ -314,6 +314,11 @@ const Index = () => {
                 </span>
               </div>
             </div>
+            <div className="pt-4 flex justify-center">
+              <button className="bg-lime-500 hover:bg-lime-600 text-white font-bold py-2 px-6 transition-colors">
+                Get Plug-In
+              </button>
+            </div>
           </div>
         )}
       </div>
