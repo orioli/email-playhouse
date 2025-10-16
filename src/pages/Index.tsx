@@ -265,7 +265,7 @@ const Index = () => {
               />
             </div>
             <div className="flex items-center gap-4">
-              <label className="text-sm font-medium whitespace-nowrap">Ease In: {easeIn}ms</label>
+              <label className="text-sm font-medium whitespace-nowrap">Ease Out: {easeIn}ms</label>
               <div className="flex-1 relative">
                 <Slider
                   value={[easeIn]}
