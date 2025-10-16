@@ -55,20 +55,24 @@ export const WaitlistDialog = ({ open, onOpenChange, stats }: WaitlistDialogProp
     setIsLoading(true);
 
     try {
+      const statsPayload = {
+        sessionStart: stats.sessionStart.toISOString(),
+        clicksSaved: stats.clicksSaved,
+        untraveledPixels: Math.round(stats.untraveledPixels),
+        discardedSuggestions: stats.discardedSuggestions,
+        totalClicks: stats.totalClicks,
+        spaceBarPresses: stats.spaceBarPresses,
+        physicallyTraveledPixels: Math.round(stats.physicallyTraveledPixels),
+        savingsTravelPercent: stats.savingsTravelPercent,
+        savingsClicksPercent: stats.savingsClicksPercent,
+      };
+      
+      console.log('Submitting waitlist with stats:', statsPayload);
+      
       const { error } = await supabase.functions.invoke('join-waitlist', {
         body: { 
           email,
-          stats: {
-            sessionStart: stats.sessionStart.toISOString(),
-            clicksSaved: stats.clicksSaved,
-            untraveledPixels: Math.round(stats.untraveledPixels),
-            discardedSuggestions: stats.discardedSuggestions,
-            totalClicks: stats.totalClicks,
-            spaceBarPresses: stats.spaceBarPresses,
-            physicallyTraveledPixels: Math.round(stats.physicallyTraveledPixels),
-            savingsTravelPercent: stats.savingsTravelPercent,
-            savingsClicksPercent: stats.savingsClicksPercent,
-          }
+          stats: statsPayload
         }
       });
 

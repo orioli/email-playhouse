@@ -13,6 +13,9 @@ Deno.serve(async (req) => {
 
   try {
     const { email, stats } = await req.json()
+    
+    console.log('Received request with email:', email);
+    console.log('Received stats:', JSON.stringify(stats));
 
     // Validate email format and length
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
