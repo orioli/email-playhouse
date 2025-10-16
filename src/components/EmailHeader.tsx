@@ -6,7 +6,7 @@ export const EmailHeader = () => {
   return (
     <header className="border-b border-border bg-background px-6 py-3 flex items-center justify-between">
       <div className="flex items-center gap-4 flex-1">
-        <h1 className="text-xl font-semibold text-primary">MailBox</h1>
+        <h1 className="text-xl font-semibold text-primary">MailBox SandBox</h1>
         
         <div className="relative flex-1 max-w-2xl">
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
