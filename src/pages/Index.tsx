@@ -214,28 +214,22 @@ const Index = () => {
   return (
     <div className="h-screen flex flex-col">
       <div 
-        className="fixed z-50 backdrop-blur-md border-2 rounded-xl shadow-2xl transition-all"
+        className="fixed z-50 bg-muted/80 backdrop-blur-md border-2 border-border rounded-xl shadow-2xl transition-all"
         style={{
           left: `${position.x}px`,
           top: `${position.y}px`,
           width: isMinimized ? '200px' : '384px',
           cursor: isDragging ? 'grabbing' : 'default',
-          backgroundColor: 'rgba(34, 197, 94, 0.15)',
-          borderColor: 'rgba(34, 197, 94, 0.3)',
           boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.1)',
           backgroundImage: `
-            radial-gradient(circle at 25% 25%, rgba(34, 197, 94, 0.08) 1px, transparent 1px),
-            radial-gradient(circle at 75% 75%, rgba(34, 197, 94, 0.08) 1px, transparent 1px)
+            radial-gradient(circle at 25% 25%, rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+            radial-gradient(circle at 75% 75%, rgba(255, 255, 255, 0.05) 1px, transparent 1px)
           `,
           backgroundSize: '20px 20px',
         }}
       >
         <div 
-          className="p-3 border-b flex items-center justify-between cursor-grab active:cursor-grabbing"
-          style={{
-            borderColor: 'rgba(34, 197, 94, 0.2)',
-            backgroundColor: 'rgba(34, 197, 94, 0.05)',
-          }}
+          className="p-3 border-b border-border/60 flex items-center justify-between cursor-grab active:cursor-grabbing bg-background/40"
           onMouseDown={handleMouseDown}
         >
           <div className="flex items-center gap-3">
