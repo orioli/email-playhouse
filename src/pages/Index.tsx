@@ -12,7 +12,7 @@ const mockEmails = [
   {
     id: "1",
     sender: "Jose Berengueres",
-    subject: "👇 Try me!",
+    subject: "🖱️ Quick Instructions",
     preview: "Discover the powerful keyboard chord interaction system that revolutionizes how you interact with your email...",
     time: "10:30 AM",
     isUnread: true,
@@ -214,22 +214,17 @@ const Index = () => {
   return (
     <div className="h-screen flex flex-col">
       <div 
-        className="fixed z-50 bg-muted/80 backdrop-blur-md border-2 border-border rounded-xl shadow-2xl transition-all"
+        className="fixed z-50 bg-background backdrop-blur-sm border border-black rounded-lg shadow-2xl transition-all"
         style={{
           left: `${position.x}px`,
           top: `${position.y}px`,
           width: isMinimized ? '200px' : '384px',
           cursor: isDragging ? 'grabbing' : 'default',
-          boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.1)',
-          backgroundImage: `
-            radial-gradient(circle at 25% 25%, rgba(255, 255, 255, 0.05) 1px, transparent 1px),
-            radial-gradient(circle at 75% 75%, rgba(255, 255, 255, 0.05) 1px, transparent 1px)
-          `,
-          backgroundSize: '20px 20px',
+          boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.5)',
         }}
       >
         <div 
-          className="p-3 border-b border-border/60 flex items-center justify-between cursor-grab active:cursor-grabbing bg-background/40"
+          className="p-3 border-b flex items-center justify-between cursor-grab active:cursor-grabbing"
           onMouseDown={handleMouseDown}
         >
           <div className="flex items-center gap-3">

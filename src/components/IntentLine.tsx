@@ -56,11 +56,6 @@ export const IntentLine = ({ sensitivity = 70, easeIn = 200, onChordActivated, o
       const hasQ = newKeys.has("q") || newKeys.has("keyq");
       const hasW = newKeys.has("w") || newKeys.has("keyw");
 
-      // Prevent Q and W from typing into text boxes when chord is active
-      if (isLineActive && (e.key.toLowerCase() === "q" || e.key.toLowerCase() === "w")) {
-        e.preventDefault();
-      }
-
       if (hasQ && hasW && !isLineActive && !isIgnoringKeys) {
         e.preventDefault();
         createIntentLine();
@@ -85,70 +80,103 @@ export const IntentLine = ({ sensitivity = 70, easeIn = 200, onChordActivated, o
 
       // If line is active and either Q or W is released
       if (isLineActive && (releasedQ || releasedW)) {
-        const currentTime = Date.now();
+        const now = Date.now();
+        const releasedKey = releasedQ ? "q" : "w";
+
+    // Check if this is the first key release or second
+    if (!firstKeyReleased) {
+      // First key released
+      setFirstKeyReleased(releasedKey);
+      setLastKeyReleaseTime(now);
+    } else if (firstKeyReleased !== releasedKey) {
+      // Second key released - check timing regardless of order
+      const timeDiff = now - (lastKeyReleaseTime || 0);
+      
+      if (timeDiff <= sensitivity) {
+        // Released together (within threshold) - trigger the send sequence with animation
+        setIsAnimatingOut(true);
         
-        // If this is the first key release
-        if (!firstKeyReleased) {
-          setFirstKeyReleased(releasedQ ? 'q' : 'w');
-          setLastKeyReleaseTime(currentTime);
-        } else {
-          // This is the second key release
-          const timeBetweenReleases = currentTime - (lastKeyReleaseTime || 0);
+        // Animate the line disappearing from cursor side
+        const animationDuration = easeIn;
+        const startTime = Date.now();
+        const originalLine = line;
+        
+        const animateLineOut = () => {
+          const elapsed = Date.now() - startTime;
+          const progress = Math.min(elapsed / animationDuration, 1);
           
-          // If both keys were released within 200ms, accept the action
-          if (timeBetweenReleases < 200) {
-            const targetButton = document.querySelector(`[data-target="${targetButtonType}"]`) as HTMLButtonElement;
-            if (targetButton) {
-              targetButton.click();
-              onActionConfirmed?.();
-            }
+          if (progress < 1 && originalLine) {
+            // Interpolate from cursor (x1, y1) towards button (x2, y2)
+            const newX1 = originalLine.x1 + (originalLine.x2 - originalLine.x1) * progress;
+            const newY1 = originalLine.y1 + (originalLine.y2 - originalLine.y1) * progress;
             
-            // Hide line and reset
+            setLine({
+              x1: newX1,
+              y1: newY1,
+              x2: originalLine.x2,
+              y2: originalLine.y2,
+            });
+            
+            requestAnimationFrame(animateLineOut);
+          } else {
+            // Animation complete - hide everything and show toast
+            setLine(null);
+            setIsAnimatingOut(false);
+            
+            setTimeout(() => {
+              setButtonRect(null);
+              setIsLineActive(false);
+              
+              // Trigger action confirmed callback
+              onActionConfirmed?.();
+            }, 250);
+          }
+        };
+        
+        requestAnimationFrame(animateLineOut);
+      } else {
+        // Released apart (more than threshold) - cancel with animation from button to cursor
+        setIsAnimatingOut(true);
+        onSuggestionDiscarded?.(); // Track discarded suggestion
+        
+        const animationDuration = easeIn;
+        const startTime = Date.now();
+        const originalLine = line;
+        
+        const animateLineOut = () => {
+          const elapsed = Date.now() - startTime;
+          const progress = Math.min(elapsed / animationDuration, 1);
+          
+          if (progress < 1 && originalLine) {
+            // Interpolate from button (x2, y2) towards cursor (x1, y1)
+            const newX2 = originalLine.x2 + (originalLine.x1 - originalLine.x2) * progress;
+            const newY2 = originalLine.y2 + (originalLine.y1 - originalLine.y2) * progress;
+            
+            setLine({
+              x1: originalLine.x1,
+              y1: originalLine.y1,
+              x2: newX2,
+              y2: newY2,
+            });
+            
+            requestAnimationFrame(animateLineOut);
+          } else {
+            // Animation complete - hide everything
             setLine(null);
             setButtonRect(null);
             setIsLineActive(false);
-            setFirstKeyReleased(null);
-            setLastKeyReleaseTime(null);
-          } else {
-            // Too much time passed, cancel with animation
-            setIsAnimatingOut(true);
-            onSuggestionDiscarded?.();
-            
-            const animationDuration = easeIn;
-            const startTime = Date.now();
-            const originalLine = line;
-            
-            const animateLineOut = () => {
-              const elapsed = Date.now() - startTime;
-              const progress = Math.min(elapsed / animationDuration, 1);
-              
-              if (progress < 1 && originalLine) {
-                const newX2 = originalLine.x2 + (originalLine.x1 - originalLine.x2) * progress;
-                const newY2 = originalLine.y2 + (originalLine.y1 - originalLine.y2) * progress;
-                
-                setLine({
-                  x1: originalLine.x1,
-                  y1: originalLine.y1,
-                  x2: newX2,
-                  y2: newY2,
-                });
-                
-                requestAnimationFrame(animateLineOut);
-              } else {
-                setLine(null);
-                setButtonRect(null);
-                setIsLineActive(false);
-                setIsAnimatingOut(false);
-              }
-            };
-            
-            requestAnimationFrame(animateLineOut);
-            
-            setFirstKeyReleased(null);
-            setLastKeyReleaseTime(null);
+            setIsAnimatingOut(false);
           }
-        }
+        };
+        
+        requestAnimationFrame(animateLineOut);
       }
+      
+      // Reset tracking
+      setFirstKeyReleased(null);
+      setLastKeyReleaseTime(null);
+    }
+  }
 
       // Reset ignore flag when Q or W is released
       if (releasedQ || releasedW) {

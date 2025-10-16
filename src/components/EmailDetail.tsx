@@ -52,11 +52,11 @@ export const EmailDetail = ({ isComposing, onClose, onSend, onReply }: EmailDeta
         <div className="border-b border-border p-4 flex items-center justify-between">
           <h2 className="text-lg font-semibold">Reply to: Jose Berengueres</h2>
           <div className="flex items-center gap-2">
-            <Button size="lg" className="min-w-32" onClick={handleSend} data-target="reply">
+            <Button size="lg" className="min-w-32" onClick={handleSend}>
               <Send className="mr-2 h-4 w-4" />
               Send
             </Button>
-            <Button variant="ghost" size="icon" onClick={onClose} data-target="close">
+            <Button variant="ghost" size="icon" onClick={onClose}>
               <X className="h-5 w-5" />
             </Button>
           </div>
@@ -73,7 +73,7 @@ export const EmailDetail = ({ isComposing, onClose, onSend, onReply }: EmailDeta
             <Input
               placeholder="Subject"
               className="border-b rounded-none px-0 focus-visible:ring-0"
-              defaultValue="Re: 👇 Try me!"
+              defaultValue="Re: 🖱️ Quick Instructions"
             />
           </div>
 
@@ -94,14 +94,14 @@ export const EmailDetail = ({ isComposing, onClose, onSend, onReply }: EmailDeta
       {/* Header with Close button */}
       <div className="border-b border-border p-4 flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <Button variant="ghost" size="icon" onClick={onClose} data-target="close">
+          <Button variant="ghost" size="icon" onClick={onClose}>
             <X className="h-5 w-5" />
           </Button>
           <div className="flex items-center gap-1">
             <Button variant="ghost" size="icon">
               <Archive className="h-4 w-4" />
             </Button>
-            <Button variant="ghost" size="icon" data-target="trash">
+            <Button variant="ghost" size="icon">
               <Trash2 className="h-4 w-4" />
             </Button>
             <Button variant="ghost" size="icon">
@@ -114,7 +114,7 @@ export const EmailDetail = ({ isComposing, onClose, onSend, onReply }: EmailDeta
       {/* Email Content */}
       <div className="flex-1 overflow-y-auto p-6">
         <div className="max-w-3xl mx-auto">
-          <h1 className="text-2xl font-semibold mb-4">👇 Try me!</h1>
+          <h1 className="text-2xl font-semibold mb-4">🖱️ Quick Instructions</h1>
 
           <div className="flex items-start justify-between mb-6 pb-6 border-b border-border">
             <div className="flex items-start gap-3">
@@ -145,7 +145,7 @@ export const EmailDetail = ({ isComposing, onClose, onSend, onReply }: EmailDeta
             </div>
 
             <div className="mb-4">
-              <h3 className="text-lg font-semibold mb-2">1️⃣ Try this!</h3>
+              <h3 className="text-lg font-semibold mb-2">1️⃣ To Suggest</h3>
 
               <span className="text-sm text-muted-foreground">
                 <kbd className="px-2 py-1 bg-muted rounded border text-lg">⤓Q</kbd> +{" "}
@@ -253,15 +253,15 @@ export const EmailDetail = ({ isComposing, onClose, onSend, onReply }: EmailDeta
 
       {/* Footer with action buttons */}
       <div className="border-t border-border p-4 flex justify-start gap-2">
-        <Button variant="outline" size="sm" onClick={onReply} data-target="reply">
+        <Button variant="outline" size="sm" onClick={onReply}>
           <Reply className="mr-2 h-4 w-4" />
           Reply
         </Button>
-        <Button variant="outline" size="sm" data-target="replyAll">
+        <Button variant="outline" size="sm">
           <ReplyAll className="mr-2 h-4 w-4" />
           Reply All
         </Button>
-        <Button variant="outline" size="sm" data-target="forward">
+        <Button variant="outline" size="sm">
           <Forward className="mr-2 h-4 w-4" />
           Forward
         </Button>
