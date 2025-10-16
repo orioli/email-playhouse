@@ -137,6 +137,7 @@ export const EmailDetail = ({ isComposing, onClose, onSend, onReply }: EmailDeta
                 autoPlay
                 muted
                 playsInline
+                controls
                 src="/videos/chord-demo.mov"
                 onEnded={handleVideoEnd}
                 onClick={handleVideoClick}
