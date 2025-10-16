@@ -316,6 +316,9 @@ const Index = () => {
                   <span className="text-red-500">{(actualClicks + chordCount) > 0 ? Math.round((chordCount / (actualClicks + chordCount)) * 100) : 0}%</span> less clicks
                 </span>
               </div>
+              <div className="text-right pt-1">
+                <span className="text-xs text-muted-foreground">Pat. Pend.</span>
+              </div>
             </div>
             <div className="pt-4 flex justify-center">
               <Button 
@@ -326,9 +329,6 @@ const Index = () => {
                 <Download className="mr-2 h-4 w-4" />
                 Get Plug-In
               </Button>
-            </div>
-            <div className="text-left pt-1">
-              <span className="text-xs text-muted-foreground">Pat. Pend.</span>
             </div>
           </div>
         )}
