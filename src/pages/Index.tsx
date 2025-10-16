@@ -327,7 +327,7 @@ const Index = () => {
                 Get Plug-In
               </Button>
             </div>
-            <div className="text-center pt-2">
+            <div className="text-center pt-1">
               <span className="text-xs text-muted-foreground">Pat. Pend.</span>
             </div>
           </div>
