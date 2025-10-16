@@ -185,7 +185,10 @@ export const IntentLine = ({ sensitivity = 70, easeIn = 200, onChordActivated, o
     };
 
     const findTargetButton = (type: 'reply' | 'replyAll' | 'forward' | 'trash' | 'close') => {
-      const buttons = Array.from(document.querySelectorAll("button"));
+      const buttons = Array.from(document.querySelectorAll("button")).filter(btn => {
+        // Exclude buttons inside elements with data-exclude-from-chord attribute
+        return !btn.closest('[data-exclude-from-chord="true"]');
+      });
       
       switch (type) {
         case 'reply':

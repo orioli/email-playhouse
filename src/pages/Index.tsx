@@ -216,6 +216,7 @@ const Index = () => {
   return (
     <div className="h-screen flex flex-col">
       <div 
+        data-exclude-from-chord="true"
         className="fixed z-50 bg-white border-2 border-black shadow-2xl transition-all"
         style={{
           left: `${position.x}px`,
