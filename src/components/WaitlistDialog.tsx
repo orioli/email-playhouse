@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { Download, X } from "lucide-react";
+import dogezaGif from "@/assets/dogeza.gif";
 
 interface WaitlistDialogProps {
   open: boolean;
@@ -138,6 +139,7 @@ export const WaitlistDialog = ({ open, onOpenChange, stats }: WaitlistDialogProp
         ) : (
           <div className="space-y-4">
             <div className="text-center py-4">
+              <img src={dogezaGif} alt="Thank you" className="w-32 h-32 mx-auto mb-4 object-contain" />
               <p className="text-lg font-medium mb-2">Thank you!</p>
               <p className="text-sm text-muted-foreground">
                 We'll notify you when the plug-in is available.
