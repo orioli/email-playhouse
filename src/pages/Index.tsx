@@ -337,10 +337,12 @@ const Index = () => {
               <Button 
                 size="lg" 
                 className="bg-black hover:bg-gray-800 text-white"
-                onClick={() => setIsWaitlistOpen(true)}
+                asChild
               >
-                <Download className="mr-2 h-4 w-4" />
-                Get Plug-In
+                <a href="https://forms.gle/kuzxpQ5DNdd6PbTVA" target="_blank" rel="noopener noreferrer">
+                  <Download className="mr-2 h-4 w-4" />
+                  Get Plug-In
+                </a>
               </Button>
             </div>
           </div>
