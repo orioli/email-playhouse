@@ -107,7 +107,7 @@ const Index = () => {
   const [actualClicks, setActualClicks] = useState(0);
   const [totalTraveledPixels, setTotalTraveledPixels] = useState(0);
   const [lastSampledPosition, setLastSampledPosition] = useState<{ x: number; y: number } | null>(null);
-  const [isMinimized, setIsMinimized] = useState(false);
+  const [isMinimized, setIsMinimized] = useState(true);
   const [position, setPosition] = useState({ x: 16, y: 340 });
   const [isDragging, setIsDragging] = useState(false);
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
