@@ -14,7 +14,7 @@ const mockEmails = [
   {
     id: "1",
     sender: "Jose Berengueres",
-    subject: "👇 Try me!",
+    subject: "👇 Try me!: press Q W together",
     preview: "Discover the powerful keyboard chord interaction system that revolutionizes how you interact with your email...",
     time: "10:30 AM",
     isUnread: true,
