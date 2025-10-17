@@ -114,6 +114,7 @@ const Index = () => {
   const [spaceBarCount, setSpaceBarCount] = useState(0);
   const [mouseStrokeCount, setMouseStrokeCount] = useState(0);
   const [lastMouseMoveTime, setLastMouseMoveTime] = useState<number | null>(null);
+  const [doubleClickCount, setDoubleClickCount] = useState(0);
 
   const handleCompose = () => {
     setIsComposing(true);
@@ -127,10 +128,14 @@ const Index = () => {
     }
   };
 
-  // Track actual clicks and spacebar presses
+  // Track actual clicks, double clicks, and spacebar presses
   useEffect(() => {
     const handleClick = () => {
       setActualClicks(prev => prev + 1);
+    };
+    
+    const handleDoubleClick = () => {
+      setDoubleClickCount(prev => prev + 1);
     };
     
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -140,9 +145,11 @@ const Index = () => {
     };
     
     window.addEventListener("click", handleClick);
+    window.addEventListener("dblclick", handleDoubleClick);
     window.addEventListener("keydown", handleKeyDown);
     return () => {
       window.removeEventListener("click", handleClick);
+      window.removeEventListener("dblclick", handleDoubleClick);
       window.removeEventListener("keydown", handleKeyDown);
     };
   }, []);
@@ -311,6 +318,10 @@ const Index = () => {
                 <span className="font-medium">{actualClicks}</span>
               </div>
               <div className="flex justify-between">
+                <span className="text-muted-foreground">Double Clicks:</span>
+                <span className="font-medium">{doubleClickCount}</span>
+              </div>
+              <div className="flex justify-between">
                 <span className="text-muted-foreground">Space Bar Presses:</span>
                 <span className="font-medium">{spaceBarCount}</span>
               </div>
@@ -352,6 +363,7 @@ const Index = () => {
                     ['Untraveled Pixels', Math.round(unteraveledPixels)],
                     ['Discarded Suggestions', discardedSuggestions],
                     ['Total Clicks', actualClicks],
+                    ['Double Clicks', doubleClickCount],
                     ['Space Bar Presses', spaceBarCount],
                     ['Mouse Strokes', mouseStrokeCount],
                     ['Physically Travelled Pixels', Math.round(totalTraveledPixels)],
