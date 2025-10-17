@@ -112,6 +112,8 @@ const Index = () => {
   const [isDragging, setIsDragging] = useState(false);
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
   const [spaceBarCount, setSpaceBarCount] = useState(0);
+  const [mouseStrokeCount, setMouseStrokeCount] = useState(0);
+  const [lastMouseMoveTime, setLastMouseMoveTime] = useState<number | null>(null);
 
   const handleCompose = () => {
     setIsComposing(true);
@@ -145,10 +147,16 @@ const Index = () => {
     };
   }, []);
 
-  // Track total traveled pixels continuously
+  // Track total traveled pixels continuously and mouse strokes
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
       const currentPos = { x: e.clientX, y: e.clientY };
+      const currentTime = Date.now();
+      
+      // Track strokes: movement after >100ms of no movement
+      if (lastMouseMoveTime !== null && (currentTime - lastMouseMoveTime) > 100) {
+        setMouseStrokeCount(prev => prev + 1);
+      }
       
       if (lastSampledPosition) {
         const distance = Math.abs(currentPos.x - lastSampledPosition.x) + Math.abs(currentPos.y - lastSampledPosition.y);
@@ -156,11 +164,12 @@ const Index = () => {
       }
       
       setLastSampledPosition(currentPos);
+      setLastMouseMoveTime(currentTime);
     };
     
     window.addEventListener('mousemove', handleMouseMove);
     return () => window.removeEventListener('mousemove', handleMouseMove);
-  }, [lastSampledPosition]);
+  }, [lastSampledPosition, lastMouseMoveTime]);
 
   // Handle dragging
   useEffect(() => {
@@ -306,6 +315,10 @@ const Index = () => {
                 <span className="font-medium">{spaceBarCount}</span>
               </div>
               <div className="flex justify-between">
+                <span className="text-muted-foreground">Mouse Strokes:</span>
+                <span className="font-medium">{mouseStrokeCount}</span>
+              </div>
+              <div className="flex justify-between">
                 <span className="text-muted-foreground">Physically Travelled pixels:</span>
                 <span className="font-medium">{Math.round(totalTraveledPixels)}</span>
               </div>
@@ -340,6 +353,7 @@ const Index = () => {
                     ['Discarded Suggestions', discardedSuggestions],
                     ['Total Clicks', actualClicks],
                     ['Space Bar Presses', spaceBarCount],
+                    ['Mouse Strokes', mouseStrokeCount],
                     ['Physically Travelled Pixels', Math.round(totalTraveledPixels)],
                     ['Savings - Less Travel (%)', lessTravel],
                     ['Savings - Less Clicks (%)', lessClicks],
