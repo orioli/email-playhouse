@@ -195,7 +195,7 @@ Wed, Oct 18, 2025 at 10:30 AM.... wrote...`}
               <div className="flex justify-center my-8">
                 <Button
                   onClick={handleStartHere}
-                  className="bg-red-600 hover:bg-red-700 text-white w-32 h-32 animate-pulse"
+                  className="bg-fuchsia-400 hover:bg-fuchsia-500 text-white w-32 h-32 animate-pulse"
                 >
                   start here
                 </Button>
