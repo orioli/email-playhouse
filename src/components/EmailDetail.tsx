@@ -81,7 +81,7 @@ export const EmailDetail = ({ isComposing, onClose, onSend, onReply }: EmailDeta
           <Textarea
             placeholder="Compose your message..."
             className="flex-1 resize-none border-0 focus-visible:ring-0 p-0"
-            defaultValue="Best Regards"
+            defaultValue="\n\n\n---\nOn xxx Jose wrote...."
           />
         </div>
       </div>
