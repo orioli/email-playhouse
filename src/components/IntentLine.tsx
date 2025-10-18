@@ -213,8 +213,10 @@ export const IntentLine = ({ sensitivity = 70, easeIn = 200, onChordActivated, o
             return hasPolyline && hasPath && btn.getAttribute('variant') !== 'outline';
           });
         case 'search':
-          // Find the search input element
-          const searchInput = document.querySelector('input[type="text"][placeholder*="Search"], input[placeholder*="search"]');
+          // Find the search input element with more specific selector
+          const searchInput = document.querySelector('input[placeholder="Search in mail"]') || 
+                             document.querySelector('input[placeholder*="Search"]') || 
+                             document.querySelector('input[placeholder*="search"]');
           return searchInput as HTMLElement | undefined;
         default:
           return null;
