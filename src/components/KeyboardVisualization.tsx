@@ -22,9 +22,6 @@ const KEY_WIDTHS: Record<string, string> = {
 
 export const KeyboardVisualization = () => {
   const [pressedKeys, setPressedKeys] = useState<Set<string>>(new Set());
-  const [position, setPosition] = useState({ x: window.innerWidth / 2 - 450, y: window.innerHeight - 180 });
-  const [isDragging, setIsDragging] = useState(false);
-  const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -48,39 +45,6 @@ export const KeyboardVisualization = () => {
     };
   }, []);
 
-  const handleMouseDown = (e: React.MouseEvent) => {
-    setIsDragging(true);
-    setDragOffset({
-      x: e.clientX - position.x,
-      y: e.clientY - position.y
-    });
-  };
-
-  useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
-      if (isDragging) {
-        setPosition({
-          x: e.clientX - dragOffset.x,
-          y: e.clientY - dragOffset.y
-        });
-      }
-    };
-
-    const handleMouseUp = () => {
-      setIsDragging(false);
-    };
-
-    if (isDragging) {
-      window.addEventListener('mousemove', handleMouseMove);
-      window.addEventListener('mouseup', handleMouseUp);
-    }
-
-    return () => {
-      window.removeEventListener('mousemove', handleMouseMove);
-      window.removeEventListener('mouseup', handleMouseUp);
-    };
-  }, [isDragging, dragOffset]);
-
   const isKeyPressed = (key: string) => {
     const upperKey = key.toUpperCase();
     return pressedKeys.has(upperKey) || 
@@ -95,16 +59,7 @@ export const KeyboardVisualization = () => {
   };
 
   return (
-    <div 
-      className="fixed bg-gray-200 rounded-2xl shadow-2xl p-4 border border-gray-300"
-      style={{ 
-        left: `${position.x}px`,
-        top: `${position.y}px`,
-        width: '900px',
-        cursor: isDragging ? 'grabbing' : 'grab'
-      }}
-      onMouseDown={handleMouseDown}
-    >
+    <div className="fixed bottom-4 left-1/2 transform -translate-x-1/2 bg-gray-200 rounded-2xl shadow-2xl p-4 border border-gray-300" style={{ maxWidth: '900px' }}>
       <div className="space-y-1">
         {KEYBOARD_LAYOUT.map((row, rowIndex) => (
           <div key={rowIndex} className="flex gap-1 justify-center">
