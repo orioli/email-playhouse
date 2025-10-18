@@ -18,6 +18,9 @@ export const EmailDetail = ({ isComposing, onClose, onSend, onReply }: EmailDeta
   const [showArrow, setShowArrow] = useState(false);
   const [onboardingStarted, setOnboardingStarted] = useState(false);
   const [keysPressed, setKeysPressed] = useState(new Set<string>());
+  const [firstZXPressTime, setFirstZXPressTime] = useState<number | null>(null);
+  const [showReleaseMessage, setShowReleaseMessage] = useState(false);
+  const [simultaneousReleaseDetected, setSimultaneousReleaseDetected] = useState(false);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -28,13 +31,33 @@ export const EmailDetail = ({ isComposing, onClose, onSend, onReply }: EmailDeta
       // Check if both Z and X are pressed
       if (newKeys.has('z') && newKeys.has('x')) {
         setShowArrow(false);
+        
+        // Record first time Z and X are pressed together
+        if (firstZXPressTime === null && !simultaneousReleaseDetected) {
+          setFirstZXPressTime(Date.now());
+        }
       }
     };
 
     const handleKeyUp = (e: KeyboardEvent) => {
+      const wasZPressed = keysPressed.has('z');
+      const wasXPressed = keysPressed.has('x');
+      const releasedKey = e.key.toLowerCase();
+      
       const newKeys = new Set(keysPressed);
-      newKeys.delete(e.key.toLowerCase());
+      newKeys.delete(releasedKey);
       setKeysPressed(newKeys);
+      
+      // Check if Z and X were both pressed and are being released simultaneously
+      if (wasZPressed && wasXPressed && (releasedKey === 'z' || releasedKey === 'x')) {
+        // Check if the other key is released within a short time frame (100ms)
+        setTimeout(() => {
+          if (!newKeys.has('z') && !newKeys.has('x')) {
+            setSimultaneousReleaseDetected(true);
+            setShowReleaseMessage(false);
+          }
+        }, 100);
+      }
     };
 
     window.addEventListener('keydown', handleKeyDown);
@@ -44,7 +67,20 @@ export const EmailDetail = ({ isComposing, onClose, onSend, onReply }: EmailDeta
       window.removeEventListener('keydown', handleKeyDown);
       window.removeEventListener('keyup', handleKeyUp);
     };
-  }, [keysPressed]);
+  }, [keysPressed, firstZXPressTime, simultaneousReleaseDetected]);
+
+  // Timer for 15 seconds after first Z+X press
+  useEffect(() => {
+    if (firstZXPressTime !== null && !simultaneousReleaseDetected && !showReleaseMessage) {
+      const timer = setTimeout(() => {
+        if (!simultaneousReleaseDetected) {
+          setShowReleaseMessage(true);
+        }
+      }, 15000);
+
+      return () => clearTimeout(timer);
+    }
+  }, [firstZXPressTime, simultaneousReleaseDetected, showReleaseMessage]);
 
   const handleVideoEnd = (e: React.SyntheticEvent<HTMLVideoElement>) => {
     const video = e.currentTarget;
@@ -231,6 +267,15 @@ Wed, Oct 18, 2025 at 10:30 AM.... wrote...`}
               <div className="fixed bottom-32 left-1/2 -translate-x-1/2 z-50 opacity-80">
                 <div className="bg-green-500 text-white px-4 py-2 rounded-lg font-semibold text-center">
                   HOLD DOWN Z X, while toggling SPACE BAR
+                </div>
+              </div>
+            )}
+            
+            {/* Release message after 15 seconds */}
+            {showReleaseMessage && (
+              <div className="fixed bottom-32 left-1/2 -translate-x-1/2 z-50 opacity-80">
+                <div className="bg-green-500 text-white px-4 py-2 rounded-lg font-semibold text-center">
+                  TO ACCEPT a suggestion RELEASE Z X at same time
                 </div>
               </div>
             )}
