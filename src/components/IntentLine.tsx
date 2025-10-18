@@ -21,7 +21,7 @@ export const IntentLine = ({ sensitivity = 70, easeIn = 200, onChordActivated, o
   const [firstKeyReleased, setFirstKeyReleased] = useState<string | null>(null);
   const [isAnimatingOut, setIsAnimatingOut] = useState(false);
   const [animationProgress, setAnimationProgress] = useState(0);
-  const [targetButtonType, setTargetButtonType] = useState<'reply' | 'replyAll' | 'forward' | 'trash' | 'close'>('reply');
+  const [targetButtonType, setTargetButtonType] = useState<'reply' | 'replyAll' | 'forward' | 'trash' | 'search'>('reply');
 
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
@@ -185,7 +185,7 @@ export const IntentLine = ({ sensitivity = 70, easeIn = 200, onChordActivated, o
       }
     };
 
-    const findTargetButton = (type: 'reply' | 'replyAll' | 'forward' | 'trash' | 'close') => {
+    const findTargetButton = (type: 'reply' | 'replyAll' | 'forward' | 'trash' | 'search') => {
       const buttons = Array.from(document.querySelectorAll("button")).filter(btn => {
         // Exclude buttons inside elements with data-exclude-from-chord attribute
         return !btn.closest('[data-exclude-from-chord="true"]');
@@ -212,16 +212,10 @@ export const IntentLine = ({ sensitivity = 70, easeIn = 200, onChordActivated, o
             // Trash2 icon has both polyline and path
             return hasPolyline && hasPath && btn.getAttribute('variant') !== 'outline';
           });
-        case 'close':
-          // Find button containing X icon (look for SVG with crossing lines)
-          return buttons.find((btn) => {
-            const svg = btn.querySelector('svg');
-            if (!svg) return false;
-            // X icon has two path or line elements that cross
-            const paths = svg.querySelectorAll('path, line');
-            // Simple heuristic: X icon typically has 2 paths/lines
-            return paths.length === 2 && !btn.textContent?.includes("Reply");
-          });
+        case 'search':
+          // Find the search input element
+          const searchInput = document.querySelector('input[type="text"][placeholder*="Search"], input[placeholder*="search"]');
+          return searchInput as HTMLElement | undefined;
         default:
           return null;
       }
@@ -231,11 +225,11 @@ export const IntentLine = ({ sensitivity = 70, easeIn = 200, onChordActivated, o
       // Check if we're in compose mode (Send button exists)
       const hasSendButton = Array.from(document.querySelectorAll("button")).some(btn => btn.textContent?.includes("Send"));
       
-      // In compose mode: only cycle Send → Close
-      // In email view: cycle Reply → Reply All → Forward → Trash → Close
-      const cycleOrder: Array<'reply' | 'replyAll' | 'forward' | 'trash' | 'close'> = hasSendButton 
-        ? ['reply', 'close']  // 'reply' will find Send button in compose mode
-        : ['reply', 'replyAll', 'forward', 'trash', 'close'];
+      // In compose mode: only cycle Send → Search
+      // In email view: cycle Reply → Reply All → Forward → Trash → Search
+      const cycleOrder: Array<'reply' | 'replyAll' | 'forward' | 'trash' | 'search'> = hasSendButton 
+        ? ['reply', 'search']  // 'reply' will find Send button in compose mode
+        : ['reply', 'replyAll', 'forward', 'trash', 'search'];
       
       const currentIndex = cycleOrder.indexOf(targetButtonType);
       const nextIndex = (currentIndex + 1) % cycleOrder.length;
@@ -245,7 +239,7 @@ export const IntentLine = ({ sensitivity = 70, easeIn = 200, onChordActivated, o
       updateIntentLine(nextType);
     };
 
-    const updateIntentLine = (type: 'reply' | 'replyAll' | 'forward' | 'trash' | 'close') => {
+    const updateIntentLine = (type: 'reply' | 'replyAll' | 'forward' | 'trash' | 'search') => {
       const targetButton = findTargetButton(type);
       if (!targetButton) return;
 
