@@ -67,6 +67,33 @@ export const EmailDetail = ({ isComposing, onClose, onSend, onReply }: EmailDeta
     }
   };
 
+  const handleStartHere = () => {
+    setShowArrow(true);
+    
+    // Simulate Z and X key presses for 1 second
+    const simulateKeyPress = (key: string) => {
+      const keyDownEvent = new KeyboardEvent('keydown', {
+        key: key,
+        code: key === 'z' ? 'KeyZ' : 'KeyX',
+        bubbles: true,
+      });
+      const keyUpEvent = new KeyboardEvent('keyup', {
+        key: key,
+        code: key === 'z' ? 'KeyZ' : 'KeyX',
+        bubbles: true,
+      });
+      
+      window.dispatchEvent(keyDownEvent);
+      
+      setTimeout(() => {
+        window.dispatchEvent(keyUpEvent);
+      }, 1000);
+    };
+    
+    simulateKeyPress('z');
+    simulateKeyPress('x');
+  };
+
   const handleSend = () => {
     toast({
       title: "Email sent",
@@ -165,7 +192,7 @@ Wed, Oct 18, 2025 at 10:30 AM.... wrote...`}
             {!showArrow && (
               <div className="flex justify-center my-8">
                 <Button
-                  onClick={() => setShowArrow(true)}
+                  onClick={handleStartHere}
                   className="bg-red-600 hover:bg-red-700 text-white w-32 h-32"
                 >
                   start here
