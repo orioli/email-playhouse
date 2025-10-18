@@ -176,17 +176,17 @@ Wed, Oct 18, 2025 at 10:30 AM.... wrote...`}
       {/* Email Content */}
       <div className="flex-1 overflow-y-auto p-6">
         <div className="max-w-3xl mx-auto">
-          <Skeleton className="h-8 w-48 mb-4" />
+          <Skeleton className="h-8 w-48 mb-4 animate-none" />
 
           <div className="flex items-start justify-between mb-6 pb-6 border-b border-border">
             <div className="flex items-start gap-3">
-              <Skeleton className="h-10 w-10 rounded-full" />
+              <Skeleton className="h-10 w-10 rounded-full animate-none" />
               <div>
-                <Skeleton className="h-5 w-40 mb-2" />
-                <Skeleton className="h-4 w-52" />
+                <Skeleton className="h-5 w-40 mb-2 animate-none" />
+                <Skeleton className="h-4 w-52 animate-none" />
               </div>
             </div>
-            <Skeleton className="h-4 w-16" />
+            <Skeleton className="h-4 w-16 animate-none" />
           </div>
 
           <div className="prose prose-sm max-w-none relative">
