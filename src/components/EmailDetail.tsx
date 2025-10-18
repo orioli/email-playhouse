@@ -81,9 +81,7 @@ export const EmailDetail = ({ isComposing, onClose, onSend, onReply }: EmailDeta
           <Textarea
             placeholder="Compose your message..."
             className="flex-1 resize-none border-0 focus-visible:ring-0 p-0"
-            defaultValue={
-              "\n\n---\nOn 10:30 AM, Jose Berengueres wrote:\n> Welcome to the Keyboard Chord Interaction System - a revolutionary way to interact with your email client using intuitive keyboard shortcuts."
-            }
+            defaultValue="Best Regards"
           />
         </div>
       </div>
