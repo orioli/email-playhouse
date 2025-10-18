@@ -108,7 +108,7 @@ const Index = () => {
   const [totalTraveledPixels, setTotalTraveledPixels] = useState(0);
   const [lastSampledPosition, setLastSampledPosition] = useState<{ x: number; y: number } | null>(null);
   const [isMinimized, setIsMinimized] = useState(true);
-  const [position, setPosition] = useState({ x: 16, y: 370 });
+  const [position, setPosition] = useState({ x: 16, y: 450 });
   const [isDragging, setIsDragging] = useState(false);
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
   const [spaceBarCount, setSpaceBarCount] = useState(0);
