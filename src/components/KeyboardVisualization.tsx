@@ -4,7 +4,7 @@ const KEYBOARD_LAYOUT = [
   ['Tab', 'Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P', '[', ']', '\\'],
   ['CapsLock', 'A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L', ';', "'", 'Enter'],
   ['Shift', 'Z', 'X', 'C', 'V', 'B', 'N', 'M', ',', '.', '/', 'Shift'],
-  ['Control', 'Option', 'Command', 'Space', 'Command', 'Option', 'Control']
+  ['Ctrl', 'Opt', 'Cmd', 'Space', 'Cmd', 'Opt', 'Ctrl']
 ];
 
 const KEY_WIDTHS: Record<string, string> = {
@@ -13,9 +13,9 @@ const KEY_WIDTHS: Record<string, string> = {
   'CapsLock': 'w-[72px]',
   'Enter': 'w-[72px]',
   'Shift': 'w-[86px]',
-  'Control': 'w-[50px]',
-  'Option': 'w-[50px]',
-  'Command': 'w-[58px]',
+  'Ctrl': 'w-[50px]',
+  'Opt': 'w-[50px]',
+  'Cmd': 'w-[58px]',
   'Space': 'flex-1'
 };
 
@@ -88,9 +88,9 @@ export const KeyboardVisualization = () => {
            (key === 'Backspace' && pressedKeys.has('BACKSPACE')) ||
            (key === 'Tab' && pressedKeys.has('TAB')) ||
            (key === 'Shift' && (pressedKeys.has('SHIFT') || pressedKeys.has('SHIFTLEFT') || pressedKeys.has('SHIFTRIGHT'))) ||
-           (key === 'Control' && (pressedKeys.has('CONTROL') || pressedKeys.has('CONTROLLEFT') || pressedKeys.has('CONTROLRIGHT'))) ||
-           (key === 'Option' && (pressedKeys.has('ALT') || pressedKeys.has('ALTLEFT') || pressedKeys.has('ALTRIGHT'))) ||
-           (key === 'Command' && (pressedKeys.has('META') || pressedKeys.has('METALEFT') || pressedKeys.has('METARIGHT')));
+           (key === 'Ctrl' && (pressedKeys.has('CONTROL') || pressedKeys.has('CONTROLLEFT') || pressedKeys.has('CONTROLRIGHT'))) ||
+           (key === 'Opt' && (pressedKeys.has('ALT') || pressedKeys.has('ALTLEFT') || pressedKeys.has('ALTRIGHT'))) ||
+           (key === 'Cmd' && (pressedKeys.has('META') || pressedKeys.has('METALEFT') || pressedKeys.has('METARIGHT')));
   };
 
   return (
