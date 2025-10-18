@@ -371,13 +371,13 @@ export const IntentLine = ({ sensitivity = 70, easeIn = 200, onChordActivated, o
     };
 
     window.addEventListener("mousemove", handleMouseMove);
-    window.addEventListener("keydown", handleKeyDown);
-    window.addEventListener("keyup", handleKeyUp);
+    window.addEventListener("keydown", handleKeyDown, true); // Use capture phase for priority
+    window.addEventListener("keyup", handleKeyUp, true); // Use capture phase for priority
 
-      return () => {
+    return () => {
       window.removeEventListener("mousemove", handleMouseMove);
-      window.removeEventListener("keydown", handleKeyDown);
-      window.removeEventListener("keyup", handleKeyUp);
+      window.removeEventListener("keydown", handleKeyDown, true);
+      window.removeEventListener("keyup", handleKeyUp, true);
     };
   }, [cursorPos, keysPressed, isLineActive, initialCursorPos, isIgnoringKeys, targetButtonType, line]);
 
