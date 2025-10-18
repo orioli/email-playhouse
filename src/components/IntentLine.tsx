@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useToast } from "@/hooks/use-toast";
 
 interface LineCoordinates {
@@ -23,16 +23,35 @@ export const IntentLine = ({ sensitivity = 70, easeIn = 200, onChordActivated, o
   const [animationProgress, setAnimationProgress] = useState(0);
   const [targetButtonType, setTargetButtonType] = useState<'reply' | 'replyAll' | 'forward' | 'trash' | 'search' | 'cancel'>('reply');
 
+  // Use refs to access current state without re-running effect
+  const cursorPosRef = useRef(cursorPos);
+  const keysPressedRef = useRef(keysPressed);
+  const isLineActiveRef = useRef(isLineActive);
+  const initialCursorPosRef = useRef(initialCursorPos);
+  const isIgnoringKeysRef = useRef(isIgnoringKeys);
+  const targetButtonTypeRef = useRef(targetButtonType);
+  const lineRef = useRef(line);
+  
+  useEffect(() => {
+    cursorPosRef.current = cursorPos;
+    keysPressedRef.current = keysPressed;
+    isLineActiveRef.current = isLineActive;
+    initialCursorPosRef.current = initialCursorPos;
+    isIgnoringKeysRef.current = isIgnoringKeys;
+    targetButtonTypeRef.current = targetButtonType;
+    lineRef.current = line;
+  }, [cursorPos, keysPressed, isLineActive, initialCursorPos, isIgnoringKeys, targetButtonType, line]);
+
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
       const newPos = { x: e.clientX, y: e.clientY };
       setCursorPos(newPos);
 
       // If line is active and mouse moved more than 5 pixels, hide the line
-      if (isLineActive) {
+      if (isLineActiveRef.current) {
         const distance = Math.sqrt(
-          Math.pow(newPos.x - initialCursorPos.x, 2) + 
-          Math.pow(newPos.y - initialCursorPos.y, 2)
+          Math.pow(newPos.x - initialCursorPosRef.current.x, 2) + 
+          Math.pow(newPos.y - initialCursorPosRef.current.y, 2)
         );
         
         if (distance > 5) {
@@ -50,149 +69,160 @@ export const IntentLine = ({ sensitivity = 70, easeIn = 200, onChordActivated, o
     };
 
     const handleKeyDown = (e: KeyboardEvent) => {
-      const newKeys = new Set(keysPressed);
-      newKeys.add(e.key.toLowerCase());
-      newKeys.add(e.code.toLowerCase());
-      setKeysPressed(newKeys);
+      setKeysPressed(prev => {
+        const newKeys = new Set(prev);
+        newKeys.add(e.key.toLowerCase());
+        newKeys.add(e.code.toLowerCase());
 
-      // Check if both Z and X are pressed
-      const hasZ = newKeys.has("z") || newKeys.has("keyz");
-      const hasX = newKeys.has("x") || newKeys.has("keyx");
+        // Check if both Z and X are pressed
+        const hasZ = newKeys.has("z") || newKeys.has("keyz");
+        const hasX = newKeys.has("x") || newKeys.has("keyx");
 
-      if (hasZ && hasX && !isLineActive && !isIgnoringKeys) {
-        e.preventDefault();
-        createIntentLine();
-        onChordActivated?.();
-      }
+        if (hasZ && hasX && !isLineActiveRef.current && !isIgnoringKeysRef.current) {
+          e.preventDefault();
+          createIntentLine();
+          onChordActivated?.();
+        }
 
-      // Handle Space to cycle through targets when line is active
-      if (isLineActive && (e.code.toLowerCase() === "space" || e.key === " ")) {
-        e.preventDefault();
-        e.stopPropagation();
-        cycleTargetButton();
-      }
+        // Handle Space to cycle through targets when line is active
+        if (isLineActiveRef.current && (e.code.toLowerCase() === "space" || e.key === " ")) {
+          e.preventDefault();
+          e.stopPropagation();
+          cycleTargetButton();
+        }
+        
+        return newKeys;
+      });
     };
 
     const handleKeyUp = (e: KeyboardEvent) => {
-      const newKeys = new Set(keysPressed);
-      newKeys.delete(e.key.toLowerCase());
-      newKeys.delete(e.code.toLowerCase());
-      setKeysPressed(newKeys);
+      setKeysPressed(prev => {
+        const newKeys = new Set(prev);
+        newKeys.delete(e.key.toLowerCase());
+        newKeys.delete(e.code.toLowerCase());
+        return newKeys;
+      });
 
       const releasedZ = e.key.toLowerCase() === "z" || e.code.toLowerCase() === "keyz";
       const releasedX = e.key.toLowerCase() === "x" || e.code.toLowerCase() === "keyx";
 
       // If line is active and either Z or X is released
-      if (isLineActive && (releasedZ || releasedX)) {
+      if (isLineActiveRef.current && (releasedZ || releasedX)) {
         const now = Date.now();
         const releasedKey = releasedZ ? "z" : "x";
 
-    // Check if this is the first key release or second
-    if (!firstKeyReleased) {
-      // First key released
-      setFirstKeyReleased(releasedKey);
-      setLastKeyReleaseTime(now);
-    } else if (firstKeyReleased !== releasedKey) {
-      // Second key released - check timing regardless of order
-      const timeDiff = now - (lastKeyReleaseTime || 0);
-      
-      if (timeDiff <= sensitivity) {
-        // Released together (within threshold) - trigger the send sequence with animation
-        setIsAnimatingOut(true);
-        
-        // Animate the line disappearing from cursor side
-        const animationDuration = easeIn;
-        const startTime = Date.now();
-        const originalLine = line;
-        
-        const animateLineOut = () => {
-          const elapsed = Date.now() - startTime;
-          const progress = Math.min(elapsed / animationDuration, 1);
-          
-          if (progress < 1 && originalLine) {
-            // Interpolate from cursor (x1, y1) towards button (x2, y2)
-            const newX1 = originalLine.x1 + (originalLine.x2 - originalLine.x1) * progress;
-            const newY1 = originalLine.y1 + (originalLine.y2 - originalLine.y1) * progress;
-            
-            setLine({
-              x1: newX1,
-              y1: newY1,
-              x2: originalLine.x2,
-              y2: originalLine.y2,
-            });
-            
-            requestAnimationFrame(animateLineOut);
-          } else {
-            // Animation complete - hide everything and show toast
-            setLine(null);
-            setIsAnimatingOut(false);
-            
-            setTimeout(() => {
-              setButtonRect(null);
-              setIsLineActive(false);
+        // Check if this is the first key release or second
+        setFirstKeyReleased(prev => {
+          if (!prev) {
+            // First key released
+            setLastKeyReleaseTime(now);
+            return releasedKey;
+          } else if (prev !== releasedKey) {
+            // Second key released - check timing regardless of order
+            setLastKeyReleaseTime(prevTime => {
+              const timeDiff = now - (prevTime || 0);
               
-              // Hide virtual cancel button
-              const cancelBtn = document.getElementById('virtual-cancel-button');
-              if (cancelBtn) cancelBtn.style.display = 'none';
-              
-              // If cancel was selected, just dismiss without action
-              if (targetButtonType === 'cancel') {
-                return;
+              if (timeDiff <= sensitivity) {
+                // Released together (within threshold) - trigger the send sequence with animation
+                setIsAnimatingOut(true);
+                
+                // Animate the line disappearing from cursor side
+                const animationDuration = easeIn;
+                const startTime = Date.now();
+                const originalLine = lineRef.current;
+                
+                const animateLineOut = () => {
+                  const elapsed = Date.now() - startTime;
+                  const progress = Math.min(elapsed / animationDuration, 1);
+                  
+                  if (progress < 1 && originalLine) {
+                    // Interpolate from cursor (x1, y1) towards button (x2, y2)
+                    const newX1 = originalLine.x1 + (originalLine.x2 - originalLine.x1) * progress;
+                    const newY1 = originalLine.y1 + (originalLine.y2 - originalLine.y1) * progress;
+                    
+                    setLine({
+                      x1: newX1,
+                      y1: newY1,
+                      x2: originalLine.x2,
+                      y2: originalLine.y2,
+                    });
+                    
+                    requestAnimationFrame(animateLineOut);
+                  } else {
+                    // Animation complete - hide everything and show toast
+                    setLine(null);
+                    setIsAnimatingOut(false);
+                    
+                    setTimeout(() => {
+                      setButtonRect(null);
+                      setIsLineActive(false);
+                      
+                      // Hide virtual cancel button
+                      const cancelBtn = document.getElementById('virtual-cancel-button');
+                      if (cancelBtn) cancelBtn.style.display = 'none';
+                      
+                      // If cancel was selected, just dismiss without action
+                      if (targetButtonTypeRef.current === 'cancel') {
+                        return;
+                      }
+                      
+                      // Trigger action confirmed callback
+                      onActionConfirmed?.();
+                    }, 250);
+                  }
+                };
+                
+                requestAnimationFrame(animateLineOut);
+              } else {
+                // Released apart (more than threshold) - cancel with animation from button to cursor
+                setIsAnimatingOut(true);
+                onSuggestionDiscarded?.(); // Track discarded suggestion
+                
+                const animationDuration = easeIn;
+                const startTime = Date.now();
+                const originalLine = lineRef.current;
+                
+                const animateLineOut = () => {
+                  const elapsed = Date.now() - startTime;
+                  const progress = Math.min(elapsed / animationDuration, 1);
+                  
+                  if (progress < 1 && originalLine) {
+                    // Interpolate from button (x2, y2) towards cursor (x1, y1)
+                    const newX2 = originalLine.x2 + (originalLine.x1 - originalLine.x2) * progress;
+                    const newY2 = originalLine.y2 + (originalLine.y1 - originalLine.y2) * progress;
+                    
+                    setLine({
+                      x1: originalLine.x1,
+                      y1: originalLine.y1,
+                      x2: newX2,
+                      y2: newY2,
+                    });
+                    
+                    requestAnimationFrame(animateLineOut);
+                  } else {
+                    // Animation complete - hide everything
+                    setLine(null);
+                    setButtonRect(null);
+                    setIsLineActive(false);
+                    setIsAnimatingOut(false);
+                    // Hide virtual cancel button
+                    const cancelBtn = document.getElementById('virtual-cancel-button');
+                    if (cancelBtn) cancelBtn.style.display = 'none';
+                  }
+                };
+                
+                requestAnimationFrame(animateLineOut);
               }
               
-              // Trigger action confirmed callback
-              onActionConfirmed?.();
-            }, 250);
-          }
-        };
-        
-        requestAnimationFrame(animateLineOut);
-      } else {
-        // Released apart (more than threshold) - cancel with animation from button to cursor
-        setIsAnimatingOut(true);
-        onSuggestionDiscarded?.(); // Track discarded suggestion
-        
-        const animationDuration = easeIn;
-        const startTime = Date.now();
-        const originalLine = line;
-        
-        const animateLineOut = () => {
-          const elapsed = Date.now() - startTime;
-          const progress = Math.min(elapsed / animationDuration, 1);
-          
-          if (progress < 1 && originalLine) {
-            // Interpolate from button (x2, y2) towards cursor (x1, y1)
-            const newX2 = originalLine.x2 + (originalLine.x1 - originalLine.x2) * progress;
-            const newY2 = originalLine.y2 + (originalLine.y1 - originalLine.y2) * progress;
-            
-            setLine({
-              x1: originalLine.x1,
-              y1: originalLine.y1,
-              x2: newX2,
-              y2: newY2,
+              // Reset tracking
+              setFirstKeyReleased(null);
+              return null;
             });
-            
-            requestAnimationFrame(animateLineOut);
-          } else {
-            // Animation complete - hide everything
-            setLine(null);
-            setButtonRect(null);
-            setIsLineActive(false);
-            setIsAnimatingOut(false);
-            // Hide virtual cancel button
-            const cancelBtn = document.getElementById('virtual-cancel-button');
-            if (cancelBtn) cancelBtn.style.display = 'none';
+            return null;
           }
-        };
-        
-        requestAnimationFrame(animateLineOut);
+          return prev;
+        });
       }
-      
-      // Reset tracking
-      setFirstKeyReleased(null);
-      setLastKeyReleaseTime(null);
-    }
-  }
 
       // Reset ignore flag when Z or X is released
       if (releasedZ || releasedX) {
@@ -379,7 +409,7 @@ export const IntentLine = ({ sensitivity = 70, easeIn = 200, onChordActivated, o
       window.removeEventListener("keydown", handleKeyDown, true);
       window.removeEventListener("keyup", handleKeyUp, true);
     };
-  }, [cursorPos, keysPressed, isLineActive, initialCursorPos, isIgnoringKeys, targetButtonType, line]);
+  }, []); // Empty dependency array - listeners stay stable with refs
 
   // Check which keys are currently pressed
   const isZPressed = keysPressed.has("z") || keysPressed.has("keyz");
