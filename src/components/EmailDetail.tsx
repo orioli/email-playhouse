@@ -16,6 +16,7 @@ interface EmailDetailProps {
 export const EmailDetail = ({ isComposing, onClose, onSend, onReply }: EmailDetailProps) => {
   const { toast } = useToast();
   const [showArrow, setShowArrow] = useState(false);
+  const [onboardingStarted, setOnboardingStarted] = useState(false);
   const [keysPressed, setKeysPressed] = useState(new Set<string>());
 
   useEffect(() => {
@@ -69,6 +70,7 @@ export const EmailDetail = ({ isComposing, onClose, onSend, onReply }: EmailDeta
 
   const handleStartHere = () => {
     setShowArrow(true);
+    setOnboardingStarted(true);
     
     // Simulate Z and X key presses for 1 second
     const simulateKeyPress = (key: string) => {
@@ -189,7 +191,7 @@ Wed, Oct 18, 2025 at 10:30 AM.... wrote...`}
 
           <div className="prose prose-sm max-w-none relative">
             {/* Start Here Button */}
-            {!showArrow && (
+            {!onboardingStarted && (
               <div className="flex justify-center my-8">
                 <Button
                   onClick={handleStartHere}
