@@ -33,9 +33,9 @@ export const EmailList = ({ emails, selectedEmail, onEmailSelect }: EmailListPro
           )}
         >
           <div className="flex items-start justify-between mb-1">
-            <div className="h-4 bg-muted rounded w-32 animate-pulse"></div>
+            <div className="h-4 bg-muted rounded w-32"></div>
             <div className="flex items-center gap-2 ml-2">
-              <div className="h-3 bg-muted rounded w-12 animate-pulse"></div>
+              <div className="h-3 bg-muted rounded w-12"></div>
               <Star
                 className={cn(
                   "h-4 w-4",
@@ -46,13 +46,13 @@ export const EmailList = ({ emails, selectedEmail, onEmailSelect }: EmailListPro
           </div>
           
           <div className="flex items-center gap-2 mb-1">
-            <div className="h-4 bg-muted rounded flex-1 animate-pulse"></div>
+            <div className="h-4 bg-muted rounded flex-1"></div>
             {email.hasAttachment && (
               <Paperclip className="h-3 w-3 text-muted-foreground" />
             )}
           </div>
           
-          <div className="h-3 bg-muted rounded w-3/4 animate-pulse"></div>
+          <div className="h-3 bg-muted rounded w-3/4"></div>
         </div>
       ))}
     </div>
