@@ -4,7 +4,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 interface EmailDetailProps {
   isComposing: boolean;
@@ -16,6 +16,34 @@ interface EmailDetailProps {
 export const EmailDetail = ({ isComposing, onClose, onSend, onReply }: EmailDetailProps) => {
   const { toast } = useToast();
   const [showArrow, setShowArrow] = useState(false);
+  const [keysPressed, setKeysPressed] = useState(new Set<string>());
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      const newKeys = new Set(keysPressed);
+      newKeys.add(e.key.toLowerCase());
+      setKeysPressed(newKeys);
+
+      // Check if both Z and X are pressed
+      if (newKeys.has('z') && newKeys.has('x')) {
+        setShowArrow(false);
+      }
+    };
+
+    const handleKeyUp = (e: KeyboardEvent) => {
+      const newKeys = new Set(keysPressed);
+      newKeys.delete(e.key.toLowerCase());
+      setKeysPressed(newKeys);
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    window.addEventListener('keyup', handleKeyUp);
+
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+      window.removeEventListener('keyup', handleKeyUp);
+    };
+  }, [keysPressed]);
 
   const handleVideoEnd = (e: React.SyntheticEvent<HTMLVideoElement>) => {
     const video = e.currentTarget;
