@@ -62,8 +62,8 @@ export const IntentLine = ({ sensitivity = 70, easeIn = 200, onChordActivated, o
         onChordActivated?.();
       }
 
-      // Handle Tab to cycle through targets when line is active
-      if (isLineActive && (e.code.toLowerCase() === "tab" || e.key === "Tab")) {
+      // Handle right arrow to cycle through targets when line is active
+      if (isLineActive && (e.code.toLowerCase() === "arrowright" || e.key === "ArrowRight")) {
         e.preventDefault();
         e.stopPropagation();
         cycleTargetButton();
@@ -342,7 +342,7 @@ export const IntentLine = ({ sensitivity = 70, easeIn = 200, onChordActivated, o
   // Check which keys are currently pressed
   const isOptPressed = keysPressed.has("alt") || keysPressed.has("altleft") || keysPressed.has("altright");
   const isCmdPressed = keysPressed.has("meta") || keysPressed.has("metaleft") || keysPressed.has("metaright");
-  const isTabPressed = keysPressed.has("tab");
+  const isArrowRightPressed = keysPressed.has("arrowright");
 
   return (
     <div className="fixed inset-0 pointer-events-none z-50">
@@ -373,18 +373,18 @@ export const IntentLine = ({ sensitivity = 70, easeIn = 200, onChordActivated, o
           ⌘
         </div>
       )}
-      {isTabPressed && isLineActive && (
+      {isArrowRightPressed && isLineActive && (
         <div 
           className="absolute flex items-center justify-center bg-gray-400/80 rounded text-sm font-bold"
           style={{
             left: cursorPos.x + 60,
             top: cursorPos.y,
-            width: 50,
+            width: 40,
             height: 30,
             transform: 'translate(-50%, -50%)'
           }}
         >
-          TAB
+          →
         </div>
       )}
       
