@@ -272,7 +272,7 @@ Wed, Oct 18, 2025 at 10:30 AM.... wrote...`}
             )}
             
             {/* Release message after 15 seconds */}
-            {showReleaseMessage && (
+            {showReleaseMessage && !simultaneousReleaseDetected && (
               <div className="fixed bottom-32 left-1/2 -translate-x-1/2 z-50 opacity-80">
                 <div className="bg-green-500 text-white px-4 py-2 rounded-lg font-semibold text-center">
                   TO ACCEPT a suggestion RELEASE Z X at same time
