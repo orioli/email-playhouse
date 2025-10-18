@@ -52,18 +52,18 @@ export const IntentLine = ({ sensitivity = 70, easeIn = 200, onChordActivated, o
       newKeys.add(e.code.toLowerCase());
       setKeysPressed(newKeys);
 
-      // Check if both Opt (Alt) and Cmd (Meta) are pressed
-      const hasOpt = newKeys.has("alt") || newKeys.has("altleft") || newKeys.has("altright");
-      const hasCmd = newKeys.has("meta") || newKeys.has("metaleft") || newKeys.has("metaright");
+      // Check if both Z and X are pressed
+      const hasZ = newKeys.has("z") || newKeys.has("keyz");
+      const hasX = newKeys.has("x") || newKeys.has("keyx");
 
-      if (hasOpt && hasCmd && !isLineActive && !isIgnoringKeys) {
+      if (hasZ && hasX && !isLineActive && !isIgnoringKeys) {
         e.preventDefault();
         createIntentLine();
         onChordActivated?.();
       }
 
-      // Handle Tab to cycle through targets when line is active
-      if (isLineActive && (e.code.toLowerCase() === "tab" || e.key === "Tab")) {
+      // Handle Space to cycle through targets when line is active
+      if (isLineActive && (e.code.toLowerCase() === "space" || e.key === " ")) {
         e.preventDefault();
         e.stopPropagation();
         cycleTargetButton();
@@ -76,13 +76,13 @@ export const IntentLine = ({ sensitivity = 70, easeIn = 200, onChordActivated, o
       newKeys.delete(e.code.toLowerCase());
       setKeysPressed(newKeys);
 
-      const releasedOpt = e.key.toLowerCase() === "alt" || e.code.toLowerCase() === "altleft" || e.code.toLowerCase() === "altright";
-      const releasedCmd = e.key.toLowerCase() === "meta" || e.code.toLowerCase() === "metaleft" || e.code.toLowerCase() === "metaright";
+      const releasedZ = e.key.toLowerCase() === "z" || e.code.toLowerCase() === "keyz";
+      const releasedX = e.key.toLowerCase() === "x" || e.code.toLowerCase() === "keyx";
 
-      // If line is active and either Opt or Cmd is released
-      if (isLineActive && (releasedOpt || releasedCmd)) {
+      // If line is active and either Z or X is released
+      if (isLineActive && (releasedZ || releasedX)) {
         const now = Date.now();
-        const releasedKey = releasedOpt ? "opt" : "cmd";
+        const releasedKey = releasedZ ? "z" : "x";
 
     // Check if this is the first key release or second
     if (!firstKeyReleased) {
@@ -179,8 +179,8 @@ export const IntentLine = ({ sensitivity = 70, easeIn = 200, onChordActivated, o
     }
   }
 
-      // Reset ignore flag when Opt or Cmd is released
-      if (releasedOpt || releasedCmd) {
+      // Reset ignore flag when Z or X is released
+      if (releasedZ || releasedX) {
         setIsIgnoringKeys(false);
       }
     };
@@ -340,14 +340,14 @@ export const IntentLine = ({ sensitivity = 70, easeIn = 200, onChordActivated, o
   }, [cursorPos, keysPressed, isLineActive, initialCursorPos, isIgnoringKeys, targetButtonType, line]);
 
   // Check which keys are currently pressed
-  const isOptPressed = keysPressed.has("alt") || keysPressed.has("altleft") || keysPressed.has("altright");
-  const isCmdPressed = keysPressed.has("meta") || keysPressed.has("metaleft") || keysPressed.has("metaright");
-  const isTabPressed = keysPressed.has("tab");
+  const isZPressed = keysPressed.has("z") || keysPressed.has("keyz");
+  const isXPressed = keysPressed.has("x") || keysPressed.has("keyx");
+  const isSpacePressed = keysPressed.has(" ") || keysPressed.has("space");
 
   return (
     <div className="fixed inset-0 pointer-events-none z-50">
       {/* Key press overlays near mouse cursor */}
-      {isOptPressed && (
+      {isZPressed && (
         <div 
           className="absolute flex items-center justify-center bg-gray-400/80 rounded text-sm font-bold px-2"
           style={{
@@ -357,10 +357,10 @@ export const IntentLine = ({ sensitivity = 70, easeIn = 200, onChordActivated, o
             transform: 'translate(-50%, -50%)'
           }}
         >
-          ⌥
+          Z
         </div>
       )}
-      {isCmdPressed && (
+      {isXPressed && (
         <div 
           className="absolute flex items-center justify-center bg-gray-400/80 rounded text-sm font-bold px-2"
           style={{
@@ -370,21 +370,20 @@ export const IntentLine = ({ sensitivity = 70, easeIn = 200, onChordActivated, o
             transform: 'translate(-50%, -50%)'
           }}
         >
-          ⌘
+          X
         </div>
       )}
-      {isTabPressed && isLineActive && (
+      {isSpacePressed && isLineActive && (
         <div 
-          className="absolute flex items-center justify-center bg-gray-400/80 rounded text-sm font-bold"
+          className="absolute flex items-center justify-center bg-gray-400/80 rounded text-sm font-bold px-2"
           style={{
             left: cursorPos.x + 60,
             top: cursorPos.y,
-            width: 50,
             height: 30,
             transform: 'translate(-50%, -50%)'
           }}
         >
-          TAB
+          SPACE
         </div>
       )}
       
