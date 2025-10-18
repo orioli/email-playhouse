@@ -72,7 +72,7 @@ export const EmailDetail = ({ isComposing, onClose, onSend, onReply }: EmailDeta
     setShowArrow(true);
     setOnboardingStarted(true);
     
-    // Simulate Z and X key presses for 3 seconds
+    // Simulate Z and X key presses for 5 seconds
     const simulateKeyPress = (key: string, code: string, duration: number) => {
       const keyDownEvent = new KeyboardEvent('keydown', {
         key: key,
@@ -92,9 +92,9 @@ export const EmailDetail = ({ isComposing, onClose, onSend, onReply }: EmailDeta
       }, duration);
     };
     
-    // Toggle space bar 3 cycles (0.5s on, 0.5s off)
+    // Toggle space bar 5 cycles (0.5s on, 0.5s off) over 5 seconds
     const toggleSpaceBar = () => {
-      for (let i = 0; i < 3; i++) {
+      for (let i = 0; i < 5; i++) {
         setTimeout(() => {
           // Press
           window.dispatchEvent(new KeyboardEvent('keydown', {
@@ -115,8 +115,8 @@ export const EmailDetail = ({ isComposing, onClose, onSend, onReply }: EmailDeta
       }
     };
     
-    simulateKeyPress('z', 'KeyZ', 3000);
-    simulateKeyPress('x', 'KeyX', 3000);
+    simulateKeyPress('z', 'KeyZ', 5000);
+    simulateKeyPress('x', 'KeyX', 5000);
     toggleSpaceBar();
   };
 
