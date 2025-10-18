@@ -72,16 +72,16 @@ export const EmailDetail = ({ isComposing, onClose, onSend, onReply }: EmailDeta
     setShowArrow(true);
     setOnboardingStarted(true);
     
-    // Simulate Z and X key presses for 1 second
-    const simulateKeyPress = (key: string) => {
+    // Simulate Z, X, and Space key presses for 3 seconds
+    const simulateKeyPress = (key: string, code: string) => {
       const keyDownEvent = new KeyboardEvent('keydown', {
         key: key,
-        code: key === 'z' ? 'KeyZ' : 'KeyX',
+        code: code,
         bubbles: true,
       });
       const keyUpEvent = new KeyboardEvent('keyup', {
         key: key,
-        code: key === 'z' ? 'KeyZ' : 'KeyX',
+        code: code,
         bubbles: true,
       });
       
@@ -89,11 +89,12 @@ export const EmailDetail = ({ isComposing, onClose, onSend, onReply }: EmailDeta
       
       setTimeout(() => {
         window.dispatchEvent(keyUpEvent);
-      }, 1000);
+      }, 3000);
     };
     
-    simulateKeyPress('z');
-    simulateKeyPress('x');
+    simulateKeyPress('z', 'KeyZ');
+    simulateKeyPress('x', 'KeyX');
+    simulateKeyPress(' ', 'Space');
   };
 
   const handleSend = () => {
