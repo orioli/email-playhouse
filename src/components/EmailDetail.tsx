@@ -122,10 +122,10 @@ export const EmailDetail = ({ isComposing, onClose, onSend, onReply }: EmailDeta
               <Skeleton className="h-10 w-10 rounded-full" />
               <div>
                 <Skeleton className="h-5 w-40 mb-2" />
-                <div className="text-sm text-muted-foreground">jose.berengueres@nu.edu.kz</div>
+                <Skeleton className="h-4 w-52" />
               </div>
             </div>
-            <div className="text-sm text-muted-foreground">10:30 AM</div>
+            <Skeleton className="h-4 w-16" />
           </div>
 
           <div className="prose prose-sm max-w-none">
