@@ -272,7 +272,8 @@ Wed, Oct 18, 2025 at 10:30 AM.... wrote...`}
             {showArrow && (
               <div className="fixed bottom-32 left-1/2 -translate-x-1/2 z-50 opacity-80">
                 <div className="bg-green-500 text-white px-4 py-2 rounded-lg font-semibold text-center">
-                  HOLD DOWN Z X, while toggling SPACE BAR
+                  <div>HOLD DOWN Z X, while toggling SPACE BAR</div>
+                  <div className="mt-1">to ACCEPT SUGGESTION RELEASE Z X same time</div>
                 </div>
               </div>
             )}
