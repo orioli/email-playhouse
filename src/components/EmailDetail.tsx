@@ -81,7 +81,11 @@ export const EmailDetail = ({ isComposing, onClose, onSend, onReply }: EmailDeta
           <Textarea
             placeholder="Compose your message..."
             className="flex-1 resize-none border-0 focus-visible:ring-0 p-0"
-            defaultValue="\n\n\n---\nWed, Oct 18, 2025 at 10:30 AM.... wrote..."
+            defaultValue={`
+
+
+---
+Wed, Oct 18, 2025 at 10:30 AM.... wrote...`}
           />
         </div>
       </div>
