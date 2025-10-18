@@ -108,7 +108,7 @@ const Index = () => {
   const [totalTraveledPixels, setTotalTraveledPixels] = useState(0);
   const [lastSampledPosition, setLastSampledPosition] = useState<{ x: number; y: number } | null>(null);
   const [isMinimized, setIsMinimized] = useState(true);
-  const [position, setPosition] = useState({ x: 16, y: 340 });
+  const [position, setPosition] = useState({ x: 16, y: 370 });
   const [isDragging, setIsDragging] = useState(false);
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
   const [spaceBarCount, setSpaceBarCount] = useState(0);
@@ -233,7 +233,7 @@ const Index = () => {
     <div className="h-screen flex flex-col">
       <div 
         data-exclude-from-chord="true"
-        className="fixed z-50 bg-white border-2 border-black shadow-2xl transition-all"
+        className="fixed z-50 bg-white border-2 border-gray-400 shadow-2xl transition-all"
         style={{
           left: `${position.x}px`,
           top: `${position.y}px`,
@@ -243,7 +243,7 @@ const Index = () => {
         }}
       >
         <div 
-          className="p-3 bg-black border-b-2 border-black flex items-center justify-between cursor-grab active:cursor-grabbing"
+          className="p-3 bg-gray-700 border-b-2 border-gray-400 flex items-center justify-between cursor-grab active:cursor-grabbing"
           onMouseDown={handleMouseDown}
         >
           <div className="flex items-center gap-3">
