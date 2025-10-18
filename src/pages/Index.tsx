@@ -4,6 +4,7 @@ import { EmailList } from "@/components/EmailList";
 import { EmailDetail } from "@/components/EmailDetail";
 import { EmailHeader } from "@/components/EmailHeader";
 import { IntentLine } from "@/components/IntentLine";
+import { KeyboardVisualization } from "@/components/KeyboardVisualization";
 import { Slider } from "@/components/ui/slider";
 import { useToast } from "@/hooks/use-toast";
 import { LineChart, Line, ResponsiveContainer } from "recharts";
@@ -438,6 +439,7 @@ const Index = () => {
           onReply={handleCompose}
         />
       </div>
+      <KeyboardVisualization />
     </div>
   );
 };
