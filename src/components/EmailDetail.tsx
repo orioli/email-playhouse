@@ -147,7 +147,7 @@ Wed, Oct 18, 2025 at 10:30 AM.... wrote...`}
             
             {/* Green Arrow pointing to Z key */}
             {showArrow && (
-              <div className="fixed bottom-32 left-8 z-50 opacity-50">
+              <div className="fixed bottom-32 left-32 z-50 opacity-50">
                 <div className="relative flex flex-col items-center">
                   <div className="bg-green-500 text-white px-4 py-2 rounded-lg font-semibold mb-2">
                     press Z X
