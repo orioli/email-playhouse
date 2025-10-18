@@ -8,19 +8,22 @@ const KEYBOARD_LAYOUT = [
 ];
 
 const KEY_WIDTHS: Record<string, string> = {
-  'Backspace': 'w-20',
-  'Tab': 'w-16',
-  'CapsLock': 'w-20',
-  'Enter': 'w-20',
-  'Shift': 'w-24',
-  'Control': 'w-14',
-  'Option': 'w-14',
-  'Command': 'w-16',
+  'Backspace': 'w-[72px]',
+  'Tab': 'w-[58px]',
+  'CapsLock': 'w-[72px]',
+  'Enter': 'w-[72px]',
+  'Shift': 'w-[86px]',
+  'Control': 'w-[50px]',
+  'Option': 'w-[50px]',
+  'Command': 'w-[58px]',
   'Space': 'flex-1'
 };
 
 export const KeyboardVisualization = () => {
   const [pressedKeys, setPressedKeys] = useState<Set<string>>(new Set());
+  const [position, setPosition] = useState({ x: window.innerWidth / 2, y: window.innerHeight - 150 });
+  const [isDragging, setIsDragging] = useState(false);
+  const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -44,6 +47,39 @@ export const KeyboardVisualization = () => {
     };
   }, []);
 
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      if (isDragging) {
+        setPosition({
+          x: e.clientX - dragOffset.x,
+          y: e.clientY - dragOffset.y
+        });
+      }
+    };
+
+    const handleMouseUp = () => {
+      setIsDragging(false);
+    };
+
+    if (isDragging) {
+      window.addEventListener('mousemove', handleMouseMove);
+      window.addEventListener('mouseup', handleMouseUp);
+    }
+
+    return () => {
+      window.removeEventListener('mousemove', handleMouseMove);
+      window.removeEventListener('mouseup', handleMouseUp);
+    };
+  }, [isDragging, dragOffset]);
+
+  const handleMouseDown = (e: React.MouseEvent) => {
+    setIsDragging(true);
+    setDragOffset({
+      x: e.clientX - position.x,
+      y: e.clientY - position.y
+    });
+  };
+
   const isKeyPressed = (key: string) => {
     const upperKey = key.toUpperCase();
     return pressedKeys.has(upperKey) || 
@@ -58,19 +94,28 @@ export const KeyboardVisualization = () => {
   };
 
   return (
-    <div className="fixed bottom-4 left-1/2 transform -translate-x-1/2 bg-gray-200 rounded-2xl shadow-2xl p-4 border border-gray-300" style={{ maxWidth: '900px' }}>
+    <div 
+      className="fixed bg-gray-200 rounded-2xl shadow-2xl p-4 border border-gray-300 cursor-grab active:cursor-grabbing" 
+      style={{ 
+        left: `${position.x}px`,
+        top: `${position.y}px`,
+        transform: 'translate(-50%, -50%)',
+        maxWidth: '810px'
+      }}
+      onMouseDown={handleMouseDown}
+    >
       <div className="space-y-1">
         {KEYBOARD_LAYOUT.map((row, rowIndex) => (
           <div key={rowIndex} className="flex gap-1 justify-center">
             {row.map((key, keyIndex) => {
-              const widthClass = KEY_WIDTHS[key] || 'w-10';
+              const widthClass = KEY_WIDTHS[key] || 'w-9';
               const isPressed = isKeyPressed(key);
               
               return (
                 <div
                   key={keyIndex}
                   className={`
-                    ${widthClass} h-10 rounded
+                    ${widthClass} h-9 rounded
                     flex items-center justify-center
                     text-xs font-medium
                     transition-all duration-75
