@@ -72,8 +72,8 @@ export const EmailDetail = ({ isComposing, onClose, onSend, onReply }: EmailDeta
     setShowArrow(true);
     setOnboardingStarted(true);
     
-    // Simulate Z, X, and Space key presses for 3 seconds
-    const simulateKeyPress = (key: string, code: string) => {
+    // Simulate Z and X key presses for 3 seconds
+    const simulateKeyPress = (key: string, code: string, duration: number) => {
       const keyDownEvent = new KeyboardEvent('keydown', {
         key: key,
         code: code,
@@ -89,12 +89,35 @@ export const EmailDetail = ({ isComposing, onClose, onSend, onReply }: EmailDeta
       
       setTimeout(() => {
         window.dispatchEvent(keyUpEvent);
-      }, 3000);
+      }, duration);
     };
     
-    simulateKeyPress('z', 'KeyZ');
-    simulateKeyPress('x', 'KeyX');
-    simulateKeyPress(' ', 'Space');
+    // Toggle space bar 3 cycles (0.5s on, 0.5s off)
+    const toggleSpaceBar = () => {
+      for (let i = 0; i < 3; i++) {
+        setTimeout(() => {
+          // Press
+          window.dispatchEvent(new KeyboardEvent('keydown', {
+            key: ' ',
+            code: 'Space',
+            bubbles: true,
+          }));
+          
+          // Release after 0.5s
+          setTimeout(() => {
+            window.dispatchEvent(new KeyboardEvent('keyup', {
+              key: ' ',
+              code: 'Space',
+              bubbles: true,
+            }));
+          }, 500);
+        }, i * 1000); // Each cycle starts 1s apart (0.5s on + 0.5s off)
+      }
+    };
+    
+    simulateKeyPress('z', 'KeyZ', 3000);
+    simulateKeyPress('x', 'KeyX', 3000);
+    toggleSpaceBar();
   };
 
   const handleSend = () => {
