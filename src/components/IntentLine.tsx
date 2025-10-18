@@ -234,8 +234,29 @@ export const IntentLine = ({ sensitivity = 70, easeIn = 200, onChordActivated, o
                              document.querySelector('input[placeholder*="search"]');
           return searchInput as HTMLElement | undefined;
         case 'cancel':
-          // Return the virtual cancel button (should already exist and be visible)
-          const cancelButton = document.getElementById('virtual-cancel-button');
+          // Return or create a virtual cancel button in the center of the screen
+          let cancelButton = document.getElementById('virtual-cancel-button');
+          if (!cancelButton) {
+            cancelButton = document.createElement('div');
+            cancelButton.id = 'virtual-cancel-button';
+            cancelButton.style.position = 'fixed';
+            cancelButton.style.left = '50%';
+            cancelButton.style.top = '50%';
+            cancelButton.style.transform = 'translate(-50%, -50%)';
+            cancelButton.style.padding = '16px 24px';
+            cancelButton.style.backgroundColor = 'white';
+            cancelButton.style.color = 'black';
+            cancelButton.style.border = '1px solid black';
+            cancelButton.style.borderRadius = '8px';
+            cancelButton.style.fontWeight = '600';
+            cancelButton.style.fontSize = '14px';
+            cancelButton.style.textAlign = 'center';
+            cancelButton.style.zIndex = '40';
+            cancelButton.style.pointerEvents = 'none';
+            cancelButton.textContent = 'TO CANCEL lift X before Z or select HERE';
+            document.body.appendChild(cancelButton);
+          }
+          cancelButton.style.display = 'block';
           return cancelButton as HTMLElement;
         default:
           return null;
@@ -261,6 +282,12 @@ export const IntentLine = ({ sensitivity = 70, easeIn = 200, onChordActivated, o
     };
 
     const updateIntentLine = (type: 'reply' | 'replyAll' | 'forward' | 'trash' | 'search' | 'cancel') => {
+      // Hide cancel button if not targeting it
+      const cancelBtn = document.getElementById('virtual-cancel-button');
+      if (type !== 'cancel' && cancelBtn) {
+        cancelBtn.style.display = 'none';
+      }
+      
       const targetButton = findTargetButton(type);
       if (!targetButton) return;
 
@@ -298,30 +325,6 @@ export const IntentLine = ({ sensitivity = 70, easeIn = 200, onChordActivated, o
     const createIntentLine = () => {
       const targetButton = findTargetButton(targetButtonType);
       if (!targetButton) return;
-
-      // Create and show cancel button at the start of chord
-      let cancelButton = document.getElementById('virtual-cancel-button');
-      if (!cancelButton) {
-        cancelButton = document.createElement('div');
-        cancelButton.id = 'virtual-cancel-button';
-        cancelButton.style.position = 'fixed';
-        cancelButton.style.left = '50%';
-        cancelButton.style.top = '50%';
-        cancelButton.style.transform = 'translate(-50%, -50%)';
-        cancelButton.style.padding = '16px 24px';
-        cancelButton.style.backgroundColor = 'white';
-        cancelButton.style.color = 'black';
-        cancelButton.style.border = '1px solid black';
-        cancelButton.style.borderRadius = '8px';
-        cancelButton.style.fontWeight = '600';
-        cancelButton.style.fontSize = '14px';
-        cancelButton.style.textAlign = 'center';
-        cancelButton.style.zIndex = '40';
-        cancelButton.style.pointerEvents = 'none';
-        cancelButton.textContent = 'TO CANCEL lift X before Z or select HERE';
-        document.body.appendChild(cancelButton);
-      }
-      cancelButton.style.display = 'block';
 
       const rect = targetButton.getBoundingClientRect();
       const padding = 4;
