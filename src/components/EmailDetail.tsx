@@ -4,7 +4,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 
 interface EmailDetailProps {
   isComposing: boolean;
@@ -22,61 +22,43 @@ export const EmailDetail = ({ isComposing, onClose, onSend, onReply, clicksSaved
   const [firstZXPressTime, setFirstZXPressTime] = useState<number | null>(null);
   const [showReleaseMessage, setShowReleaseMessage] = useState(false);
   const [simultaneousReleaseDetected, setSimultaneousReleaseDetected] = useState(false);
-  
-  // Use refs to access current state without re-running effect
-  const keysPressedRef = useRef(keysPressed);
-  const firstZXPressTimeRef = useRef(firstZXPressTime);
-  const simultaneousReleaseDetectedRef = useRef(simultaneousReleaseDetected);
-  
-  useEffect(() => {
-    keysPressedRef.current = keysPressed;
-    firstZXPressTimeRef.current = firstZXPressTime;
-    simultaneousReleaseDetectedRef.current = simultaneousReleaseDetected;
-  }, [keysPressed, firstZXPressTime, simultaneousReleaseDetected]);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      setKeysPressed(prev => {
-        const newKeys = new Set(prev);
-        newKeys.add(e.key.toLowerCase());
+      const newKeys = new Set(keysPressed);
+      newKeys.add(e.key.toLowerCase());
+      setKeysPressed(newKeys);
 
-        // Check if both Z and X are pressed
-        if (newKeys.has('z') && newKeys.has('x')) {
-          setShowArrow(false);
-          
-          // Record first time Z and X are pressed together
-          if (firstZXPressTimeRef.current === null && !simultaneousReleaseDetectedRef.current) {
-            setFirstZXPressTime(Date.now());
-          }
-        }
+      // Check if both Z and X are pressed
+      if (newKeys.has('z') && newKeys.has('x')) {
+        setShowArrow(false);
         
-        return newKeys;
-      });
+        // Record first time Z and X are pressed together
+        if (firstZXPressTime === null && !simultaneousReleaseDetected) {
+          setFirstZXPressTime(Date.now());
+        }
+      }
     };
 
     const handleKeyUp = (e: KeyboardEvent) => {
+      const wasZPressed = keysPressed.has('z');
+      const wasXPressed = keysPressed.has('x');
       const releasedKey = e.key.toLowerCase();
       
-      setKeysPressed(prev => {
-        const wasZPressed = prev.has('z');
-        const wasXPressed = prev.has('x');
-        
-        const newKeys = new Set(prev);
-        newKeys.delete(releasedKey);
-        
-        // Check if Z and X were both pressed and are being released simultaneously
-        if (wasZPressed && wasXPressed && (releasedKey === 'z' || releasedKey === 'x')) {
-          // Check if the other key is released within a short time frame (100ms)
-          setTimeout(() => {
-            if (!newKeys.has('z') && !newKeys.has('x')) {
-              setSimultaneousReleaseDetected(true);
-              setShowReleaseMessage(false);
-            }
-          }, 100);
-        }
-        
-        return newKeys;
-      });
+      const newKeys = new Set(keysPressed);
+      newKeys.delete(releasedKey);
+      setKeysPressed(newKeys);
+      
+      // Check if Z and X were both pressed and are being released simultaneously
+      if (wasZPressed && wasXPressed && (releasedKey === 'z' || releasedKey === 'x')) {
+        // Check if the other key is released within a short time frame (100ms)
+        setTimeout(() => {
+          if (!newKeys.has('z') && !newKeys.has('x')) {
+            setSimultaneousReleaseDetected(true);
+            setShowReleaseMessage(false);
+          }
+        }, 100);
+      }
     };
 
     window.addEventListener('keydown', handleKeyDown);
@@ -86,7 +68,7 @@ export const EmailDetail = ({ isComposing, onClose, onSend, onReply, clicksSaved
       window.removeEventListener('keydown', handleKeyDown);
       window.removeEventListener('keyup', handleKeyUp);
     };
-  }, []); // Empty dependency array - listeners stay stable
+  }, [keysPressed, firstZXPressTime, simultaneousReleaseDetected]);
 
   // Timer for 15 seconds after first Z+X press
   useEffect(() => {
