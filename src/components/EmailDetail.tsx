@@ -145,14 +145,11 @@ Wed, Oct 18, 2025 at 10:30 AM.... wrote...`}
               </div>
             )}
             
-            {/* Green Arrow pointing to Z key */}
+            {/* Press Z X text in middle of keyboard */}
             {showArrow && (
-              <div className="fixed bottom-32 left-[345px] z-50 opacity-50">
-                <div className="relative flex flex-col items-center">
-                  <div className="bg-green-500 text-white px-4 py-2 rounded-lg font-semibold mb-2">
-                    press Z X
-                  </div>
-                  <ArrowDown className="w-16 h-16 text-green-500" strokeWidth={3} />
+              <div className="fixed bottom-32 left-1/2 -translate-x-1/2 z-50 opacity-50">
+                <div className="bg-green-500 text-white px-4 py-2 rounded-lg font-semibold">
+                  press Z X
                 </div>
               </div>
             )}
