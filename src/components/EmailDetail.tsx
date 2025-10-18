@@ -69,7 +69,7 @@ export const EmailDetail = ({ isComposing, onClose, onSend, onReply }: EmailDeta
             <Input
               placeholder="To"
               className="border-b rounded-none px-0 focus-visible:ring-0"
-              defaultValue="jose.berengueres@nu.edu.kz"
+              defaultValue="TO: email"
             />
             <Input
               placeholder="Subject"
