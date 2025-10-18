@@ -52,11 +52,11 @@ export const IntentLine = ({ sensitivity = 70, easeIn = 200, onChordActivated, o
       newKeys.add(e.code.toLowerCase());
       setKeysPressed(newKeys);
 
-      // Check if both Q and W are pressed
-      const hasQ = newKeys.has("q") || newKeys.has("keyq");
-      const hasW = newKeys.has("w") || newKeys.has("keyw");
+      // Check if both Opt (Alt) and Cmd (Meta) are pressed
+      const hasOpt = newKeys.has("alt") || newKeys.has("altleft") || newKeys.has("altright");
+      const hasCmd = newKeys.has("meta") || newKeys.has("metaleft") || newKeys.has("metaright");
 
-      if (hasQ && hasW && !isLineActive && !isIgnoringKeys) {
+      if (hasOpt && hasCmd && !isLineActive && !isIgnoringKeys) {
         e.preventDefault();
         createIntentLine();
         onChordActivated?.();
@@ -75,13 +75,13 @@ export const IntentLine = ({ sensitivity = 70, easeIn = 200, onChordActivated, o
       newKeys.delete(e.code.toLowerCase());
       setKeysPressed(newKeys);
 
-      const releasedQ = e.key.toLowerCase() === "q" || e.code.toLowerCase() === "keyq";
-      const releasedW = e.key.toLowerCase() === "w" || e.code.toLowerCase() === "keyw";
+      const releasedOpt = e.key.toLowerCase() === "alt" || e.code.toLowerCase() === "altleft" || e.code.toLowerCase() === "altright";
+      const releasedCmd = e.key.toLowerCase() === "meta" || e.code.toLowerCase() === "metaleft" || e.code.toLowerCase() === "metaright";
 
-      // If line is active and either Q or W is released
-      if (isLineActive && (releasedQ || releasedW)) {
+      // If line is active and either Opt or Cmd is released
+      if (isLineActive && (releasedOpt || releasedCmd)) {
         const now = Date.now();
-        const releasedKey = releasedQ ? "q" : "w";
+        const releasedKey = releasedOpt ? "opt" : "cmd";
 
     // Check if this is the first key release or second
     if (!firstKeyReleased) {
@@ -178,8 +178,8 @@ export const IntentLine = ({ sensitivity = 70, easeIn = 200, onChordActivated, o
     }
   }
 
-      // Reset ignore flag when Q or W is released
-      if (releasedQ || releasedW) {
+      // Reset ignore flag when Opt or Cmd is released
+      if (releasedOpt || releasedCmd) {
         setIsIgnoringKeys(false);
       }
     };
@@ -339,39 +339,37 @@ export const IntentLine = ({ sensitivity = 70, easeIn = 200, onChordActivated, o
   }, [cursorPos, keysPressed, isLineActive, initialCursorPos, isIgnoringKeys, targetButtonType, line]);
 
   // Check which keys are currently pressed
-  const isQPressed = keysPressed.has("q") || keysPressed.has("keyq");
-  const isWPressed = keysPressed.has("w") || keysPressed.has("keyw");
+  const isOptPressed = keysPressed.has("alt") || keysPressed.has("altleft") || keysPressed.has("altright");
+  const isCmdPressed = keysPressed.has("meta") || keysPressed.has("metaleft") || keysPressed.has("metaright");
   const isSpacePressed = keysPressed.has(" ") || keysPressed.has("space");
 
   return (
     <div className="fixed inset-0 pointer-events-none z-50">
       {/* Key press overlays near mouse cursor */}
-      {isQPressed && (
+      {isOptPressed && (
         <div 
-          className="absolute flex items-center justify-center bg-gray-400/80 rounded text-2xl"
+          className="absolute flex items-center justify-center bg-gray-400/80 rounded text-sm font-bold px-2"
           style={{
             left: cursorPos.x + 20,
             top: cursorPos.y - 15,
-            width: 30,
             height: 30,
             transform: 'translate(-50%, -50%)'
           }}
         >
-          🆀
+          ⌥
         </div>
       )}
-      {isWPressed && (
+      {isCmdPressed && (
         <div 
-          className="absolute flex items-center justify-center bg-gray-400/80 rounded text-2xl"
+          className="absolute flex items-center justify-center bg-gray-400/80 rounded text-sm font-bold px-2"
           style={{
             left: cursorPos.x + 20,
             top: cursorPos.y + 15,
-            width: 30,
             height: 30,
             transform: 'translate(-50%, -50%)'
           }}
         >
-          🆆
+          ⌘
         </div>
       )}
       {isSpacePressed && isLineActive && (
