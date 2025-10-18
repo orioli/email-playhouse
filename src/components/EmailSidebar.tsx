@@ -41,7 +41,11 @@ export const EmailSidebar = ({ selectedFolder, onFolderChange, onCompose }: Emai
           >
             <div className="flex items-center gap-3">
               <folder.icon className="h-4 w-4" />
-              <div className="h-4 bg-muted rounded w-20 animate-pulse"></div>
+              {folder.id === 'inbox' ? (
+                <span>{folder.label}</span>
+              ) : (
+                <div className="h-4 bg-muted rounded w-20 animate-pulse"></div>
+              )}
             </div>
             {folder.count > 0 && (
               <span className={cn(
