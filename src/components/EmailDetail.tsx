@@ -22,9 +22,16 @@ export const EmailDetail = ({ isComposing, onClose, onSend, onReply, clicksSaved
   const [firstZXPressTime, setFirstZXPressTime] = useState<number | null>(null);
   const [showReleaseMessage, setShowReleaseMessage] = useState(false);
   const [simultaneousReleaseDetected, setSimultaneousReleaseDetected] = useState(false);
+  const [simulationTimeouts, setSimulationTimeouts] = useState<number[]>([]);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
+      // Cancel simulation if user touches keyboard during animation
+      if (simulationTimeouts.length > 0) {
+        simulationTimeouts.forEach(timeoutId => clearTimeout(timeoutId));
+        setSimulationTimeouts([]);
+      }
+
       const newKeys = new Set(keysPressed);
       newKeys.add(e.key.toLowerCase());
       setKeysPressed(newKeys);
@@ -68,7 +75,7 @@ export const EmailDetail = ({ isComposing, onClose, onSend, onReply, clicksSaved
       window.removeEventListener('keydown', handleKeyDown);
       window.removeEventListener('keyup', handleKeyUp);
     };
-  }, [keysPressed, firstZXPressTime, simultaneousReleaseDetected]);
+  }, [keysPressed, firstZXPressTime, simultaneousReleaseDetected, simulationTimeouts]);
 
   // Timer for 15 seconds after first Z+X press
   useEffect(() => {
@@ -114,6 +121,8 @@ export const EmailDetail = ({ isComposing, onClose, onSend, onReply, clicksSaved
     setShowArrow(true);
     setOnboardingStarted(true);
     
+    const timeouts: number[] = [];
+    
     // Simulate Z and X key presses for 5 seconds
     const simulateKeyPress = (key: string, code: string, duration: number) => {
       const keyDownEvent = new KeyboardEvent('keydown', {
@@ -129,15 +138,16 @@ export const EmailDetail = ({ isComposing, onClose, onSend, onReply, clicksSaved
       
       window.dispatchEvent(keyDownEvent);
       
-      setTimeout(() => {
+      const timeout = window.setTimeout(() => {
         window.dispatchEvent(keyUpEvent);
       }, duration);
+      timeouts.push(timeout);
     };
     
     // Toggle space bar 5 cycles (0.5s on, 0.5s off) over 5 seconds
     const toggleSpaceBar = () => {
       for (let i = 0; i < 5; i++) {
-        setTimeout(() => {
+        const timeout1 = window.setTimeout(() => {
           // Press
           window.dispatchEvent(new KeyboardEvent('keydown', {
             key: ' ',
@@ -146,20 +156,24 @@ export const EmailDetail = ({ isComposing, onClose, onSend, onReply, clicksSaved
           }));
           
           // Release after 0.5s
-          setTimeout(() => {
+          const timeout2 = window.setTimeout(() => {
             window.dispatchEvent(new KeyboardEvent('keyup', {
               key: ' ',
               code: 'Space',
               bubbles: true,
             }));
           }, 500);
+          timeouts.push(timeout2);
         }, i * 1000); // Each cycle starts 1s apart (0.5s on + 0.5s off)
+        timeouts.push(timeout1);
       }
     };
     
     simulateKeyPress('z', 'KeyZ', 5000);
     simulateKeyPress('x', 'KeyX', 5000);
     toggleSpaceBar();
+    
+    setSimulationTimeouts(timeouts);
   };
 
   const handleSend = () => {
