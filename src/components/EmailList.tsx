@@ -32,10 +32,10 @@ export const EmailList = ({ emails, selectedEmail, onEmailSelect }: EmailListPro
               : "hover:bg-email-hover"
           )}
         >
-          <div className="flex items-start justify-between mb-2">
-            <span className="text-sm font-medium text-muted-foreground">{email.sender}</span>
+          <div className="flex items-start justify-between mb-1">
+            <div className="h-4 bg-muted rounded w-32 animate-pulse"></div>
             <div className="flex items-center gap-2 ml-2">
-              <span className="text-xs text-muted-foreground">{email.time}</span>
+              <div className="h-3 bg-muted rounded w-12 animate-pulse"></div>
               <Star
                 className={cn(
                   "h-4 w-4",
@@ -46,13 +46,13 @@ export const EmailList = ({ emails, selectedEmail, onEmailSelect }: EmailListPro
           </div>
           
           <div className="flex items-center gap-2 mb-1">
-            <span className="text-sm text-muted-foreground">{email.subject}</span>
+            <div className="h-4 bg-muted rounded flex-1 animate-pulse"></div>
             {email.hasAttachment && (
               <Paperclip className="h-3 w-3 text-muted-foreground" />
             )}
           </div>
           
-          <p className="text-xs text-muted-foreground truncate">{email.preview}</p>
+          <div className="h-3 bg-muted rounded w-3/4 animate-pulse"></div>
         </div>
       ))}
     </div>
