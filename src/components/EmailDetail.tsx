@@ -11,9 +11,10 @@ interface EmailDetailProps {
   onClose: () => void;
   onSend?: () => void;
   onReply?: () => void;
+  clicksSaved?: number;
 }
 
-export const EmailDetail = ({ isComposing, onClose, onSend, onReply }: EmailDetailProps) => {
+export const EmailDetail = ({ isComposing, onClose, onSend, onReply, clicksSaved = 0 }: EmailDetailProps) => {
   const { toast } = useToast();
   const [showArrow, setShowArrow] = useState(false);
   const [onboardingStarted, setOnboardingStarted] = useState(false);
@@ -71,6 +72,11 @@ export const EmailDetail = ({ isComposing, onClose, onSend, onReply }: EmailDeta
 
   // Timer for 15 seconds after first Z+X press
   useEffect(() => {
+    // Don't show the message if user has already saved clicks
+    if (clicksSaved > 0) {
+      return;
+    }
+    
     if (firstZXPressTime !== null && !simultaneousReleaseDetected && !showReleaseMessage) {
       const timer = setTimeout(() => {
         if (!simultaneousReleaseDetected) {
@@ -80,7 +86,7 @@ export const EmailDetail = ({ isComposing, onClose, onSend, onReply }: EmailDeta
 
       return () => clearTimeout(timer);
     }
-  }, [firstZXPressTime, simultaneousReleaseDetected, showReleaseMessage]);
+  }, [firstZXPressTime, simultaneousReleaseDetected, showReleaseMessage, clicksSaved]);
 
   const handleVideoEnd = (e: React.SyntheticEvent<HTMLVideoElement>) => {
     const video = e.currentTarget;

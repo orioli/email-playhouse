@@ -437,6 +437,7 @@ const Index = () => {
           isComposing={isComposing}
           onClose={handleClose}
           onReply={handleCompose}
+          clicksSaved={chordCount}
         />
       </div>
       <KeyboardVisualization />
