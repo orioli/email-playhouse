@@ -1,9 +1,10 @@
-import { X, Reply, ReplyAll, Forward, Trash2, Archive, MoreVertical, Send } from "lucide-react";
+import { X, Reply, ReplyAll, Forward, Trash2, Archive, MoreVertical, Send, ArrowDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useState } from "react";
 
 interface EmailDetailProps {
   isComposing: boolean;
@@ -14,6 +15,7 @@ interface EmailDetailProps {
 
 export const EmailDetail = ({ isComposing, onClose, onSend, onReply }: EmailDetailProps) => {
   const { toast } = useToast();
+  const [showArrow, setShowArrow] = useState(false);
 
   const handleVideoEnd = (e: React.SyntheticEvent<HTMLVideoElement>) => {
     const video = e.currentTarget;
@@ -130,8 +132,30 @@ Wed, Oct 18, 2025 at 10:30 AM.... wrote...`}
             <Skeleton className="h-4 w-16" />
           </div>
 
-          <div className="prose prose-sm max-w-none">
-            {/* Email body content removed */}
+          <div className="prose prose-sm max-w-none relative">
+            {/* Start Here Button */}
+            {!showArrow && (
+              <div className="flex justify-center my-8">
+                <Button
+                  onClick={() => setShowArrow(true)}
+                  className="bg-red-600 hover:bg-red-700 text-white w-32 h-32"
+                >
+                  start here
+                </Button>
+              </div>
+            )}
+            
+            {/* Green Arrow pointing to Z key */}
+            {showArrow && (
+              <div className="fixed bottom-32 left-8 z-50 opacity-50">
+                <div className="relative flex flex-col items-center">
+                  <div className="bg-green-500 text-white px-4 py-2 rounded-lg font-semibold mb-2">
+                    press Z X
+                  </div>
+                  <ArrowDown className="w-16 h-16 text-green-500" strokeWidth={3} />
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </div>
