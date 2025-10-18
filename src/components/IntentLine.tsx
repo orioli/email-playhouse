@@ -21,7 +21,7 @@ export const IntentLine = ({ sensitivity = 70, easeIn = 200, onChordActivated, o
   const [firstKeyReleased, setFirstKeyReleased] = useState<string | null>(null);
   const [isAnimatingOut, setIsAnimatingOut] = useState(false);
   const [animationProgress, setAnimationProgress] = useState(0);
-  const [targetButtonType, setTargetButtonType] = useState<'reply' | 'replyAll' | 'forward' | 'trash' | 'search'>('reply');
+  const [targetButtonType, setTargetButtonType] = useState<'reply' | 'replyAll' | 'forward' | 'trash' | 'search' | 'cancel'>('reply');
 
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
@@ -42,6 +42,9 @@ export const IntentLine = ({ sensitivity = 70, easeIn = 200, onChordActivated, o
           setFirstKeyReleased(null); // Reset key tracking
           setLastKeyReleaseTime(null);
           onSuggestionDiscarded?.(); // Track discarded suggestion
+          // Hide virtual cancel button
+          const cancelBtn = document.getElementById('virtual-cancel-button');
+          if (cancelBtn) cancelBtn.style.display = 'none';
         }
       }
     };
@@ -128,6 +131,15 @@ export const IntentLine = ({ sensitivity = 70, easeIn = 200, onChordActivated, o
               setButtonRect(null);
               setIsLineActive(false);
               
+              // Hide virtual cancel button
+              const cancelBtn = document.getElementById('virtual-cancel-button');
+              if (cancelBtn) cancelBtn.style.display = 'none';
+              
+              // If cancel was selected, just dismiss without action
+              if (targetButtonType === 'cancel') {
+                return;
+              }
+              
               // Trigger action confirmed callback
               onActionConfirmed?.();
             }, 250);
@@ -167,6 +179,9 @@ export const IntentLine = ({ sensitivity = 70, easeIn = 200, onChordActivated, o
             setButtonRect(null);
             setIsLineActive(false);
             setIsAnimatingOut(false);
+            // Hide virtual cancel button
+            const cancelBtn = document.getElementById('virtual-cancel-button');
+            if (cancelBtn) cancelBtn.style.display = 'none';
           }
         };
         
@@ -185,7 +200,7 @@ export const IntentLine = ({ sensitivity = 70, easeIn = 200, onChordActivated, o
       }
     };
 
-    const findTargetButton = (type: 'reply' | 'replyAll' | 'forward' | 'trash' | 'search') => {
+    const findTargetButton = (type: 'reply' | 'replyAll' | 'forward' | 'trash' | 'search' | 'cancel') => {
       const buttons = Array.from(document.querySelectorAll("button")).filter(btn => {
         // Exclude buttons inside elements with data-exclude-from-chord attribute
         return !btn.closest('[data-exclude-from-chord="true"]');
@@ -218,6 +233,30 @@ export const IntentLine = ({ sensitivity = 70, easeIn = 200, onChordActivated, o
                              document.querySelector('input[placeholder*="Search"]') || 
                              document.querySelector('input[placeholder*="search"]');
           return searchInput as HTMLElement | undefined;
+        case 'cancel':
+          // Return or create a virtual cancel button in the center of the screen
+          let cancelButton = document.getElementById('virtual-cancel-button');
+          if (!cancelButton) {
+            cancelButton = document.createElement('div');
+            cancelButton.id = 'virtual-cancel-button';
+            cancelButton.style.position = 'fixed';
+            cancelButton.style.left = '50%';
+            cancelButton.style.top = '50%';
+            cancelButton.style.transform = 'translate(-50%, -50%)';
+            cancelButton.style.padding = '16px 24px';
+            cancelButton.style.backgroundColor = 'rgb(239 68 68)';
+            cancelButton.style.color = 'white';
+            cancelButton.style.borderRadius = '8px';
+            cancelButton.style.fontWeight = '600';
+            cancelButton.style.fontSize = '14px';
+            cancelButton.style.textAlign = 'center';
+            cancelButton.style.zIndex = '40';
+            cancelButton.style.pointerEvents = 'none';
+            cancelButton.textContent = 'TO CANCEL lift X before Z or select HERE';
+            document.body.appendChild(cancelButton);
+          }
+          cancelButton.style.display = 'block';
+          return cancelButton as HTMLElement;
         default:
           return null;
       }
@@ -227,11 +266,11 @@ export const IntentLine = ({ sensitivity = 70, easeIn = 200, onChordActivated, o
       // Check if we're in compose mode (Send button exists)
       const hasSendButton = Array.from(document.querySelectorAll("button")).some(btn => btn.textContent?.includes("Send"));
       
-      // In compose mode: only cycle Send → Search
-      // In email view: cycle Reply → Reply All → Forward → Trash → Search
-      const cycleOrder: Array<'reply' | 'replyAll' | 'forward' | 'trash' | 'search'> = hasSendButton 
-        ? ['reply', 'search']  // 'reply' will find Send button in compose mode
-        : ['reply', 'replyAll', 'forward', 'trash', 'search'];
+      // In compose mode: cycle Send → Search → Cancel
+      // In email view: cycle Reply → Reply All → Forward → Trash → Search → Cancel
+      const cycleOrder: Array<'reply' | 'replyAll' | 'forward' | 'trash' | 'search' | 'cancel'> = hasSendButton 
+        ? ['reply', 'search', 'cancel']  // 'reply' will find Send button in compose mode
+        : ['reply', 'replyAll', 'forward', 'trash', 'search', 'cancel'];
       
       const currentIndex = cycleOrder.indexOf(targetButtonType);
       const nextIndex = (currentIndex + 1) % cycleOrder.length;
@@ -241,7 +280,7 @@ export const IntentLine = ({ sensitivity = 70, easeIn = 200, onChordActivated, o
       updateIntentLine(nextType);
     };
 
-    const updateIntentLine = (type: 'reply' | 'replyAll' | 'forward' | 'trash' | 'search') => {
+    const updateIntentLine = (type: 'reply' | 'replyAll' | 'forward' | 'trash' | 'search' | 'cancel') => {
       const targetButton = findTargetButton(type);
       if (!targetButton) return;
 
