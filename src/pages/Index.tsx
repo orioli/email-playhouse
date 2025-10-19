@@ -424,6 +424,7 @@ const Index = () => {
               title: "Email sent",
               description: "Your message has been sent successfully.",
               duration: 3000,
+              className: "bg-blue-600 text-white border-blue-600",
             });
             handleClose();
           } else {
