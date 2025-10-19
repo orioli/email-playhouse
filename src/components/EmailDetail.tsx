@@ -263,7 +263,7 @@ Wed, Oct 18, 2025 at 10:30 AM.... wrote...`}
                   onClick={handleStartHere}
                   className="bg-rose-400 hover:bg-rose-500 text-white w-32 h-32 animate-pulse"
                 >
-                  start here
+                  TO START: Click here!
                 </Button>
               </div>
             )}
