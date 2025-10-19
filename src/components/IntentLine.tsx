@@ -244,7 +244,7 @@ export const IntentLine = ({ sensitivity = 70, easeIn = 200, onChordActivated, o
             cancelButton.style.top = '50%';
             cancelButton.style.transform = 'translate(-50%, -50%)';
             cancelButton.style.padding = '16px 24px';
-            cancelButton.style.backgroundColor = 'white';
+            cancelButton.style.backgroundColor = '#f5f5f7';
             cancelButton.style.color = 'black';
             cancelButton.style.borderRadius = '8px';
             cancelButton.style.fontWeight = '600';
@@ -252,7 +252,7 @@ export const IntentLine = ({ sensitivity = 70, easeIn = 200, onChordActivated, o
             cancelButton.style.textAlign = 'center';
             cancelButton.style.zIndex = '40';
             cancelButton.style.pointerEvents = 'none';
-            cancelButton.innerHTML = '<div style="color: #ef4444; margin-bottom: 4px;">TO CANCEL: LIFT X, THEN Z</div><div style="color: #10b981; margin-bottom: 4px;">TO ACCEPT: LIFT Z X <span style="text-decoration: underline;">AT SAME TIME</span></div><div style="color: #3b82f6;">NEXT OPTION: Z X + SPACE BAR</div>';
+            cancelButton.innerHTML = '<div style="color: #ef4444; padding: 12px 0;">TO CANCEL: LIFT X, THEN Z</div><div style="border-top: 1px solid #d1d5db;"></div><div style="color: #10b981; padding: 12px 0;">TO ACCEPT: LIFT Z X <span style="text-decoration: underline;">AT SAME TIME</span></div><div style="border-top: 1px solid #d1d5db;"></div><div style="color: #3b82f6; padding: 12px 0;">NEXT OPTION: Z X + SPACE BAR</div>';
             document.body.appendChild(cancelButton);
           }
           cancelButton.style.display = 'block';
