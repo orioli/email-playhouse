@@ -244,11 +244,10 @@ export const IntentLine = ({ sensitivity = 70, easeIn = 200, onChordActivated, o
             cancelButton.style.top = '50%';
             cancelButton.style.transform = 'translate(-50%, -50%)';
             cancelButton.style.padding = '16px 24px';
-            cancelButton.style.backgroundColor = '#f5f5f7';
+            cancelButton.style.backgroundColor = 'white';
             cancelButton.style.color = 'black';
-            cancelButton.style.border = 'none';
-            cancelButton.style.borderRadius = '12px';
-            cancelButton.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.1)';
+            cancelButton.style.border = '1px solid black';
+            cancelButton.style.borderRadius = '8px';
             cancelButton.style.fontWeight = '600';
             cancelButton.style.fontSize = '14px';
             cancelButton.style.textAlign = 'center';
