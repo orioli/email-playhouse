@@ -253,7 +253,7 @@ export const IntentLine = ({ sensitivity = 70, easeIn = 200, onChordActivated, o
             cancelButton.style.textAlign = 'center';
             cancelButton.style.zIndex = '40';
             cancelButton.style.pointerEvents = 'none';
-            cancelButton.textContent = 'TO CANCEL lift X before Z or select HERE';
+            cancelButton.innerHTML = '<div style="color: #ef4444; margin-bottom: 4px;">TO CANCEL: lift X before Z or select HERE</div><div style="color: #10b981;">TO ACCEPT: LIFT Z X AT SAME TIME</div>';
             document.body.appendChild(cancelButton);
           }
           cancelButton.style.display = 'block';
