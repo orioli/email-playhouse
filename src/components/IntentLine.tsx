@@ -539,14 +539,12 @@ export const IntentLine = ({ sensitivity = 70, easeIn = 200, onChordActivated, o
               />
 
               {/* Animated arrow at the end */}
-              <g transform={`translate(${line.x2}, ${line.y2})`}>
-                <g transform={`rotate(${tangentAngle}) ${targetButtonType === 'cancel' ? 'scale(-1, 1)' : ''}`}>
-                  <polygon
-                    points="0,0 -10,-5 -10,5"
-                    fill="#10b981"
-                    className="animate-pulse"
-                  />
-                </g>
+              <g transform={`translate(${line.x2}, ${line.y2}) rotate(${tangentAngle})`}>
+                <polygon
+                  points="0,0 -10,-5 -10,5"
+                  fill="#10b981"
+                  className="animate-pulse"
+                />
               </g>
             </>
           );
