@@ -8,7 +8,7 @@ import { KeyboardVisualization } from "@/components/KeyboardVisualization";
 import { Slider } from "@/components/ui/slider";
 import { useToast } from "@/hooks/use-toast";
 import { LineChart, Line, ResponsiveContainer } from "recharts";
-import { Download } from "lucide-react";
+import { Download, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 const mockEmails = [
@@ -99,6 +99,7 @@ const Index = () => {
   const [selectedFolder, setSelectedFolder] = useState("inbox");
   const [selectedEmail, setSelectedEmail] = useState<string | null>("1");
   const [isComposing, setIsComposing] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [sensitivity, setSensitivity] = useState(70);
   const [easeIn, setEaseIn] = useState(200);
   const [chordCount, setChordCount] = useState(0);
@@ -118,8 +119,12 @@ const Index = () => {
   const [doubleClickCount, setDoubleClickCount] = useState(0);
 
   const handleCompose = () => {
-    setIsComposing(true);
-    setSelectedEmail(null);
+    setIsLoading(true);
+    setTimeout(() => {
+      setIsComposing(true);
+      setSelectedEmail(null);
+      setIsLoading(false);
+    }, 1000);
   };
 
   const handleClose = () => {
@@ -231,7 +236,16 @@ const Index = () => {
   ];
 
   return (
-    <div className="h-screen flex flex-col">
+    <div className="h-screen flex flex-col relative">
+      {/* Loading Spinner Overlay */}
+      {isLoading && (
+        <div className="fixed inset-0 bg-background/80 backdrop-blur-sm z-50 flex items-center justify-center">
+          <div className="bg-card rounded-lg p-8 shadow-lg flex flex-col items-center gap-4">
+            <Loader2 className="h-12 w-12 animate-spin text-primary" />
+            <p className="text-lg font-medium">Loading compose...</p>
+          </div>
+        </div>
+      )}
       <div 
         data-exclude-from-chord="true"
         className="fixed z-50 bg-white border-2 border-gray-400 shadow-2xl transition-all"
