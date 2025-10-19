@@ -246,7 +246,6 @@ export const IntentLine = ({ sensitivity = 70, easeIn = 200, onChordActivated, o
             cancelButton.style.padding = '16px 24px';
             cancelButton.style.backgroundColor = 'white';
             cancelButton.style.color = 'black';
-            cancelButton.style.border = '1px solid black';
             cancelButton.style.borderRadius = '8px';
             cancelButton.style.fontWeight = '600';
             cancelButton.style.fontSize = '14px';
