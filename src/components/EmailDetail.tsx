@@ -270,7 +270,7 @@ Wed, Oct 18, 2025 at 10:30 AM.... wrote...`}
             
             {/* Press Z X text in middle of keyboard */}
             {showArrow && (
-              <div className="fixed bottom-32 left-1/2 -translate-x-1/2 z-50 opacity-80">
+              <div className="fixed bottom-32 left-1/2 -translate-x-1/2 z-50 opacity-95">
                 <div className="bg-green-500 text-white px-4 py-2 rounded-lg font-semibold text-center">
                   <div>HOLD DOWN Z X, while toggling SPACE BAR</div>
                   <div className="mt-1">to ACCEPT SUGGESTION RELEASE Z X same time</div>
