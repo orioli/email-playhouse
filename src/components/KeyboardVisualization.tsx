@@ -21,7 +21,7 @@ const KEY_WIDTHS: Record<string, string> = {
 
 export const KeyboardVisualization = () => {
   const [pressedKeys, setPressedKeys] = useState<Set<string>>(new Set());
-  const [position, setPosition] = useState({ x: window.innerWidth / 2, y: window.innerHeight - 150 });
+  const [position, setPosition] = useState({ x: window.innerWidth / 2, y: window.innerHeight - 250 });
   const [isDragging, setIsDragging] = useState(false);
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
 
