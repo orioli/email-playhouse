@@ -8,7 +8,7 @@ interface LineCoordinates {
   y2: number;
 }
 
-export const IntentLine = ({ sensitivity = 70, easeIn = 200, onChordActivated, onActionConfirmed, onLineCreated, onSuggestionDiscarded }: { sensitivity?: number; easeIn?: number; onChordActivated?: () => void; onActionConfirmed?: () => void; onLineCreated?: (distance: number) => void; onSuggestionDiscarded?: () => void }) => {
+export const IntentLine = ({ sensitivity = 70, easeIn = 200, onChordActivated, onActionConfirmed, onLineCreated, onSuggestionDiscarded }: { sensitivity?: number; easeIn?: number; onChordActivated?: () => void; onActionConfirmed?: (cursorPos: {x: number, y: number}) => void; onLineCreated?: (distance: number) => void; onSuggestionDiscarded?: () => void }) => {
   const { toast } = useToast();
   const [line, setLine] = useState<LineCoordinates | null>(null);
   const [cursorPos, setCursorPos] = useState({ x: 0, y: 0 });
@@ -141,7 +141,7 @@ export const IntentLine = ({ sensitivity = 70, easeIn = 200, onChordActivated, o
               }
               
               // Trigger action confirmed callback
-              onActionConfirmed?.();
+              onActionConfirmed?.(cursorPos);
             }, 250);
           }
         };

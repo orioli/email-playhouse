@@ -117,6 +117,12 @@ const Index = () => {
   const [mouseStrokeCount, setMouseStrokeCount] = useState(0);
   const [lastMouseMoveTime, setLastMouseMoveTime] = useState<number | null>(null);
   const [doubleClickCount, setDoubleClickCount] = useState(0);
+  const [replyToSendTime, setReplyToSendTime] = useState<number>(-1);
+  const [replyClickTime, setReplyClickTime] = useState<number | null>(null);
+  const [spacesInInterval, setSpacesInInterval] = useState<number>(-1);
+  const [cursorAtSend, setCursorAtSend] = useState<{x: number, y: number} | null>(null);
+  const [sendButtonPos, setSendButtonPos] = useState<{x: number, y: number} | null>(null);
+  const [intervalSpaceCount, setIntervalSpaceCount] = useState(0);
 
   const handleCompose = () => {
     setIsLoading(true);
@@ -125,6 +131,23 @@ const Index = () => {
       setSelectedEmail(null);
       setIsLoading(false);
     }, 1000);
+  };
+
+  const handleReplyClick = () => {
+    setReplyClickTime(Date.now());
+    setIntervalSpaceCount(0);
+    handleCompose();
+  };
+
+  const handleSendClick = (cursorPos: {x: number, y: number}, buttonPos: {x: number, y: number}) => {
+    if (replyClickTime !== null) {
+      const timeDiff = Date.now() - replyClickTime;
+      setReplyToSendTime(timeDiff);
+      setSpacesInInterval(intervalSpaceCount);
+      setCursorAtSend(cursorPos);
+      setSendButtonPos(buttonPos);
+    }
+    setReplyClickTime(null);
   };
 
   const handleClose = () => {
@@ -147,6 +170,10 @@ const Index = () => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.code === "Space" && !e.repeat) {
         setSpaceBarCount(prev => prev + 1);
+        // If tracking interval, count spaces
+        if (replyClickTime !== null) {
+          setIntervalSpaceCount(prev => prev + 1);
+        }
       }
     };
     
@@ -158,7 +185,7 @@ const Index = () => {
       window.removeEventListener("dblclick", handleDoubleClick);
       window.removeEventListener("keydown", handleKeyDown);
     };
-  }, []);
+  }, [replyClickTime]);
 
   // Track total traveled pixels continuously and mouse strokes
   useEffect(() => {
@@ -355,6 +382,22 @@ const Index = () => {
                   <span className="text-red-500">{(actualClicks + chordCount) > 0 ? Math.round((chordCount / (actualClicks + chordCount)) * 100) : 0}%</span> less clicks
                 </span>
               </div>
+              <div className="flex justify-between">
+                <span className="text-muted-foreground">Reply to Send Time:</span>
+                <span className="font-medium">{replyToSendTime >= 0 ? `${replyToSendTime}ms` : '-'}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-muted-foreground">Spaces (Reply-Send):</span>
+                <span className="font-medium">{spacesInInterval >= 0 ? spacesInInterval : '-'}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-muted-foreground">Cursor at Send:</span>
+                <span className="font-medium">{cursorAtSend ? `(${cursorAtSend.x}, ${cursorAtSend.y})` : '-'}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-muted-foreground">Send Button Pos:</span>
+                <span className="font-medium">{sendButtonPos ? `(${sendButtonPos.x}, ${sendButtonPos.y})` : '-'}</span>
+              </div>
               <div className="text-right pt-1">
                 <span className="text-xs text-muted-foreground">Pat. Pend.</span>
               </div>
@@ -384,6 +427,12 @@ const Index = () => {
                     ['Physically Travelled Pixels', Math.round(totalTraveledPixels)],
                     ['Savings - Less Travel (%)', lessTravel],
                     ['Savings - Less Clicks (%)', lessClicks],
+                    ['Reply to Send Time (ms)', replyToSendTime >= 0 ? replyToSendTime : '-'],
+                    ['Spaces in Reply-Send Interval', spacesInInterval >= 0 ? spacesInInterval : '-'],
+                    ['Cursor Position at Send (x)', cursorAtSend ? cursorAtSend.x : '-'],
+                    ['Cursor Position at Send (y)', cursorAtSend ? cursorAtSend.y : '-'],
+                    ['Send Button Center (x)', sendButtonPos ? sendButtonPos.x : '-'],
+                    ['Send Button Center (y)', sendButtonPos ? sendButtonPos.y : '-'],
                     ['Download Time', downloadTime],
                   ].map(row => row.join(',')).join('\n');
                   
@@ -417,8 +466,29 @@ const Index = () => {
         onChordActivated={() => setChordCount(prev => prev + 1)}
         onLineCreated={(distance) => setUntraveledPixels(prev => prev + distance)}
         onSuggestionDiscarded={() => setDiscardedSuggestions(prev => prev + 1)}
-        onActionConfirmed={() => {
+        onActionConfirmed={(cursorPos) => {
           if (isComposing) {
+            // Get Send button position
+            const sendButton = document.querySelector('button:has(> svg.lucide-send)') as HTMLElement;
+            let buttonPos = { x: 0, y: 0 };
+            if (sendButton) {
+              const rect = sendButton.getBoundingClientRect();
+              buttonPos = {
+                x: Math.round(rect.left + rect.width / 2),
+                y: Math.round(rect.top + rect.height / 2)
+              };
+            }
+            
+            // Track metrics if Reply was clicked
+            if (replyClickTime !== null) {
+              const timeDiff = Date.now() - replyClickTime;
+              setReplyToSendTime(timeDiff);
+              setSpacesInInterval(intervalSpaceCount);
+              setCursorAtSend(cursorPos);
+              setSendButtonPos(buttonPos);
+              setReplyClickTime(null);
+            }
+            
             // Show toast when sending from compose mode
             toast({
               title: "Email sent",
@@ -428,7 +498,7 @@ const Index = () => {
             handleClose();
           } else {
             // From email view, open compose mode
-            handleCompose();
+            handleReplyClick();
           }
         }}
       />
@@ -450,7 +520,8 @@ const Index = () => {
         <EmailDetail
           isComposing={isComposing}
           onClose={handleClose}
-          onReply={handleCompose}
+          onReply={handleReplyClick}
+          onSend={handleSendClick}
           clicksSaved={chordCount}
         />
       </div>

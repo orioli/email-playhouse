@@ -9,7 +9,7 @@ import { useState, useEffect } from "react";
 interface EmailDetailProps {
   isComposing: boolean;
   onClose: () => void;
-  onSend?: () => void;
+  onSend?: (cursorPos: {x: number, y: number}, buttonPos: {x: number, y: number}) => void;
   onReply?: () => void;
   clicksSaved?: number;
 }
@@ -162,13 +162,24 @@ export const EmailDetail = ({ isComposing, onClose, onSend, onReply, clicksSaved
     toggleSpaceBar();
   };
 
-  const handleSend = () => {
+  const handleSend = (e: React.MouseEvent<HTMLButtonElement>) => {
+    // Get cursor position
+    const cursorPos = { x: e.clientX, y: e.clientY };
+    
+    // Get Send button center position
+    const button = e.currentTarget;
+    const rect = button.getBoundingClientRect();
+    const buttonPos = {
+      x: Math.round(rect.left + rect.width / 2),
+      y: Math.round(rect.top + rect.height / 2)
+    };
+    
     toast({
       title: "Email sent",
       description: "Your message has been sent successfully.",
       duration: 3000,
     });
-    onSend?.();
+    onSend?.(cursorPos, buttonPos);
     onClose();
   };
   if (isComposing) {
