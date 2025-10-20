@@ -95,7 +95,7 @@ export const KeyboardVisualization = () => {
 
   return (
     <div 
-      className="fixed bg-gray-200/20 rounded-2xl shadow-2xl p-4 border border-gray-300/20 cursor-grab active:cursor-grabbing"
+      className="fixed bg-gray-200/80 rounded-2xl shadow-2xl p-4 border border-gray-300/80 cursor-grab active:cursor-grabbing"
       style={{ 
         left: `${position.x}px`,
         top: `${position.y}px`,
