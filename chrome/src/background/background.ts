@@ -17,6 +17,7 @@ chrome.runtime.onInstalled.addListener(async (details) => {
     const settings = await loadSettings();
     const stats = await loadStats();
     
+    // Apply new defaults first, then preserve any user-modified settings
     await saveSettings({ ...DEFAULT_SETTINGS, ...settings });
     await saveStats({ ...DEFAULT_STATS, ...stats });
   }
