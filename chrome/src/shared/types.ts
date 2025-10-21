@@ -27,7 +27,7 @@ export const DEFAULT_STATS: Stats = {
 };
 
 export const DEFAULT_SETTINGS: Settings = {
-  sensitivity: 50,
+  sensitivity: 170,
   easeInDuration: 200,
   showKeyboardVisualization: true,
   showStatsPanel: true,
