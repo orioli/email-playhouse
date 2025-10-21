@@ -100,7 +100,7 @@ const Index = () => {
   const [selectedEmail, setSelectedEmail] = useState<string | null>("1");
   const [isComposing, setIsComposing] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [sensitivity, setSensitivity] = useState(70);
+  const [sensitivity, setSensitivity] = useState(170);
   const [easeIn, setEaseIn] = useState(200);
   const [chordCount, setChordCount] = useState(0);
   const [sessionStartTime] = useState(new Date());
