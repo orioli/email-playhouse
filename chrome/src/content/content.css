@@ -1,0 +1,13 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+[data-chord-extension] {
+  all: initial;
+}
+
+[data-chord-extension] * {
+  all: unset;
+  display: revert;
+  box-sizing: border-box;
+}
