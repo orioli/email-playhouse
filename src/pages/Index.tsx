@@ -124,6 +124,7 @@ const Index = () => {
   const [sendButtonPos, setSendButtonPos] = useState<{x: number, y: number} | null>(null);
   const [sendButtonClickTime, setSendButtonClickTime] = useState<Date | null>(null);
   const [intervalSpaceCount, setIntervalSpaceCount] = useState(0);
+  const [missClicksInCompose, setMissClicksInCompose] = useState(0);
 
   const handleCompose = () => {
     setIsLoading(true);
@@ -173,6 +174,7 @@ const Index = () => {
     setCursorAtSend(null);
     setSendButtonPos(null);
     setSendButtonClickTime(null);
+    setMissClicksInCompose(0);
     setSessionStartTime(new Date());
   };
 
@@ -421,6 +423,10 @@ const Index = () => {
                 <span className="text-muted-foreground">Send Button Click (end):</span>
                 <span className="font-medium">{sendButtonClickTime ? sendButtonClickTime.toLocaleTimeString() : '-'}</span>
               </div>
+              <div className="flex justify-between">
+                <span className="text-muted-foreground">Miss-Clicks in Compose:</span>
+                <span className="font-medium text-amber-500">{missClicksInCompose}</span>
+              </div>
               <div className="text-right pt-1">
                 <span className="text-xs text-muted-foreground">Pat. Pend.</span>
               </div>
@@ -457,6 +463,7 @@ const Index = () => {
                     ['Send Button Center (x)', sendButtonPos ? sendButtonPos.x : '-'],
                     ['Send Button Center (y)', sendButtonPos ? sendButtonPos.y : '-'],
                     ['Send Button Click Time (end)', sendButtonClickTime ? sendButtonClickTime.toLocaleString() : '-'],
+                    ['Miss-Clicks in Compose Window', missClicksInCompose],
                     ['Download Time', downloadTime],
                   ].map(row => row.join(',')).join('\n');
                   
@@ -494,7 +501,8 @@ const Index = () => {
           if (isComposing) {
             // Only close compose if Send button was actually targeted
             if (buttonType === 'search') {
-              // Don't close compose for search
+              // Don't close compose for search - count as miss-click
+              setMissClicksInCompose(prev => prev + 1);
               return;
             }
             
