@@ -187,16 +187,13 @@ export const EmailDetail = ({ isComposing, onClose, onSend, onReply, clicksSaved
   if (isComposing) {
     return (
       <div className="flex-1 flex flex-col bg-background">
-        {/* Header with Send and Close buttons */}
+        {/* Header with Send button */}
         <div className="border-b border-border p-4 flex items-center justify-between">
           <h2 className="text-lg font-semibold">Reply to: Jose Berengueres</h2>
           <div className="flex items-center gap-2">
             <Button size="lg" className="min-w-32" onClick={handleSend}>
               <Send className="mr-2 h-4 w-4" />
               Send
-            </Button>
-            <Button variant="ghost" size="icon" onClick={onClose}>
-              <X className="h-5 w-5" />
             </Button>
           </div>
         </div>
