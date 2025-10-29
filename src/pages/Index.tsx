@@ -510,6 +510,7 @@ const Index = () => {
               setSpacesInInterval(intervalSpaceCount);
               setCursorAtSend(cursorPos);
               setSendButtonPos(buttonPos);
+              setSendButtonClickTime(new Date());
               setReplyClickTime(null);
             }
             
