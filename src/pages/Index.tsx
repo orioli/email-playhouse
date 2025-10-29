@@ -103,7 +103,7 @@ const Index = () => {
   const [sensitivity, setSensitivity] = useState(170);
   const [easeIn, setEaseIn] = useState(200);
   const [chordCount, setChordCount] = useState(0);
-  const [sessionStartTime] = useState(new Date());
+  const [sessionStartTime, setSessionStartTime] = useState(new Date());
   const [unteraveledPixels, setUntraveledPixels] = useState(0);
   const [discardedSuggestions, setDiscardedSuggestions] = useState(0);
   const [actualClicks, setActualClicks] = useState(0);
@@ -155,6 +155,22 @@ const Index = () => {
     if (!selectedEmail) {
       setSelectedEmail("1");
     }
+  };
+
+  const handleResetStats = () => {
+    setChordCount(0);
+    setUntraveledPixels(0);
+    setDiscardedSuggestions(0);
+    setActualClicks(0);
+    setTotalTraveledPixels(0);
+    setSpaceBarCount(0);
+    setMouseStrokeCount(0);
+    setDoubleClickCount(0);
+    setReplyToSendTime(-1);
+    setSpacesInInterval(-1);
+    setCursorAtSend(null);
+    setSendButtonPos(null);
+    setSessionStartTime(new Date());
   };
 
   // Track actual clicks, double clicks, and spacebar presses
@@ -523,6 +539,7 @@ const Index = () => {
           onReply={handleReplyClick}
           onSend={handleSendClick}
           clicksSaved={chordCount}
+          onResetStats={handleResetStats}
         />
       </div>
       <KeyboardVisualization />

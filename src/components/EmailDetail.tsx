@@ -12,9 +12,10 @@ interface EmailDetailProps {
   onSend?: (cursorPos: {x: number, y: number}, buttonPos: {x: number, y: number}) => void;
   onReply?: () => void;
   clicksSaved?: number;
+  onResetStats?: () => void;
 }
 
-export const EmailDetail = ({ isComposing, onClose, onSend, onReply, clicksSaved = 0 }: EmailDetailProps) => {
+export const EmailDetail = ({ isComposing, onClose, onSend, onReply, clicksSaved = 0, onResetStats }: EmailDetailProps) => {
   const { toast } = useToast();
   const [showArrow, setShowArrow] = useState(false);
   const [onboardingStarted, setOnboardingStarted] = useState(false);
@@ -113,6 +114,7 @@ export const EmailDetail = ({ isComposing, onClose, onSend, onReply, clicksSaved
   const handleStartHere = () => {
     setShowArrow(true);
     setOnboardingStarted(true);
+    onResetStats?.();
     
     // Simulate Z and X key presses for 5 seconds
     const simulateKeyPress = (key: string, code: string, duration: number) => {
