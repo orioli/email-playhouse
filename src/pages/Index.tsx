@@ -122,6 +122,7 @@ const Index = () => {
   const [spacesInInterval, setSpacesInInterval] = useState<number>(-1);
   const [cursorAtSend, setCursorAtSend] = useState<{x: number, y: number} | null>(null);
   const [sendButtonPos, setSendButtonPos] = useState<{x: number, y: number} | null>(null);
+  const [sendButtonClickTime, setSendButtonClickTime] = useState<Date | null>(null);
   const [intervalSpaceCount, setIntervalSpaceCount] = useState(0);
 
   const handleCompose = () => {
@@ -146,6 +147,7 @@ const Index = () => {
       setSpacesInInterval(intervalSpaceCount);
       setCursorAtSend(cursorPos);
       setSendButtonPos(buttonPos);
+      setSendButtonClickTime(new Date());
     }
     setReplyClickTime(null);
   };
@@ -170,6 +172,7 @@ const Index = () => {
     setSpacesInInterval(-1);
     setCursorAtSend(null);
     setSendButtonPos(null);
+    setSendButtonClickTime(null);
     setSessionStartTime(new Date());
   };
 
@@ -414,6 +417,10 @@ const Index = () => {
                 <span className="text-muted-foreground">Send Button Pos:</span>
                 <span className="font-medium">{sendButtonPos ? `(${sendButtonPos.x}, ${sendButtonPos.y})` : '-'}</span>
               </div>
+              <div className="flex justify-between">
+                <span className="text-muted-foreground">Send Button Click (end):</span>
+                <span className="font-medium">{sendButtonClickTime ? sendButtonClickTime.toLocaleTimeString() : '-'}</span>
+              </div>
               <div className="text-right pt-1">
                 <span className="text-xs text-muted-foreground">Pat. Pend.</span>
               </div>
@@ -449,6 +456,7 @@ const Index = () => {
                     ['Cursor Position at Send (y)', cursorAtSend ? cursorAtSend.y : '-'],
                     ['Send Button Center (x)', sendButtonPos ? sendButtonPos.x : '-'],
                     ['Send Button Center (y)', sendButtonPos ? sendButtonPos.y : '-'],
+                    ['Send Button Click Time (end)', sendButtonClickTime ? sendButtonClickTime.toLocaleString() : '-'],
                     ['Download Time', downloadTime],
                   ].map(row => row.join(',')).join('\n');
                   
