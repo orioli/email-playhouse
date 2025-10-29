@@ -490,8 +490,14 @@ const Index = () => {
         onChordActivated={() => setChordCount(prev => prev + 1)}
         onLineCreated={(distance) => setUntraveledPixels(prev => prev + distance)}
         onSuggestionDiscarded={() => setDiscardedSuggestions(prev => prev + 1)}
-        onActionConfirmed={(cursorPos) => {
+        onActionConfirmed={(cursorPos, buttonType) => {
           if (isComposing) {
+            // Only close compose if Send button was actually targeted
+            if (buttonType === 'search') {
+              // Don't close compose for search
+              return;
+            }
+            
             // Get Send button position
             const sendButton = document.querySelector('button:has(> svg.lucide-send)') as HTMLElement;
             let buttonPos = { x: 0, y: 0 };
