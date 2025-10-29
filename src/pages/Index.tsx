@@ -125,6 +125,7 @@ const Index = () => {
   const [sendButtonClickTime, setSendButtonClickTime] = useState<Date | null>(null);
   const [intervalSpaceCount, setIntervalSpaceCount] = useState(0);
   const [missClicksInCompose, setMissClicksInCompose] = useState(0);
+  const [missClicksInMain, setMissClicksInMain] = useState(0);
 
   const handleCompose = () => {
     setIsLoading(true);
@@ -175,6 +176,7 @@ const Index = () => {
     setSendButtonPos(null);
     setSendButtonClickTime(null);
     setMissClicksInCompose(0);
+    setMissClicksInMain(0);
     setSessionStartTime(new Date());
   };
 
@@ -427,6 +429,10 @@ const Index = () => {
                 <span className="text-muted-foreground">Miss-Clicks in Compose:</span>
                 <span className="font-medium text-amber-500">{missClicksInCompose}</span>
               </div>
+              <div className="flex justify-between">
+                <span className="text-muted-foreground">Miss-Clicks in Main:</span>
+                <span className="font-medium text-amber-500">{missClicksInMain}</span>
+              </div>
               <div className="text-right pt-1">
                 <span className="text-xs text-muted-foreground">Pat. Pend.</span>
               </div>
@@ -464,6 +470,7 @@ const Index = () => {
                     ['Send Button Center (y)', sendButtonPos ? sendButtonPos.y : '-'],
                     ['Send Button Click Time (end)', sendButtonClickTime ? sendButtonClickTime.toLocaleString() : '-'],
                     ['Miss-Clicks in Compose Window', missClicksInCompose],
+                    ['Miss-Clicks in Main Window', missClicksInMain],
                     ['Download Time', downloadTime],
                   ].map(row => row.join(',')).join('\n');
                   
@@ -536,8 +543,13 @@ const Index = () => {
             });
             handleClose();
           } else {
-            // From email view, open compose mode
-            handleReplyClick();
+            // From email view, only open compose if Reply button was targeted
+            if (buttonType === 'reply') {
+              handleReplyClick();
+            } else {
+              // Any other button is a miss-click
+              setMissClicksInMain(prev => prev + 1);
+            }
           }
         }}
       />
