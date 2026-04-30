@@ -1,6 +1,6 @@
 ## Version history
 
-👩🏻‍⚕️ [**Mockup**](https://email-playhouse2.lovable.app/): the source code of this repo. 
+👩🏻‍⚕️ [**Mockup**](https://email-playhouse2.lovable.app/): this repo. 
 
 ⌨️ [**1.0**](https://chromewebstore.google.com/detail/tabtab-go-smart-navigatio/bnpblkjpdiefjkfmnndffhgcadmcfigh?pli=1): Single hand operated top-6 predictive navigation (Beta Chrome plugin).
 
